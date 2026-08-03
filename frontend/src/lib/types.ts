@@ -39,6 +39,31 @@ export interface AIReport {
   drills?: string | null;
 }
 
+export interface JointAngles {
+  left_knee?: number;
+  right_knee?: number;
+  left_hip?: number;
+  right_hip?: number;
+  left_ankle?: number;
+  right_ankle?: number;
+  left_shoulder?: number;
+  right_shoulder?: number;
+  left_elbow?: number;
+  right_elbow?: number;
+  trunk_lean?: number;
+}
+
+export interface FrameSample {
+  t: number;
+  lm: Record<string, [number, number]>;
+  ang: JointAngles;
+}
+
+export interface MovementPhase {
+  name: string;
+  t: number;
+}
+
 export interface VideoItem {
   id: number;
   title: string;
@@ -46,6 +71,9 @@ export interface VideoItem {
   uploaded_at: string;
   visibility: string;
   coach_comment?: string | null;
+  sport?: string | null;
+  movement?: string | null;
+  camera_angle?: string | null;
   duration_sec?: number | null;
   fps?: number | null;
   frame_count?: number | null;
@@ -55,6 +83,13 @@ export interface VideoItem {
   avg_trunk_lean_deg?: number | null;
   estimated_cadence_spm?: number | null;
   pose_summary?: string | null;
+  score_technique?: number | null;
+  score_stability?: number | null;
+  score_symmetry?: number | null;
+  score_efficiency?: number | null;
+  score_overall?: number | null;
+  phases?: MovementPhase[] | null;
+  frame_series?: FrameSample[] | null;
   ai_report?: AIReport | null;
 }
 

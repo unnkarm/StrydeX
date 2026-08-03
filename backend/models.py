@@ -1,7 +1,7 @@
 import datetime
 import enum
 from sqlalchemy import (
-    Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Text, Enum
+    Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Text, Enum, JSON
 )
 from sqlalchemy.orm import relationship
 from database import Base
@@ -76,6 +76,11 @@ class Video(Base):
     visibility = Column(String, default="public")  # public | private
     coach_comment = Column(Text, nullable=True)
 
+    # Capture context (chosen by the athlete before analysis)
+    sport = Column(String, nullable=True)
+    movement = Column(String, nullable=True)
+    camera_angle = Column(String, nullable=True)
+
     # CV-derived metrics (optical flow — general activity/explosiveness proxy)
     duration_sec = Column(Float, nullable=True)
     fps = Column(Float, nullable=True)
@@ -88,6 +93,20 @@ class Video(Base):
     avg_trunk_lean_deg = Column(Float, nullable=True)
     estimated_cadence_spm = Column(Float, nullable=True)
     pose_summary = Column(Text, nullable=True)
+
+    # AI Movement Score (0-100 sub-scores derived from pose biomechanics)
+    score_technique = Column(Float, nullable=True)
+    score_stability = Column(Float, nullable=True)
+    score_symmetry = Column(Float, nullable=True)
+    score_efficiency = Column(Float, nullable=True)
+    score_overall = Column(Float, nullable=True)
+
+    # Movement timeline phases: [{"name": "Start", "t": 0.0}, ...]
+    phases = Column(JSON, nullable=True)
+
+    # Per-frame skeleton + joint-angle time series, sampled across the clip:
+    # [{"t": 1.2, "lm": {"left_knee": [0.41, 0.62], ...}, "ang": {"left_knee": 142.0, ...}}, ...]
+    frame_series = Column(JSON, nullable=True)
 
     ai_report = relationship("AIReport", back_populates="video", uselist=False, cascade="all, delete-orphan")
     athlete = relationship("AthleteProfile", back_populates="videos")

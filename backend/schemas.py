@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, EmailStr
 
 
@@ -86,6 +86,9 @@ class VideoOut(BaseModel):
     uploaded_at: datetime.datetime
     visibility: str
     coach_comment: Optional[str] = None
+    sport: Optional[str] = None
+    movement: Optional[str] = None
+    camera_angle: Optional[str] = None
     duration_sec: Optional[float] = None
     fps: Optional[float] = None
     frame_count: Optional[int] = None
@@ -95,10 +98,22 @@ class VideoOut(BaseModel):
     avg_trunk_lean_deg: Optional[float] = None
     estimated_cadence_spm: Optional[float] = None
     pose_summary: Optional[str] = None
+    score_technique: Optional[float] = None
+    score_stability: Optional[float] = None
+    score_symmetry: Optional[float] = None
+    score_efficiency: Optional[float] = None
+    score_overall: Optional[float] = None
+    phases: Optional[List[Dict[str, Any]]] = None
     ai_report: Optional[AIReportOut] = None
 
     class Config:
         from_attributes = True
+
+
+class VideoDetailOut(VideoOut):
+    """Full video payload including the per-frame skeleton/angle series
+    used by the analysis dashboard (pose overlay, joint-angle graphs)."""
+    frame_series: Optional[List[Dict[str, Any]]] = None
 
 
 # ---------- Public Portfolio ----------

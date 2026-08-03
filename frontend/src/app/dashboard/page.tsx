@@ -197,10 +197,17 @@ export default function DashboardPage() {
                 <div className="mt-2 flex gap-4 text-xs text-muted">
                   <span>Duration: {v.duration_sec ?? "—"}s</span>
                   <span>Explosiveness: {v.est_max_speed_score ?? "—"}/100</span>
+                  {v.score_overall != null && <span>AI Score: {v.score_overall}/100</span>}
                 </div>
                 {v.ai_report && (
                   <p className="mt-2 text-sm text-foreground/90">{v.ai_report.summary}</p>
                 )}
+                <Link
+                  href={`/upload?video=${v.id}`}
+                  className="mt-3 inline-block text-xs text-accent hover:underline"
+                >
+                  View full analysis →
+                </Link>
               </div>
             ))}
           </div>
