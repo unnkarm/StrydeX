@@ -31,6 +31,105 @@ const RISK_COLOR: Record<string, string> = {
   critical: "#e4572e",
 };
 
+type Suggestion = {
+  title: string;
+  detail: string;
+  priority: "high" | "medium" | "positive" | "info";
+};
+
+const SUGGESTION_STYLE: Record<Suggestion["priority"], string> = {
+  high: "border-clay/50 bg-clay/10 text-clay",
+  medium: "border-[#f2c14e]/50 bg-[#f2c14e]/10 text-[#f2c14e]",
+  positive: "border-accent/40 bg-accent/10 text-accent",
+  info: "border-border bg-surface-2 text-foreground",
+};
+
+function buildSuggestions(
+  summary: IntelligenceSummary | null,
+  injuryRisk: InjuryRisk | null,
+  readiness: Readiness | null,
+  performanceLogCount: number
+): Suggestion[] {
+  const suggestions: Suggestion[] = [];
+
+  if (injuryRisk?.risk_band === "critical" || injuryRisk?.risk_band === "high") {
+    suggestions.push({
+      title: "Prioritize recovery",
+      detail: `Your injury-risk estimate is ${injuryRisk.risk_pct}%. Reduce high-intensity load and review the risk factors with a coach or qualified clinician before the next hard session.`,
+      priority: "high",
+    });
+  } else if (injuryRisk?.risk_band === "moderate") {
+    suggestions.push({
+      title: "Adjust today’s load",
+      detail: "Keep the session controlled, extend the warm-up, and monitor fatigue or soreness before adding intensity.",
+      priority: "medium",
+    });
+  } else if (injuryRisk?.risk_band === "low") {
+    suggestions.push({
+      title: "Maintain your recovery habits",
+      detail: "Injury risk is currently low. Progress training load gradually and keep recovery data current.",
+      priority: "positive",
+    });
+  }
+
+  const readinessScore = readiness?.readiness_pct;
+  if (readinessScore == null) {
+    suggestions.push({
+      title: "Complete today’s readiness check-in",
+      detail: "Add sleep, activity, and heart-rate data to receive an ML readiness score before planning training intensity.",
+      priority: "info",
+    });
+  } else if (readinessScore < 40) {
+    suggestions.push({
+      title: "Choose a recovery session",
+      detail: "Readiness is low. Favor rest, mobility, hydration, and easy aerobic work instead of maximal efforts.",
+      priority: "high",
+    });
+  } else if (readinessScore < 60) {
+    suggestions.push({
+      title: "Train below maximum intensity",
+      detail: "Readiness is moderate. Reduce volume or intensity and reassess during the warm-up.",
+      priority: "medium",
+    });
+  } else if (readinessScore >= 80) {
+    suggestions.push({
+      title: "Use the high-readiness window",
+      detail: "Readiness is strong. If you feel well, schedule a quality session while keeping workload controlled.",
+      priority: "positive",
+    });
+  } else {
+    suggestions.push({
+      title: "Follow the normal training plan",
+      detail: "Readiness is good. Proceed as planned and continue monitoring recovery after the session.",
+      priority: "positive",
+    });
+  }
+
+  if (summary?.sprint_trend_pct != null && summary.sprint_trend_pct < 0) {
+    suggestions.push({
+      title: "Review the performance decline",
+      detail: `Your recent score trend is ${summary.sprint_trend_pct}%. Review training load, sleep, and technique before increasing volume.`,
+      priority: "medium",
+    });
+  } else if (summary?.sprint_trend_pct != null && summary.sprint_trend_pct > 0) {
+    suggestions.push({
+      title: "Build on the positive trend",
+      detail: `Performance is trending up ${summary.sprint_trend_pct}%. Keep what is working and avoid sudden load increases.`,
+      priority: "positive",
+    });
+  }
+
+  if (performanceLogCount < 4) {
+    suggestions.push({
+      title: "Log more performance sessions",
+      detail: `You have ${performanceLogCount} logged session${performanceLogCount === 1 ? "" : "s"}. Add at least four across multiple days for more useful trends and predictions.`,
+      priority: "info",
+    });
+  }
+
+  return suggestions.slice(0, 4);
+}
+
 type ReadinessForm = {
   total_steps: string;
   calories: string;
@@ -248,6 +347,13 @@ export default function AnalyticsPage() {
       performance: point.value,
     })) || [];
 
+  const suggestions = buildSuggestions(
+    summary,
+    injuryRisk,
+    readiness,
+    performanceLogs.length
+  );
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
       <div className="grid gap-6 lg:grid-cols-[230px_minmax(0,1fr)]">
@@ -287,6 +393,35 @@ export default function AnalyticsPage() {
           <StatCard compact label="Injury risk" value={summary?.injury_risk_pct != null ? `${summary.injury_risk_pct}%` : "—"} />
           <StatCard compact label="Readiness" value={summary?.readiness_pct != null ? `${summary.readiness_pct}%` : "—"} />
         </div>
+
+        <section className="mb-10 rounded-lg border border-border bg-surface p-5">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <h2 className="text-sm font-medium text-foreground">Suggested next steps</h2>
+              <p className="mt-1 text-xs text-muted">
+                Prioritized from your latest ML estimates and training history
+              </p>
+            </div>
+            <span className="text-[11px] text-muted">Guidance only · adjust to how you feel</span>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            {suggestions.map((suggestion) => (
+              <div
+                key={`${suggestion.title}-${suggestion.priority}`}
+                className={`rounded-md border p-4 ${SUGGESTION_STYLE[suggestion.priority]}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-sm font-medium">{suggestion.title}</h3>
+                  <span className="rounded-full border border-current/30 px-2 py-0.5 text-[10px] uppercase tracking-wider opacity-80">
+                    {suggestion.priority === "positive" ? "on track" : suggestion.priority}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-muted">{suggestion.detail}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <div className="grid gap-4 lg:grid-cols-2">
           <section className="rounded-lg border border-border bg-surface p-5">

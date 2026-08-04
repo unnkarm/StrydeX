@@ -4,7 +4,7 @@ from pathlib import Path
 
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit
 
 # --------------------------------------------------
 # Paths
@@ -83,7 +83,6 @@ numeric_features = [
     "event_distance",
 ]
 
-# FIX: Properly initialize the ColumnTransformer
 preprocessor = ColumnTransformer(
     transformers=[
         (
@@ -99,23 +98,28 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# --------------------------------------------------
-# Fit
-# --------------------------------------------------
-
-X_processed = preprocessor.fit_transform(X)
-
 # -----------------------------
-# Split Dataset
+# Split raw rows by athlete before fitting preprocessing.
+# This prevents one athlete appearing in both train and test and prevents
+# the encoder from learning anything from the holdout set.
 # -----------------------------
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X_processed,
-    y,
+splitter = GroupShuffleSplit(
+    n_splits=1,
     test_size=0.2,
     random_state=42,
-    shuffle=True
 )
+train_index, test_index = next(
+    splitter.split(X, y, groups=performance_df["athlete_id"])
+)
+
+X_train_raw = X.iloc[train_index]
+X_test_raw = X.iloc[test_index]
+y_train = y.iloc[train_index]
+y_test = y.iloc[test_index]
+
+X_train = preprocessor.fit_transform(X_train_raw)
+X_test = preprocessor.transform(X_test_raw)
 
 # -----------------------------
 # Save Preprocessor
@@ -123,7 +127,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 joblib.dump(
     preprocessor,
-    ENCODER_DIR / "performance_preprocessor.joblib",
+    ENCODER_DIR / "performance_preprocessor_v2.joblib",
 )
 
 # -----------------------------
@@ -136,8 +140,15 @@ joblib.dump(
         "X_test": X_test,
         "y_train": y_train,
         "y_test": y_test,
+        "split_strategy": "grouped_by_athlete",
+        "train_athlete_ids": sorted(
+            performance_df.iloc[train_index]["athlete_id"].unique().tolist()
+        ),
+        "test_athlete_ids": sorted(
+            performance_df.iloc[test_index]["athlete_id"].unique().tolist()
+        ),
     },
-    ARTIFACTS_DIR / "performance_dataset.joblib",
+    ARTIFACTS_DIR / "performance_dataset_v2.joblib",
 )
 
 print("✅ Feature engineering completed.")

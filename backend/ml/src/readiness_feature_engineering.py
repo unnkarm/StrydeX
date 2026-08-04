@@ -2,7 +2,9 @@ import joblib
 import pandas as pd
 from pathlib import Path
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit
+
+from readiness_scoring import calculate_readiness_score
 
 # --------------------------------------------------
 # Paths
@@ -27,26 +29,15 @@ df = pd.read_csv(
 # Create Readiness Score (0-100)
 # --------------------------------------------------
 
-sleep_score = (df["totalminutesasleep"] / 480 * 100).clip(0, 100)
-
-activity_score = (df["veryactiveminutes"] / 30 * 100).clip(0, 100)
-
-heart_score = (
-    (100 - abs(df["avg_heart_rate"] - 70))
-).clip(0, 100)
-
-sedentary_penalty = (
-    df["sedentaryminutes"] / 1000 * 20
-).clip(0, 20)
-
-df["readiness_score"] = (
-    0.4 * sleep_score
-    + 0.3 * activity_score
-    + 0.3 * heart_score
-    - sedentary_penalty
+df["readiness_score"] = df.apply(
+    lambda row: calculate_readiness_score(
+        total_minutes_asleep=row["totalminutesasleep"],
+        very_active_minutes=row["veryactiveminutes"],
+        average_heart_rate=row["avg_heart_rate"],
+        sedentary_minutes=row["sedentaryminutes"],
+    ),
+    axis=1,
 )
-
-df["readiness_score"] = df["readiness_score"].clip(0, 100)
 
 # --------------------------------------------------
 # Features
@@ -72,12 +63,16 @@ y = df["readiness_score"]
 # Train/Test Split
 # --------------------------------------------------
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
+splitter = GroupShuffleSplit(
+    n_splits=1,
     test_size=0.2,
     random_state=42,
 )
+train_index, test_index = next(splitter.split(X, y, groups=df["id"]))
+X_train = X.iloc[train_index]
+X_test = X.iloc[test_index]
+y_train = y.iloc[train_index]
+y_test = y.iloc[test_index]
 
 # --------------------------------------------------
 # Save Dataset
@@ -89,8 +84,9 @@ joblib.dump(
         "X_test": X_test,
         "y_train": y_train,
         "y_test": y_test,
+        "split_strategy": "grouped_by_athlete",
     },
-    ARTIFACTS_DIR / "readiness_dataset.joblib",
+    ARTIFACTS_DIR / "readiness_dataset_v2.joblib",
 )
 
 print("✅ Readiness feature engineering completed.")

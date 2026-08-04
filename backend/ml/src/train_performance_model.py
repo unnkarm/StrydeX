@@ -24,7 +24,7 @@ MODELS_DIR.mkdir(parents=True, exist_ok=True)
 # --------------------------------------------------
 
 data = joblib.load(
-    ARTIFACTS_DIR / "performance_dataset.joblib"
+    ARTIFACTS_DIR / "performance_dataset_v2.joblib"
 )
 
 X_train = data["X_train"]
@@ -63,13 +63,21 @@ print(f"MAE  : {mae:.2f}")
 print(f"RMSE : {rmse:.2f}")
 print(f"R²   : {r2:.4f}")
 
+baseline_predictions = [float(y_train.mean())] * len(y_test)
+baseline_mae = mean_absolute_error(y_test, baseline_predictions)
+baseline_rmse = mean_squared_error(y_test, baseline_predictions) ** 0.5
+print(f"Baseline MAE  : {baseline_mae:.2f}")
+print(f"Baseline RMSE : {baseline_rmse:.2f}")
+if r2 <= 0 or mae >= baseline_mae:
+    print("WARNING: Candidate does not beat the mean baseline; do not deploy it.")
+
 # --------------------------------------------------
 # Save Model
 # --------------------------------------------------
 
 joblib.dump(
     model,
-    MODELS_DIR / "performance_model.joblib"
+    MODELS_DIR / "performance_model_v2.joblib"
 )
 
-print("\n✅ Model saved successfully!")
+print("\nCandidate saved as performance_model_v2.joblib; existing model preserved.")

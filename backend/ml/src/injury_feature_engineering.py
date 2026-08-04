@@ -94,22 +94,19 @@ preprocessor = ColumnTransformer(
 )
 
 # --------------------------------------------------
-# Transform
+# Split raw rows before fitting preprocessing so the holdout remains unseen.
 # --------------------------------------------------
 
-X_processed = preprocessor.fit_transform(X)
-
-# --------------------------------------------------
-# Split
-# --------------------------------------------------
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X_processed,
+X_train_raw, X_test_raw, y_train, y_test = train_test_split(
+    X,
     y,
     test_size=0.2,
     random_state=42,
     stratify=y,
 )
+
+X_train = preprocessor.fit_transform(X_train_raw)
+X_test = preprocessor.transform(X_test_raw)
 
 # --------------------------------------------------
 # Save
@@ -117,7 +114,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 joblib.dump(
     preprocessor,
-    ENCODER_DIR / "injury_preprocessor.joblib",
+    ENCODER_DIR / "injury_preprocessor_v2.joblib",
 )
 
 joblib.dump(
@@ -126,8 +123,9 @@ joblib.dump(
         "X_test": X_test,
         "y_train": y_train,
         "y_test": y_test,
+        "split_strategy": "stratified_holdout",
     },
-    ARTIFACTS_DIR / "injury_dataset.joblib",
+    ARTIFACTS_DIR / "injury_dataset_v2.joblib",
 )
 
 print("✅ Injury feature engineering completed.")

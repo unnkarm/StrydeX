@@ -27,7 +27,7 @@ backend/ml/datasets/raw/
 backend/ml/datasets/processed/
 
 # Generated dataset artifacts
-backend/ml/artifacts/*_dataset.joblib
+backend/ml/artifacts/*_dataset*.joblib
 
 # Trained models
 backend/ml/artifacts/models/

@@ -24,7 +24,7 @@ MODELS_DIR.mkdir(parents=True, exist_ok=True)
 # --------------------------------------------------
 
 data = joblib.load(
-    ARTIFACTS_DIR / "readiness_dataset.joblib"
+    ARTIFACTS_DIR / "readiness_dataset_v2.joblib"
 )
 
 X_train = data["X_train"]
@@ -69,7 +69,8 @@ print(f"R²   : {r2:.4f}")
 
 joblib.dump(
     model,
-    MODELS_DIR / "readiness_model.joblib"
+    MODELS_DIR / "readiness_model_v2.joblib"
 )
 
-print("\n✅ Readiness model saved successfully!")
+print("\nCandidate saved as readiness_model_v2.joblib; existing model preserved.")
+print("NOTE: API inference keeps using the existing readiness model until this candidate is validated.")
