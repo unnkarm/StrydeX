@@ -39,6 +39,7 @@ class AthleteProfileIn(BaseModel):
     academy: Optional[str] = None
     region: Optional[str] = None
     bio: Optional[str] = None
+    visibility: str = "public"  # public | scouts_only | private
 
 
 class AthleteProfileOut(AthleteProfileIn):

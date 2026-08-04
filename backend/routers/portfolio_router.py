@@ -17,6 +17,8 @@ def get_portfolio(username: str, db: Session = Depends(get_db)):
     )
     if not profile:
         raise HTTPException(status_code=404, detail="Athlete not found")
+    if profile.visibility == "private":
+        raise HTTPException(status_code=404, detail="Athlete not found")
 
     public_videos = [v for v in profile.videos if v.visibility == "public"]
 

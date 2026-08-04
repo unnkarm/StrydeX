@@ -42,6 +42,7 @@ class AthleteProfile(Base):
     bio = Column(Text, nullable=True)
     verified = Column(Boolean, default=False)
     verified_by = Column(String, nullable=True)
+    visibility = Column(String, default="public")  # public | scouts_only | private
 
     user = relationship("User", back_populates="athlete_profile")
     performance_logs = relationship("PerformanceLog", back_populates="athlete", cascade="all, delete-orphan")
