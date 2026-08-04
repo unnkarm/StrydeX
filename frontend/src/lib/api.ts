@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -95,6 +95,10 @@ export const api = {
     request("/videos/upload", { method: "POST", body: form }),
 
   myVideos: () => request("/videos/me"),
+
+  getVideo: (id: number) => request(`/videos/${id}`),
+
+  videoFileUrl: (id: number) => `${API_BASE}/videos/${id}/file`,
 
   portfolio: (username: string) =>
     request(`/portfolio/${username}`, { auth: false }),
