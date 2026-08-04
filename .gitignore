@@ -4,6 +4,37 @@ venv/
 __pycache__/
 *.pyc
 strydex.db
+
+# Local app storage
 storage/videos/*
 !storage/videos/.gitkeep
+backend/storage/videos/*
+!backend/storage/videos/.gitkeep
+
 .env.local
+backend/.env
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+backend/.env*
+!backend/.env.example
+
+# Uploaded/generated files
+backend/storage/videos/*
+!backend/storage/videos/.gitkeep
+
+# ML training datasets
+backend/ml/datasets/raw/
+backend/ml/datasets/processed/
+
+# Generated dataset artifacts
+backend/ml/artifacts/*_dataset*.joblib
+
+# Trained models
+backend/ml/artifacts/models/
+
+# Generated encoders
+backend/ml/artifacts/encoders/
+

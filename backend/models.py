@@ -1,9 +1,20 @@
 import datetime
 import enum
+
 from sqlalchemy import (
-    Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Text, Enum, JSON
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
 )
 from sqlalchemy.orm import relationship
+
 from database import Base
 
 
@@ -20,9 +31,14 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     role = Column(Enum(Role), default=Role.athlete, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
-    athlete_profile = relationship("AthleteProfile", back_populates="user", uselist=False)
+    athlete_profile = relationship(
+        "AthleteProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
 
 
 class AthleteProfile(Base):
@@ -40,12 +56,25 @@ class AthleteProfile(Base):
     academy = Column(String, nullable=True)
     region = Column(String, nullable=True)
     bio = Column(Text, nullable=True)
-    verified = Column(Boolean, default=False)
+    verified = Column(Boolean, default=False, nullable=False)
     verified_by = Column(String, nullable=True)
 
     user = relationship("User", back_populates="athlete_profile")
-    performance_logs = relationship("PerformanceLog", back_populates="athlete", cascade="all, delete-orphan")
-    videos = relationship("Video", back_populates="athlete", cascade="all, delete-orphan")
+    performance_logs = relationship(
+        "PerformanceLog",
+        back_populates="athlete",
+        cascade="all, delete-orphan",
+    )
+    checkins = relationship(
+        "DailyCheckin",
+        back_populates="athlete",
+        cascade="all, delete-orphan",
+    )
+    videos = relationship(
+        "Video",
+        back_populates="athlete",
+        cascade="all, delete-orphan",
+    )
 
 
 class PerformanceLog(Base):
@@ -53,7 +82,9 @@ class PerformanceLog(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     athlete_id = Column(Integer, ForeignKey("athlete_profiles.id"), nullable=False)
-    date = Column(DateTime, default=datetime.datetime.utcnow)
+    date = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+
+    # Original MVP fields
     duration_min = Column(Float, nullable=True)
     distance_km = Column(Float, nullable=True)
     sprint_time_sec = Column(Float, nullable=True)
@@ -61,7 +92,48 @@ class PerformanceLog(Base):
     weight_lifted_kg = Column(Float, nullable=True)
     notes = Column(Text, nullable=True)
 
+    # Analytics / ML fields
+    sport_type = Column(String, nullable=True)
+    event = Column(String, nullable=True)
+    training_hours_per_week = Column(Float, nullable=True)
+    average_heart_rate = Column(Float, nullable=True)
+    bmi = Column(Float, nullable=True)
+    sleep_hours_per_night = Column(Float, nullable=True)
+    daily_caloric_intake = Column(Float, nullable=True)
+    hydration_level = Column(Float, nullable=True)
+    injury_history = Column(String, nullable=True)
+    previous_competition_performance = Column(Float, nullable=True)
+    training_intensity = Column(String, nullable=True)
+    resting_heart_rate = Column(Float, nullable=True)
+    body_fat_percentage = Column(Float, nullable=True)
+    vo2_max = Column(Float, nullable=True)
+    event_distance = Column(Float, nullable=True)
+    altitude_training = Column(String, nullable=True)
+    mental_focus_level = Column(Float, nullable=True)
+    performance_metric = Column(Float, nullable=True)
+
     athlete = relationship("AthleteProfile", back_populates="performance_logs")
+
+
+class DailyCheckin(Base):
+    __tablename__ = "daily_checkins"
+
+    id = Column(Integer, primary_key=True, index=True)
+    athlete_id = Column(Integer, ForeignKey("athlete_profiles.id"), nullable=False)
+    date = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    total_steps = Column(Integer, nullable=True)
+    calories = Column(Float, nullable=True)
+    very_active_minutes = Column(Integer, nullable=True)
+    fairly_active_minutes = Column(Integer, nullable=True)
+    lightly_active_minutes = Column(Integer, nullable=True)
+    sedentary_minutes = Column(Integer, nullable=True)
+    total_minutes_asleep = Column(Float, nullable=True)
+    total_time_in_bed = Column(Float, nullable=True)
+    avg_heart_rate = Column(Float, nullable=True)
+    readiness_score = Column(Float, nullable=True)
+    recommendation = Column(Text, nullable=True)
+
+    athlete = relationship("AthleteProfile", back_populates="checkins")
 
 
 class Video(Base):
@@ -72,43 +144,38 @@ class Video(Base):
     title = Column(String, nullable=False)
     tags = Column(String, nullable=True)
     filepath = Column(String, nullable=False)
-    uploaded_at = Column(DateTime, default=datetime.datetime.utcnow)
-    visibility = Column(String, default="public")  # public | private
+    uploaded_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    visibility = Column(String, default="public", nullable=False)
     coach_comment = Column(Text, nullable=True)
 
-    # Capture context (chosen by the athlete before analysis)
     sport = Column(String, nullable=True)
     movement = Column(String, nullable=True)
     camera_angle = Column(String, nullable=True)
 
-    # CV-derived metrics (optical flow — general activity/explosiveness proxy)
     duration_sec = Column(Float, nullable=True)
     fps = Column(Float, nullable=True)
     frame_count = Column(Integer, nullable=True)
     motion_score = Column(Float, nullable=True)
     est_max_speed_score = Column(Float, nullable=True)
-
-    # CV-derived metrics (MediaPipe Pose — sprint-specific biomechanics)
     avg_knee_angle_deg = Column(Float, nullable=True)
     avg_trunk_lean_deg = Column(Float, nullable=True)
     estimated_cadence_spm = Column(Float, nullable=True)
     pose_summary = Column(Text, nullable=True)
 
-    # AI Movement Score (0-100 sub-scores derived from pose biomechanics)
     score_technique = Column(Float, nullable=True)
     score_stability = Column(Float, nullable=True)
     score_symmetry = Column(Float, nullable=True)
     score_efficiency = Column(Float, nullable=True)
     score_overall = Column(Float, nullable=True)
-
-    # Movement timeline phases: [{"name": "Start", "t": 0.0}, ...]
     phases = Column(JSON, nullable=True)
-
-    # Per-frame skeleton + joint-angle time series, sampled across the clip:
-    # [{"t": 1.2, "lm": {"left_knee": [0.41, 0.62], ...}, "ang": {"left_knee": 142.0, ...}}, ...]
     frame_series = Column(JSON, nullable=True)
 
-    ai_report = relationship("AIReport", back_populates="video", uselist=False, cascade="all, delete-orphan")
+    ai_report = relationship(
+        "AIReport",
+        back_populates="video",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
     athlete = relationship("AthleteProfile", back_populates="videos")
 
 
@@ -121,6 +188,7 @@ class AIReport(Base):
     strengths = Column(Text, nullable=True)
     weaknesses = Column(Text, nullable=True)
     drills = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     video = relationship("Video", back_populates="ai_report")
+

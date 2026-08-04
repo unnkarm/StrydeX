@@ -1,3 +1,4 @@
+
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
 export function getToken(): string | null {
@@ -38,7 +39,7 @@ async function request(
       const body = await res.json();
       detail = body.detail || detail;
     } catch {
-      // ignore
+      // ignore non-JSON error bodies
     }
     throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
   }
@@ -61,6 +62,22 @@ export const api = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
+      auth: false,
+    }),
+
+  forgotPassword: (email: string) =>
+    request("/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+      auth: false,
+    }),
+
+  resetPassword: (token: string, newPassword: string) =>
+    request("/auth/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, new_password: newPassword }),
       auth: false,
     }),
 
@@ -91,8 +108,7 @@ export const api = {
 
   myPerformanceLogs: () => request("/performance/me"),
 
-  uploadVideo: (form: FormData) =>
-    request("/videos/upload", { method: "POST", body: form }),
+  uploadVideo: (form: FormData) => request("/videos/upload", { method: "POST", body: form }),
 
   myVideos: () => request("/videos/me"),
 
@@ -101,13 +117,31 @@ export const api = {
   videoFileUrl: (id: number) => `${API_BASE}/videos/${id}/file`,
 
   portfolio: (username: string) =>
-    request(`/portfolio/${username}`, { auth: false }),
+    request(`/portfolio/${encodeURIComponent(username)}`, { auth: false }),
 
   scoutSearch: (params: Record<string, string | boolean | undefined>) => {
     const qs = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-      if (v !== undefined && v !== "") qs.set(k, String(v));
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== "") qs.set(key, String(value));
     });
     return request(`/scout/search?${qs.toString()}`, { auth: false });
   },
+
+  trends: () => request("/analytics/trends"),
+  records: () => request("/analytics/records"),
+  prediction: (metric: string = "performance_metric") =>
+    request(`/analytics/prediction?metric=${encodeURIComponent(metric)}`),
+  injuryRisk: () => request("/analytics/injury-risk"),
+
+  submitCheckin: (data: Record<string, unknown>) =>
+    request("/analytics/checkin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }),
+
+  readiness: () => request("/analytics/readiness"),
+  readinessHistory: () => request("/analytics/checkins"),
+  intelligenceSummary: () => request("/analytics/summary"),
 };
+

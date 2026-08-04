@@ -1,35 +1,27 @@
 """
 Computer vision analysis for uploaded training/match videos.
 
-Three signals, computed in a single pass over the video:
+This pipeline blends the original MVP motion-analysis fallback with a richer
+MediaPipe Pose pass and time-series output used by the analytics dashboard.
 
-1. Optical-flow motion score (general activity/explosiveness proxy) — works
-   on any clip regardless of sport or camera angle, kept from the original
-   MVP skeleton as a fallback signal.
-
+1. Optical-flow motion score (general activity/explosiveness proxy) — works on
+   any clip regardless of sport or camera angle.
 2. MediaPipe Pose biomechanics (sprint-specific) — bilateral knee/hip/ankle/
-   shoulder/elbow angles and trunk lean, extracted from actual body
-   landmarks. Populated only when a person is clearly detected in frame;
-   the bilateral fields are None otherwise and the motion score still
-   applies.
-
-3. A per-frame skeleton + joint-angle time series (`frame_series`), plus a
-   coarse movement-phase segmentation (`phases`) and a set of 0-100 "AI
-   Movement Score" sub-scores derived from the biomechanics above. These
-   power the pose-overlay video, movement timeline, and joint-angle graphs
-   in the analysis dashboard.
+   shoulder/elbow angles and trunk lean, extracted from actual body landmarks.
+3. A per-frame skeleton + joint-angle time series (`frame_series`), plus coarse
+   movement-phase segmentation (`phases`) and 0-100 AI Movement Score sub-scores.
 
 Both signals feed into `ai_feedback.generate_feedback()`, which prefers the
 pose-based summary when available and falls back to the motion-only read.
 """
+
 import cv2
-import numpy as np
 import mediapipe as mp
+import numpy as np
 
 mp_pose = mp.solutions.pose
 L = mp_pose.PoseLandmark
 
-# Landmarks kept per sampled frame for skeleton drawing + angle math.
 SKELETON_LANDMARKS = {
     "nose": L.NOSE,
     "left_shoulder": L.LEFT_SHOULDER,
@@ -48,9 +40,6 @@ SKELETON_LANDMARKS = {
     "right_foot_index": L.RIGHT_FOOT_INDEX,
 }
 
-# Reference ranges used by the joint-angle cards in the UI. These are
-# generic sprint-mechanics reference bands for demo/coaching purposes, not
-# a substitute for individualized biomechanical assessment.
 OPTIMAL_RANGES = {
     "knee": (135.0, 150.0),
     "hip": (115.0, 130.0),
@@ -73,6 +62,7 @@ def _xy(pts: dict, name: str) -> np.ndarray:
 
 def _side_angles(pts: dict, side: str) -> dict:
     """Knee/hip/ankle/elbow/shoulder angles for one side ('left'/'right')."""
+
     def has(*names):
         return all(f"{side}_{n}" in pts for n in names)
 
@@ -126,7 +116,7 @@ def _estimate_cadence(ankle_y_series: list, fps: float) -> float | None:
     duration_s = len(y_smooth) / fps
     if duration_s <= 0:
         return None
-    return round((peaks / duration_s) * 60, 1)  # strides per minute
+    return round((peaks / duration_s) * 60, 1)
 
 
 def _clamp(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
@@ -135,13 +125,22 @@ def _clamp(v: float, lo: float = 0.0, hi: float = 100.0) -> float:
 
 def _empty_result() -> dict:
     return {
-        "duration_sec": None, "fps": None, "frame_count": None,
-        "motion_score": None, "est_max_speed_score": None,
-        "avg_knee_angle_deg": None, "avg_trunk_lean_deg": None,
-        "estimated_cadence_spm": None, "pose_summary": None,
-        "score_technique": None, "score_stability": None,
-        "score_symmetry": None, "score_efficiency": None, "score_overall": None,
-        "phases": None, "frame_series": None,
+        "duration_sec": None,
+        "fps": None,
+        "frame_count": None,
+        "motion_score": None,
+        "est_max_speed_score": None,
+        "avg_knee_angle_deg": None,
+        "avg_trunk_lean_deg": None,
+        "estimated_cadence_spm": None,
+        "pose_summary": None,
+        "score_technique": None,
+        "score_stability": None,
+        "score_symmetry": None,
+        "score_efficiency": None,
+        "score_overall": None,
+        "phases": None,
+        "frame_series": None,
     }
 
 
@@ -155,12 +154,11 @@ def analyze_video(filepath: str) -> dict:
     duration_sec = (frame_count / fps) if fps else None
 
     prev_gray = None
-    motion_series = []  # (t, magnitude)
-    knee_angles = []  # combined L+R, for legacy summary text
+    motion_series = []
+    knee_angles = []
     trunk_angles = []
     ankle_y_series = []
-    frame_series = []  # per-sample skeleton + angles, for the dashboard
-
+    frame_series = []
     sample_every = max(1, frame_count // 90) if frame_count else 1
 
     with mp_pose.Pose(
@@ -178,7 +176,6 @@ def analyze_video(filepath: str) -> dict:
             if idx % sample_every == 0:
                 t = round(idx / fps, 3) if fps else float(idx)
 
-                # --- optical flow (motion score) ---
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 gray_small = cv2.resize(gray, (320, 180))
                 if prev_gray is not None:
@@ -189,7 +186,6 @@ def analyze_video(filepath: str) -> dict:
                     motion_series.append((t, float(np.mean(mag))))
                 prev_gray = gray_small
 
-                # --- MediaPipe pose (bilateral biomechanics + skeleton) ---
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 result = pose.process(rgb)
                 if result.pose_landmarks:
@@ -218,13 +214,12 @@ def analyze_video(filepath: str) -> dict:
                         ankle_y_series.append(pts["right_ankle"][1])
 
                     if pts:
-                        frame_series.append({
-                            "t": t,
-                            "lm": pts,
-                            "ang": {k: round(v, 1) for k, v in ang.items()},
-                        })
+                        frame_series.append(
+                            {"t": t, "lm": pts, "ang": {k: round(v, 1) for k, v in ang.items()}}
+                        )
 
             idx += 1
+
     cap.release()
 
     motion_magnitudes = [m for _, m in motion_series]
@@ -242,19 +237,18 @@ def analyze_video(filepath: str) -> dict:
     if avg_knee is not None:
         lines = []
         if avg_knee < 150:
-            lines.append(f"Average knee flexion is {avg_knee}\u00b0, on the tighter side for sprint mechanics.")
+            lines.append(f"Average knee flexion is {avg_knee}°, on the tighter side for sprint mechanics.")
         else:
-            lines.append(f"Average knee flexion is {avg_knee}\u00b0, within a healthy sprint range.")
+            lines.append(f"Average knee flexion is {avg_knee}°, within a healthy sprint range.")
         if avg_trunk is not None:
             if avg_trunk > 15:
-                lines.append(f"Trunk lean averages {avg_trunk}\u00b0 from vertical, more forward lean than ideal.")
+                lines.append(f"Trunk lean averages {avg_trunk}° from vertical, more forward lean than ideal.")
             else:
-                lines.append(f"Trunk stays close to upright ({avg_trunk}\u00b0 lean).")
+                lines.append(f"Trunk stays close to upright ({avg_trunk}° lean).")
         if cadence is not None:
             lines.append(f"Estimated stride cadence is ~{cadence} strides/min.")
         pose_summary = " ".join(lines)
 
-    # --- Movement timeline phases -------------------------------------
     phases = None
     if duration_sec:
         if motion_series:
@@ -270,7 +264,6 @@ def analyze_video(filepath: str) -> dict:
             {"name": "Finish", "t": round(duration_sec, 2)},
         ]
 
-    # --- AI Movement Score sub-scores (0-100) --------------------------
     score_technique = score_stability = score_symmetry = score_efficiency = None
     score_overall = None
     if avg_knee is not None:
