@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import type { ScoutResult } from "@/lib/types";
+import { getShortlist, toggleShortlist } from "@/lib/shortlist";
 
 export default function ScoutPage() {
   const [filters, setFilters] = useState({
@@ -16,6 +17,15 @@ export default function ScoutPage() {
   });
   const [results, setResults] = useState<ScoutResult[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [shortlist, setShortlist] = useState<string[]>([]);
+
+  useEffect(() => {
+    setShortlist(getShortlist());
+  }, []);
+
+  function handleToggleShortlist(username: string) {
+    setShortlist(toggleShortlist(username));
+  }
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -90,19 +100,32 @@ export default function ScoutPage() {
         {results === null && <p className="text-sm text-muted">Run a search to see athletes.</p>}
         {results?.length === 0 && <p className="text-sm text-muted">No athletes match those filters.</p>}
         {results?.map((r) => (
-          <Link
+          <div
             key={r.username}
-            href={`/u/${r.username}`}
-            className="flex items-center justify-between rounded-lg border border-border bg-surface p-4 hover:border-accent transition-colors"
+            className="flex items-center justify-between rounded-lg border border-border bg-surface p-4 transition-colors hover:border-accent"
           >
-            <div>
+            <Link href={`/u/${r.username}`} className="min-w-0 flex-1">
               <div className="font-medium">{r.name}</div>
               <div className="text-sm text-muted">
                 {r.sport || "—"} &middot; {r.position || "—"} &middot; Age {r.age ?? "—"} &middot; {r.region || "—"}
               </div>
+            </Link>
+            <div className="flex items-center gap-3">
+              {r.verified && <div className="text-sm text-accent">✔ Verified</div>}
+              <Link href={`/u/${r.username}`} className="rounded-full border border-border px-3 py-1 text-xs hover:border-accent">
+                View
+              </Link>
+              <button
+                onClick={() => handleToggleShortlist(r.username)}
+                aria-label="Save to shortlist"
+                className={`text-lg leading-none ${
+                  shortlist.includes(r.username) ? "text-clay" : "text-muted hover:text-clay"
+                }`}
+              >
+                {shortlist.includes(r.username) ? "♥" : "♡"}
+              </button>
             </div>
-            {r.verified && <div className="text-sm text-accent">✔ Verified</div>}
-          </Link>
+          </div>
         ))}
       </div>
     </div>

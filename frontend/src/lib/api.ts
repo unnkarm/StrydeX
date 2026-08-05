@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -24,7 +25,7 @@ async function request(
 
   if (auth) {
     const token = getToken();
-    if (token) finalHeaders.Authorization = `Bearer ${token}`;
+    if (token) finalHeaders["Authorization"] = `Bearer ${token}`;
   }
 
   const res = await fetch(`${API_BASE}${path}`, {
@@ -38,7 +39,7 @@ async function request(
       const body = await res.json();
       detail = body.detail || detail;
     } catch {
-      // Ignore non-JSON error bodies.
+      // ignore non-JSON error bodies
     }
     throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
   }
@@ -56,19 +57,13 @@ export const api = {
       auth: false,
     }),
 
-  login: (email: string, password: string) => {
-    const body = new URLSearchParams();
-    body.set("grant_type", "password");
-    body.set("username", email);
-    body.set("password", password);
-
-    return request("/auth/login", {
+  login: (email: string, password: string) =>
+    request("/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
       auth: false,
-    });
-  },
+    }),
 
   forgotPassword: (email: string) =>
     request("/auth/forgot-password", {
@@ -113,10 +108,13 @@ export const api = {
 
   myPerformanceLogs: () => request("/performance/me"),
 
-  uploadVideo: (form: FormData) =>
-    request("/videos/upload", { method: "POST", body: form }),
+  uploadVideo: (form: FormData) => request("/videos/upload", { method: "POST", body: form }),
 
   myVideos: () => request("/videos/me"),
+
+  getVideo: (id: number) => request(`/videos/${id}`),
+
+  videoFileUrl: (id: number) => `${API_BASE}/videos/${id}/file`,
 
   portfolio: (username: string) =>
     request(`/portfolio/${encodeURIComponent(username)}`, { auth: false }),
@@ -146,3 +144,4 @@ export const api = {
   readinessHistory: () => request("/analytics/checkins"),
   intelligenceSummary: () => request("/analytics/summary"),
 };
+

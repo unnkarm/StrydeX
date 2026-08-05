@@ -6,8 +6,11 @@ __pycache__/
 *.pyc
 strydex.db
 
+# Local app storage
 storage/videos/*
 !storage/videos/.gitkeep
+backend/storage/videos/*
+!backend/storage/videos/.gitkeep
 
 .env.local
 backend/.env
@@ -42,3 +45,4 @@ backend/ml/artifacts/models/*
 
 # Generated encoders
 backend/ml/artifacts/encoders/
+

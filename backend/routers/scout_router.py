@@ -19,7 +19,7 @@ def search_athletes(
     verified_only: bool = False,
     db: Session = Depends(get_db),
 ):
-    q = db.query(models.AthleteProfile)
+    q = db.query(models.AthleteProfile).filter(models.AthleteProfile.visibility != "private")
     if sport:
         q = q.filter(models.AthleteProfile.sport.ilike(f"%{sport}%"))
     if position:

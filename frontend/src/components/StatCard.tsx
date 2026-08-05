@@ -14,26 +14,24 @@ export default function StatCard({
   return (
     <div
       className={`rounded-lg border border-border bg-surface ${
-        compact ? "min-w-0 px-4 py-3.5" : "px-5 py-4"
+        compact ? "min-w-0 px-4 py-3.5" : "p-4"
       }`}
     >
-      <div
+      <p
         className={`uppercase text-muted ${
-          compact
-            ? "min-h-8 text-[10px] leading-4 tracking-[0.14em]"
-            : "text-xs tracking-widest"
+          compact ? "min-h-8 text-[10px] leading-4 tracking-[0.14em]" : "text-xs tracking-wide"
         }`}
       >
         {label}
-      </div>
+      </p>
       <div
-        className={`stat-value font-medium ${compact ? "mt-1 text-2xl leading-none" : "mt-1 text-3xl"} ${
+        className={`stat-value mt-1 font-semibold ${compact ? "text-2xl leading-none" : "text-2xl"} ${
           accent ? "text-accent" : "text-foreground"
         }`}
       >
         {value}
         {unit && (
-          <span className={`ml-1 text-muted ${compact ? "text-xs" : "text-base"}`}>
+          <span className={`ml-0.5 text-muted ${compact ? "text-xs" : "text-sm"}`}>
             {unit}
           </span>
         )}

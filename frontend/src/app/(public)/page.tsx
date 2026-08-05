@@ -66,7 +66,7 @@ export default function Home() {
 
       <div className="lane-rule" />
 
-      <section className="grid gap-8 py-16 md:grid-cols-3">
+      <section id="how-it-works" className="grid gap-8 py-16 md:grid-cols-3">
         {[
           {
             step: "Track",
@@ -86,6 +86,35 @@ export default function Home() {
             <p className="mt-2 text-foreground">{item.copy}</p>
           </div>
         ))}
+      </section>
+
+      <div className="lane-rule" />
+
+      <section id="for-athletes" className="py-16">
+        <h2 className="display-heading text-sm text-muted">Athlete Features</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-4">
+          {[
+            { label: "Performance", copy: "Sprint, jump, and session trends over time." },
+            { label: "Video AI", copy: "Pose estimation and joint-angle breakdowns." },
+            { label: "Portfolio", copy: "One shareable, coach-verified profile." },
+            { label: "Progress", copy: "See what's improving, session to session." },
+          ].map((f) => (
+            <div key={f.label} className="rounded-lg border border-border bg-surface p-4">
+              <div className="display-heading text-sm text-accent">{f.label}</div>
+              <p className="mt-2 text-sm text-muted">{f.copy}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface-2 p-8">
+          <p className="display-heading text-xl">Built for athletes. Designed for discovery.</p>
+          <Link
+            href="/signup"
+            className="rounded-full bg-accent px-6 py-3 font-medium text-accent-ink hover:opacity-90 transition-opacity"
+          >
+            Get Started →
+          </Link>
+        </div>
       </section>
     </div>
   );
