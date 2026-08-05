@@ -19,6 +19,7 @@ export interface AthleteProfile {
   bio?: string | null;
   verified: boolean;
   verified_by?: string | null;
+  visibility?: string;
 }
 
 export interface PerformanceLog {
