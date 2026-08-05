@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 import models
 import schemas
 from ai_feedback import generate_feedback
-from auth import get_current_user
+from auth import get_current_user, get_current_user_optional
 from cv_analysis import analyze_video
 from database import get_db
 
@@ -90,7 +90,11 @@ def _get_owned_or_public_video(video_id: int, db: Session, user: Optional[models
 
 
 @router.get("/{video_id}", response_model=schemas.VideoDetailOut)
-def get_video(video_id: int, db: Session = Depends(get_db), user: models.User = Depends(get_current_user)):
+def get_video(
+    video_id: int,
+    db: Session = Depends(get_db),
+    user: Optional[models.User] = Depends(get_current_user_optional),
+):
     return _get_owned_or_public_video(video_id, db, user)
 
 
