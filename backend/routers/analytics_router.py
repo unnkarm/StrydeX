@@ -45,13 +45,16 @@ def get_records(db: Session = Depends(get_db), user: models.User = Depends(get_c
 # ---------- 3. Performance predictions ----------
 @router.get("/prediction", response_model=schemas.PredictionOut)
 def get_prediction(
-    metric: str = Query("sprint_time_sec", description="sprint_time_sec | vertical_jump_cm | weight_lifted_kg"),
+    metric: str = Query("performance_metric", description="performance_metric"),
     db: Session = Depends(get_db),
     user: models.User = Depends(get_current_user),
 ):
     profile = _require_profile(user)
     logs = _logs_for(db, profile.id)
-    return analytics.predict_metric(logs, metric)
+    try:
+        return analytics.predict_metric(logs, metric)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 # ---------- 4. Injury risk ----------
@@ -135,7 +138,7 @@ def get_summary(db: Session = Depends(get_db), user: models.User = Depends(get_c
 
     trends = analytics.compute_trends(logs)
     records = analytics.compute_personal_records(logs)
-    prediction = analytics.predict_metric(logs, "sprint_time_sec")
+    prediction = analytics.predict_metric(logs, "performance_metric")
 
     latest_checkin = (
         db.query(models.DailyCheckin)
@@ -152,7 +155,7 @@ def get_summary(db: Session = Depends(get_db), user: models.User = Depends(get_c
     injury = analytics.compute_injury_risk(logs, latest_checkin, latest_video)
 
     sprint_pb_entry = next(
-        (r for r in reversed(records) if r["metric"] == "sprint_time_sec" and r["is_current_best"]), None
+        (r for r in reversed(records) if r["metric"] == "performance_metric" and r["is_current_best"]), None
     )
     new_pb_days_ago = None
     if sprint_pb_entry:

@@ -468,9 +468,9 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="mb-1 text-sm font-medium text-foreground">ML performance prediction</h2>
-            <p className="mb-4 text-xs text-muted">Random Forest prediction from your latest session inputs</p>
-            <div className="grid grid-cols-3 gap-3 text-center">
+            <h2 className="mb-1 text-sm font-medium text-foreground">Performance-score forecast</h2>
+            <p className="mb-4 text-xs text-muted">Longitudinal projection from your dated session-score history</p>
+            <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
               <div>
                 <div className="stat-value text-xl text-foreground">
                   {prediction?.current != null ? `${prediction.current}/100` : "—"}
@@ -481,11 +481,19 @@ export default function AnalyticsPage() {
                 <div className="stat-value text-xl text-accent">
                   {prediction?.predicted_30d != null ? `${prediction.predicted_30d}/100` : "—"}
                 </div>
-                <div className="mt-1 text-[11px] text-muted">Predicted</div>
+                <div className="mt-1 text-[11px] text-muted">In 30 days</div>
               </div>
               <div>
-                <div className="stat-value text-xl text-foreground">0–100</div>
-                <div className="mt-1 text-[11px] text-muted">Scale</div>
+                <div className="stat-value text-xl text-accent">
+                  {prediction?.predicted_90d != null ? `${prediction.predicted_90d}/100` : "—"}
+                </div>
+                <div className="mt-1 text-[11px] text-muted">In 90 days</div>
+              </div>
+              <div>
+                <div className="stat-value text-xl text-foreground">
+                  {prediction?.confidence_pct != null ? `${prediction.confidence_pct}%` : "—"}
+                </div>
+                <div className="mt-1 text-[11px] text-muted">Trend fit</div>
               </div>
             </div>
             {prediction?.note && <p className="mt-4 text-xs text-muted">{prediction.note}</p>}

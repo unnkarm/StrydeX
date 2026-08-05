@@ -36,6 +36,41 @@ def add_log(
     profile = _require_profile(user)
 
     input_data = payload.model_dump()
+    if analytics.is_crossfit_sport(input_data["sport_type"]):
+        try:
+            predicted_performance = analytics.predict_crossfit_score(
+                profile, input_data
+            )
+        except Exception as exc:
+            raise HTTPException(
+                status_code=500,
+                detail=f"CrossFit performance prediction failed: {exc}",
+            ) from exc
+    else:
+        predicted_performance = _predict_generic_performance(input_data)
+
+    log = models.PerformanceLog(
+        athlete_id=profile.id,
+        **input_data,
+        performance_metric=predicted_performance,
+    )
+
+    db.add(log)
+
+    try:
+        db.commit()
+        db.refresh(log)
+
+    except Exception:
+        db.rollback()
+        raise
+
+    return log
+
+
+def _predict_generic_performance(input_data: dict) -> float:
+    """Keep the existing model for sports not represented by the new data."""
+
     model_sport, model_event = analytics.performance_model_categories(
         input_data["sport_type"],
         input_data["event"],
@@ -100,23 +135,7 @@ def add_log(
         2,
     )
 
-    log = models.PerformanceLog(
-        athlete_id=profile.id,
-        **input_data,
-        performance_metric=predicted_performance,
-    )
-
-    db.add(log)
-
-    try:
-        db.commit()
-        db.refresh(log)
-
-    except Exception:
-        db.rollback()
-        raise
-
-    return log
+    return predicted_performance
 
 
 @router.get(

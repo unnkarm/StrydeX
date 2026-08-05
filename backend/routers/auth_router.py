@@ -74,16 +74,11 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
-    print("USERNAME:", form_data.username)
-    print("PASSWORD:", form_data.password)
-
     user = (
         db.query(models.User)
         .filter(models.User.email == form_data.username)
         .first()
     )
-
-    print("USER FOUND:", user)
 
     if not user or not verify_password(
         form_data.password,

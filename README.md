@@ -52,6 +52,23 @@ endpoints was exercised end-to-end with a `TestClient` run against a real
 SQLite database (10 sessions over 90 days, a checkin, then all 6 endpoints)
 before being wired into the frontend.
 
+## Dataset-backed CrossFit scoring
+
+The supplied `athletes.csv.zip` can now train a dedicated CrossFit performance
+model with:
+
+```bash
+backend/venv/bin/python backend/ml/src/train_crossfit_performance_model.py \
+  /path/to/athletes.csv.zip
+backend/venv/bin/python backend/ml/src/evaluate.py --json
+```
+
+The trainer never loads names, athlete IDs, teams, or affiliates. It rejects
+sentinel/out-of-range results, requires at least four objective benchmarks,
+fits percentile anchors on training athletes only, and keeps an untouched 20%
+holdout. The API routes CrossFit logs to this model and leaves unsupported
+sports on the existing generic model.
+
 ## Setup
 
 Same as the original skeleton — see `backend/` and `frontend/` for their own

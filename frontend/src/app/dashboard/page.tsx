@@ -118,8 +118,10 @@ export default function DashboardPage() {
     setLogError(null);
 
     try {
-      const numeric = (key: keyof PerformanceForm) =>
-        naFields.has(key) ? null : Number(logForm[key]);
+      const numeric = (key: keyof PerformanceForm) => {
+        const value = logForm[key].trim();
+        return naFields.has(key) || value === "" ? null : Number(value);
+      };
 
       await api.addPerformanceLog({
         sport_type: logForm.sport_type === "Other" ? customSport.trim() : logForm.sport_type,

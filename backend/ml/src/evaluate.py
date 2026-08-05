@@ -53,6 +53,23 @@ def _regression_metrics(model, dataset: dict) -> dict:
     }
 
 
+def _crossfit_metrics(model, dataset: dict) -> dict:
+    y_test = np.asarray(dataset["y_test"], dtype=float)
+    predictions = np.clip(model.predict(dataset["X_test"]), 0.0, 100.0)
+    baseline = np.full(y_test.shape, float(dataset["y_train_mean"]))
+    mae = mean_absolute_error(y_test, predictions)
+    baseline_mae = mean_absolute_error(y_test, baseline)
+    return {
+        "samples": int(y_test.size),
+        "mae": float(mae),
+        "rmse": float(mean_squared_error(y_test, predictions) ** 0.5),
+        "r2": float(r2_score(y_test, predictions)),
+        "baseline_mae": float(baseline_mae),
+        "within_10_points": float(np.mean(np.abs(y_test - predictions) <= 10)),
+        "beats_baseline": bool(mae < baseline_mae),
+    }
+
+
 def _injury_metrics(model, dataset: dict, threshold: float = 0.5) -> dict:
     y_test = np.asarray(dataset["y_test"], dtype=int)
     probabilities = model.predict_proba(dataset["X_test"])[:, 1]
@@ -99,6 +116,13 @@ def _readiness_formula_metrics(dataset: dict) -> dict:
 def evaluate() -> dict:
     results = {}
 
+    crossfit_dataset = ARTIFACTS_DIR / "crossfit_performance_holdout.joblib"
+    crossfit_model = MODELS_DIR / "crossfit_performance_model.joblib"
+    if crossfit_dataset.exists() and crossfit_model.exists():
+        results["crossfit_performance"] = _crossfit_metrics(
+            joblib.load(crossfit_model), joblib.load(crossfit_dataset)
+        )
+
     for suffix in ("", "_v2"):
         dataset_path = ARTIFACTS_DIR / f"injury_dataset{suffix}.joblib"
         model_path = MODELS_DIR / f"injury_model{suffix}.joblib"
@@ -127,17 +151,30 @@ def evaluate() -> dict:
     return results
 
 
-def _passes_quality_gates(results: dict) -> bool:
+def _quality_gates(results: dict) -> dict[str, bool]:
     injury = results.get("injury_v2", results.get("injury_deployed", {}))
     performance = results.get("performance_v2", results.get("performance_deployed", {}))
     formula = results["readiness_formula"]
-    return bool(
-        injury.get("recall", 0) >= 0.70
-        and injury.get("balanced_accuracy", 0) >= 0.70
-        and performance.get("r2", -1) > 0
-        and performance.get("beats_baseline", False)
-        and formula.get("mae", 1) < 1e-9
-    )
+    crossfit = results.get("crossfit_performance", {})
+    return {
+        "injury": bool(
+            injury.get("recall", 0) >= 0.70
+            and injury.get("balanced_accuracy", 0) >= 0.70
+        ),
+        "generic_performance": bool(
+            performance.get("r2", -1) > 0
+            and performance.get("beats_baseline", False)
+        ),
+        "crossfit_performance": bool(
+            crossfit.get("r2", -1) >= 0.35
+            and crossfit.get("beats_baseline", False)
+        ),
+        "readiness_formula": bool(formula.get("mae", 1) < 1e-9),
+    }
+
+
+def _passes_quality_gates(results: dict) -> bool:
+    return all(_quality_gates(results).values())
 
 
 def main() -> int:
@@ -146,8 +183,13 @@ def main() -> int:
     parser.add_argument("--strict", action="store_true", help="exit nonzero when quality gates fail")
     args = parser.parse_args()
     results = evaluate()
-    passed = _passes_quality_gates(results)
-    payload = {"quality_gates_passed": passed, "results": results}
+    gates = _quality_gates(results)
+    passed = all(gates.values())
+    payload = {
+        "quality_gates_passed": passed,
+        "quality_gates": gates,
+        "results": results,
+    }
     print(json.dumps(payload, indent=2))
     return int(args.strict and not passed)
 

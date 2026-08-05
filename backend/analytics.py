@@ -26,6 +26,7 @@ ENCODERS_DIR = ARTIFACTS_DIR / "encoders"
 performance_model = None
 injury_model = None
 readiness_model = None
+crossfit_performance_model = None
 
 performance_preprocessor = None
 injury_preprocessor = None
@@ -56,6 +57,13 @@ try:
 except Exception:
     logger.exception("Failed to load one or more ML artifacts.")
 
+try:
+    crossfit_performance_model = joblib.load(
+        MODELS_DIR / "crossfit_performance_model.joblib"
+    )
+except Exception:
+    logger.exception("Failed to load the CrossFit performance model.")
+
 
 def validate_models() -> None:
     """Raise a clear startup error when an artifact is unavailable."""
@@ -70,6 +78,9 @@ def validate_models() -> None:
 
     if readiness_model is None:
         missing.append("readiness_model.joblib")
+
+    if crossfit_performance_model is None:
+        missing.append("crossfit_performance_model.joblib")
 
     if performance_preprocessor is None:
         missing.append("performance_preprocessor.joblib")
@@ -146,6 +157,44 @@ def performance_model_categories(sport, event) -> tuple[str, str]:
             model_event = "Unknown"
 
     return model_sport, model_event
+
+
+def is_crossfit_sport(sport) -> bool:
+    return _safe_string(sport).strip().lower() in {"crossfit", "cross fit"}
+
+
+def build_crossfit_performance_dataframe(profile, payload: dict) -> pd.DataFrame:
+    """Build the privacy-safe features used by the CrossFit model."""
+
+    height_cm = getattr(profile, "height_cm", None)
+    weight_kg = getattr(profile, "weight_kg", None)
+    supplied_bmi = payload.get("bmi")
+    if supplied_bmi is None and height_cm and weight_kg:
+        supplied_bmi = float(weight_kg) / (float(height_cm) / 100.0) ** 2
+
+    return pd.DataFrame(
+        [
+            {
+                "age": getattr(profile, "age", None),
+                "height_cm": height_cm,
+                "weight_kg": weight_kg,
+                "bmi": supplied_bmi,
+                "region": getattr(profile, "region", None),
+                "training_hours_per_week": payload.get("training_hours_per_week"),
+                "training_intensity": _safe_string(
+                    payload.get("training_intensity"), default="Medium"
+                ),
+            }
+        ]
+    )
+
+
+def predict_crossfit_score(profile, payload: dict) -> float:
+    if crossfit_performance_model is None:
+        raise RuntimeError("CrossFit performance model is unavailable.")
+    model_input = build_crossfit_performance_dataframe(profile, payload)
+    prediction = float(crossfit_performance_model.predict(model_input)[0])
+    return round(max(0.0, min(100.0, prediction)), 2)
 
 
 def injury_model_position(sport, position) -> str:
@@ -698,22 +747,100 @@ def predict_performance(latest_log) -> dict:
     }
 
 
+def forecast_performance(logs: list) -> dict:
+    """Forecast the stored session score from the athlete's dated history.
+
+    The random-forest model estimates a score for an individual session.  It
+    has no time or horizon features, so using it again for a future date would
+    only reproduce the current score.  Future estimates instead come from the
+    athlete's own score trend and are withheld until there is enough history.
+    """
+
+    series = _series(logs, "performance_metric")
+    current = series[-1][1] if series else None
+    unavailable = {
+        "current": current,
+        "predicted_30d": None,
+        "predicted_90d": None,
+        "confidence_pct": None,
+    }
+
+    if not series:
+        return {
+            **unavailable,
+            "note": "No scored performance sessions are available yet.",
+        }
+
+    distinct_days = {date.date() for date, _ in series}
+    span_days = (series[-1][0] - series[0][0]).total_seconds() / 86400
+    if len(series) < 4 or len(distinct_days) < 3 or span_days < 7:
+        return {
+            **unavailable,
+            "note": (
+                "A forecast needs at least 4 scored sessions across 3 days "
+                "and a history spanning 7 days."
+            ),
+        }
+
+    start = series[0][0]
+    x_values = [
+        (date - start).total_seconds() / 86400
+        for date, _ in series
+    ]
+    y_values = [value for _, value in series]
+    x_mean = statistics.mean(x_values)
+    y_mean = statistics.mean(y_values)
+    denominator = sum((x - x_mean) ** 2 for x in x_values)
+
+    if denominator == 0:
+        return {
+            **unavailable,
+            "note": "Sessions need to be logged on different dates to forecast a trend.",
+        }
+
+    slope = sum(
+        (x - x_mean) * (y - y_mean)
+        for x, y in zip(x_values, y_values)
+    ) / denominator
+    intercept = y_mean - slope * x_mean
+    fitted = [intercept + slope * x for x in x_values]
+    residual_sum = sum(
+        (actual - estimate) ** 2
+        for actual, estimate in zip(y_values, fitted)
+    )
+    total_sum = sum((value - y_mean) ** 2 for value in y_values)
+    r_squared = max(0.0, 1.0 - (residual_sum / total_sum)) if total_sum else 0.0
+    latest_day = x_values[-1]
+
+    def projected(days: int) -> float:
+        return round(max(0.0, min(100.0, intercept + slope * (latest_day + days))), 2)
+
+    return {
+        "current": round(current, 2),
+        "predicted_30d": projected(30),
+        "predicted_90d": projected(90),
+        "confidence_pct": round(r_squared * 100, 1),
+        "note": (
+            f"Trend forecast from {len(series)} dated session scores. "
+            "Confidence describes historical trend fit, not certainty."
+        ),
+    }
+
+
 def predict_metric(
     logs: list,
     metric: str = "performance_metric",
 ) -> dict:
-    """
-    Compatibility wrapper used by analytics_router.py.
-    """
+    """Return a longitudinal forecast for the supported score metric."""
 
-    latest = _latest_log(logs)
-    prediction = predict_performance(latest)
+    if metric != "performance_metric":
+        raise ValueError(f"Unsupported prediction metric: {metric}")
 
     return {
         "metric": "performance_metric",
         "label": "Performance score",
         "unit": "score",
-        **prediction,
+        **forecast_performance(logs),
     }
 
 
@@ -1057,9 +1184,7 @@ def compute_personal_records(
 
             timeline.append(
                 {
-                    # Compatibility with the existing summary router,
-                    # which searches for sprint_time_sec.
-                    "metric": "sprint_time_sec",
+                    "metric": "performance_metric",
                     "label": "Performance score",
                     "unit": "score",
                     "value": value,

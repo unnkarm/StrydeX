@@ -1,6 +1,7 @@
 node_modules/
 .next/
 venv/
+.venv*/
 __pycache__/
 *.pyc
 strydex.db
@@ -31,6 +32,13 @@ backend/ml/artifacts/*_dataset*.joblib
 
 # Trained models
 backend/ml/artifacts/models/
+!backend/ml/artifacts/models/
+backend/ml/artifacts/models/*
+!backend/ml/artifacts/models/crossfit_performance_model.joblib
+!backend/ml/artifacts/models/crossfit_performance_model_metadata.json
+
+# Reproducible holdout used to verify the shipped CrossFit model
+!backend/ml/artifacts/crossfit_performance_holdout.joblib
 
 # Generated encoders
 backend/ml/artifacts/encoders/

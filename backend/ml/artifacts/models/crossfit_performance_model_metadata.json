@@ -1,0 +1,31 @@
+{
+  "model_version": 1,
+  "source_rows": 423006,
+  "eligible_rows": 97114,
+  "minimum_benchmarks": 4,
+  "feature_columns": [
+    "age",
+    "height_cm",
+    "weight_kg",
+    "bmi",
+    "region",
+    "training_hours_per_week",
+    "training_intensity"
+  ],
+  "target": "mean training-reference percentile across valid benchmarks",
+  "direct_identifiers_loaded": false,
+  "library_versions": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "scikit_learn": "1.9.0",
+    "joblib": "1.5.3"
+  },
+  "holdout_metrics": {
+    "samples": 19423,
+    "mae": 14.999196741131158,
+    "rmse": 18.5255954831924,
+    "r2": 0.4597973402467177,
+    "baseline_mae": 21.388867953739947,
+    "beats_baseline": true
+  }
+}
