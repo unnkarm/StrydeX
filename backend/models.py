@@ -59,6 +59,8 @@ class AthleteProfile(Base):
     verified = Column(Boolean, default=False, nullable=False)
     verified_by = Column(String, nullable=True)
     visibility = Column(String, default="public")  # public | scouts_only | private
+    profile_picture = Column(String, nullable=True)
+
 
     user = relationship("User", back_populates="athlete_profile")
     performance_logs = relationship(
@@ -76,6 +78,12 @@ class AthleteProfile(Base):
         back_populates="athlete",
         cascade="all, delete-orphan",
     )
+    goals = relationship(
+        "Goal",
+        back_populates="athlete",
+        cascade="all, delete-orphan",
+    )
+
 
 
 class PerformanceLog(Base):
@@ -192,4 +200,23 @@ class AIReport(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     video = relationship("Video", back_populates="ai_report")
+
+
+class Goal(Base):
+    __tablename__ = "goals"
+
+    id = Column(Integer, primary_key=True, index=True)
+    athlete_id = Column(Integer, ForeignKey("athlete_profiles.id"), nullable=False)
+    title = Column(String, nullable=False)
+    current_value = Column(Float, nullable=False)
+    target_value = Column(Float, nullable=False)
+    unit = Column(String, default="s")
+    progress_pct = Column(Float, default=0.0)
+    last_month_change = Column(Float, default=0.0)
+    status = Column(String, default="active") # active | completed
+    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    completed_at = Column(DateTime, nullable=True)
+
+    athlete = relationship("AthleteProfile", back_populates="goals")
+
 

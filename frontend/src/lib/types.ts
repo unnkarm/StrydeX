@@ -20,6 +20,7 @@ export interface AthleteProfile {
   verified: boolean;
   verified_by?: string | null;
   visibility?: string;
+  profile_picture?: string | null;
 }
 
 export interface PerformanceLog {
@@ -132,7 +133,23 @@ export interface IntelligenceSummary {
   injury_risk_band?: string | null;
   readiness_pct?: number | null;
   readiness_recommendation?: string | null;
+  
+  overall_score?: number | null;
+  overall_change_pct?: number | null;
+  speed_score?: number | null;
+  strength_score?: number | null;
+  technique_score?: number | null;
+  endurance_score?: number | null;
+  focus_points?: string[] | null;
+  historical_scores?: { month: string; score: number }[] | null;
+  ai_recommendations?: {
+    speed?: string;
+    technique?: string;
+    recovery?: string;
+    focus?: string;
+  } | null;
 }
+
 
 export interface AIReport {
   summary: string;
@@ -209,4 +226,20 @@ export interface ScoutResult {
   age?: number | null;
   region?: string | null;
   verified: boolean;
+  match_pct?: number | null;
 }
+
+export interface Goal {
+  id: number;
+  athlete_id: number;
+  title: string;
+  current_value: number;
+  target_value: number;
+  unit: string;
+  progress_pct: number;
+  last_month_change: number;
+  status: "active" | "completed";
+  created_at: string;
+  completed_at?: string | null;
+}
+

@@ -1,0 +1,35 @@
+=== Registered Routes ===
+Path: /openapi.json | Methods: {'HEAD', 'GET'}
+Path: /docs | Methods: {'HEAD', 'GET'}
+Path: /docs/oauth2-redirect | Methods: {'HEAD', 'GET'}
+Path: /redoc | Methods: {'HEAD', 'GET'}
+Path: /auth/signup | Methods: {'POST'}
+Path: /auth/login | Methods: {'POST'}
+Path: /auth/forgot-password | Methods: {'POST'}
+Path: /auth/reset-password | Methods: {'POST'}
+Path: /auth/me | Methods: {'GET'}
+Path: /athletes/avatar | Methods: {'POST'}
+Path: /athletes/me | Methods: {'POST'}
+Path: /athletes/me | Methods: {'GET'}
+Path: /athletes/{athlete_id}/verify | Methods: {'POST'}
+Path: /performance/ | Methods: {'POST'}
+Path: /performance/me | Methods: {'GET'}
+Path: /videos/upload | Methods: {'POST'}
+Path: /videos/me | Methods: {'GET'}
+Path: /videos/{video_id} | Methods: {'GET'}
+Path: /videos/{video_id}/file | Methods: {'GET'}
+Path: /portfolio/{username} | Methods: {'GET'}
+Path: /scout/search | Methods: {'GET'}
+Path: /analytics/trends | Methods: {'GET'}
+Path: /analytics/records | Methods: {'GET'}
+Path: /analytics/prediction | Methods: {'GET'}
+Path: /analytics/injury-risk | Methods: {'GET'}
+Path: /analytics/checkin | Methods: {'POST'}
+Path: /analytics/checkins | Methods: {'GET'}
+Path: /analytics/readiness | Methods: {'GET'}
+Path: /analytics/summary | Methods: {'GET'}
+Path: /goals/me | Methods: {'GET'}
+Path: /goals/ | Methods: {'POST'}
+Path: /goals/{goal_id}/complete | Methods: {'POST'}
+Path: /goals/{goal_id} | Methods: {'DELETE'}
+Path: / | Methods: {'GET'}

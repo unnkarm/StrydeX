@@ -33,4 +33,42 @@ def search_athletes(
     if verified_only:
         q = q.filter(models.AthleteProfile.verified == True)  # noqa: E712
 
-    return q.limit(50).all()
+    athletes = q.limit(100).all()
+    results = []
+    for a in athletes:
+        score = 60.0
+        if sport and a.sport and sport.lower() in a.sport.lower():
+            score += 10.0
+        if position and a.position and position.lower() in a.position.lower():
+            score += 10.0
+        if region and a.region and region.lower() in a.region.lower():
+            score += 10.0
+        if a.verified:
+            score += 5.0
+
+        # Performance contribution: average video score or default
+        perf_boost = 3.0
+        if a.videos:
+            valid_scores = [v.score_overall for v in a.videos if v.score_overall is not None]
+            if valid_scores:
+                perf_boost = (sum(valid_scores) / len(valid_scores)) / 100.0 * 5.0
+        score += perf_boost
+
+        # Progress / Verification boost
+        score = round(min(100.0, score), 1)
+
+        results.append({
+            "username": a.username,
+            "name": a.name,
+            "sport": a.sport,
+            "position": a.position,
+            "age": a.age,
+            "region": a.region,
+            "verified": a.verified,
+            "match_pct": score,
+        })
+
+    # Sort descending by match percentage
+    results.sort(key=lambda x: x["match_pct"], reverse=True)
+    return results
+

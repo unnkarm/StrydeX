@@ -9,9 +9,9 @@ export default function ScoutNav() {
   return (
     <header className="sticky top-0 z-20 bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/scout" className="display-heading text-lg font-semibold text-foreground">
-          Stryde<span className="text-accent">X</span>{" "}
-          <span className="text-muted">Scout</span>
+        <Link href="/scout" className="flex items-center gap-2">
+          <img src="/logo.png" alt="StrydeX Logo" className="h-7 w-auto object-contain" />
+          <span className="text-muted font-mono text-[10px] uppercase tracking-widest ml-1 bg-surface border border-border px-2 py-0.5 rounded">Scout</span>
         </Link>
 
         <nav className="flex items-center gap-6 text-sm">

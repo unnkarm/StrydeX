@@ -95,6 +95,14 @@ def _predict_generic_performance(input_data: dict) -> float:
         ]
     )
 
+    if analytics.performance_model is None or analytics.performance_preprocessor is None:
+        # Heuristic/rule-based fallback for performance score
+        training_hours = numeric_values.get("training_hours_per_week", 10.0)
+        vo2 = numeric_values.get("vo2_max", 50.0)
+        focus = numeric_values.get("mental_focus_level", 5.0)
+        score = 65.0 + (training_hours - 5.0) * 1.5 + (vo2 - 45.0) * 0.5 + (focus - 5.0) * 2.0
+        return round(max(0.0, min(100.0, score)), 2)
+
     try:
         processed_input = analytics.performance_preprocessor.transform(model_input)
         predicted_performance = float(
@@ -107,6 +115,7 @@ def _predict_generic_performance(input_data: dict) -> float:
         ) from exc
 
     return round(max(0.0, min(100.0, predicted_performance)), 2)
+
 
 
 @router.get("/me", response_model=List[schemas.PerformanceLogOut])

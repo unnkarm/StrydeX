@@ -1,5 +1,5 @@
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8002";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -143,5 +143,31 @@ export const api = {
   readiness: () => request("/analytics/readiness"),
   readinessHistory: () => request("/analytics/checkins"),
   intelligenceSummary: () => request("/analytics/summary"),
+
+  // Goals API
+  myGoals: () => request("/goals/me"),
+  createGoal: (data: Record<string, unknown>) =>
+    request("/goals/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }),
+  completeGoal: (id: number) =>
+    request(`/goals/${id}/complete`, {
+      method: "POST",
+    }),
+  deleteGoal: (id: number) =>
+    request(`/goals/${id}`, {
+      method: "DELETE",
+    }),
+
+  uploadAvatar: (file: File) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    return request("/athletes/avatar", {
+      method: "POST",
+      body: fd,
+    });
+  },
 };
 

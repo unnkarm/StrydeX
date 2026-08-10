@@ -50,8 +50,8 @@ export default function AppTopbar() {
 
   return (
     <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-border bg-background/95 px-6 py-3 backdrop-blur">
-      <Link href="/dashboard" className="display-heading shrink-0 text-lg font-semibold text-foreground">
-        Stryde<span className="text-accent">X</span>
+      <Link href="/dashboard" className="shrink-0">
+        <img src="/logo.png" alt="StrydeX Logo" className="h-7 w-auto object-contain" />
       </Link>
 
       <form onSubmit={handleSearch} className="hidden flex-1 max-w-sm sm:block">
@@ -82,9 +82,13 @@ export default function AppTopbar() {
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-xs font-medium text-accent"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 overflow-hidden border border-border text-xs font-medium text-accent"
           >
-            {initials}
+            {profile?.profile_picture ? (
+              <img src={profile.profile_picture} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              initials
+            )}
           </button>
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-lg border border-border bg-surface text-sm shadow-lg">

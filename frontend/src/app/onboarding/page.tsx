@@ -30,16 +30,36 @@ export default function OnboardingPage() {
     username: "",
     region: "",
     age: "",
-    sport: "",
-    position: "",
+    sport: "Cricket",
+    position: "Batter (RHB)", // RHB, LHB, Fast Bowler, Spin Bowler, Wicketkeeper, All-Rounder
     academy: "",
     height_cm: "",
     weight_kg: "",
-    sprint_time_sec: "",
-    vertical_jump_cm: "",
+    batting_avg: "",
+    strike_rate: "",
+    bowling_speed: "",
+    yoyo_test: "",
     bio: "",
     visibility: "public" as "public" | "scouts_only" | "private",
+    profile_picture: "",
   });
+
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    setError(null);
+    try {
+      const res = await api.uploadAvatar(file);
+      update("profile_picture", res.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload avatar");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
 
   function update<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -66,13 +86,15 @@ export default function OnboardingPage() {
         region: form.region || null,
         bio: form.bio || null,
         visibility: form.visibility,
+        profile_picture: form.profile_picture || null,
       });
 
-      if (form.sprint_time_sec || form.vertical_jump_cm) {
+      // Save baseline logs
+      if (form.batting_avg || form.bowling_speed) {
         await api.addPerformanceLog({
-          sprint_time_sec: form.sprint_time_sec ? Number(form.sprint_time_sec) : null,
-          vertical_jump_cm: form.vertical_jump_cm ? Number(form.vertical_jump_cm) : null,
-          notes: "Added during onboarding",
+          notes: `Onboarding baseline: Batting Avg ${form.batting_avg || "—"}, Bowler Speed ${form.bowling_speed || "—"} km/h, YoYo score ${form.yoyo_test || "—"}`,
+          sprint_time_sec: form.yoyo_test ? Number(form.yoyo_test) : null,
+          vertical_jump_cm: form.batting_avg ? Number(form.batting_avg) : null,
         });
       }
 
@@ -88,7 +110,7 @@ export default function OnboardingPage() {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="display-heading text-3xl text-accent">You&apos;re in.</div>
-        <p className="mt-3 text-muted">Your athlete profile is ready.</p>
+        <p className="mt-3 text-muted">Your cricketer profile is ready.</p>
         <button
           onClick={() => router.push("/dashboard")}
           className="mt-8 rounded-full bg-accent px-6 py-3 font-medium text-accent-ink hover:opacity-90 transition-opacity"
@@ -103,7 +125,7 @@ export default function OnboardingPage() {
     <div className="mx-auto max-w-xl px-6 py-14">
       <div className="flex items-center justify-between">
         <span className="display-heading text-lg font-semibold">
-          Stryde<span className="text-accent">X</span>
+          Stryde<span className="text-accent">X</span> <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded ml-2 uppercase font-mono">Cricket</span>
         </span>
         <Link href="/dashboard" className="text-sm text-muted hover:text-foreground">
           Exit
@@ -136,25 +158,42 @@ export default function OnboardingPage() {
       </div>
 
       <h1 className="display-heading mt-10 text-2xl">
-        {step === 0 && "Build your athlete identity"}
-        {step === 1 && "What do you play?"}
-        {step === 2 && "Your baseline numbers"}
+        {step === 0 && "Build your cricketer profile"}
+        {step === 1 && "What is your role?"}
+        {step === 2 && "Your baseline statistics"}
         {step === 3 && "Who can see your profile?"}
       </h1>
 
       {step === 0 && (
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2 flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-border text-xs text-muted">
-              Photo
+            <div className="relative w-16 h-16 rounded-full border border-border bg-surface-2 overflow-hidden flex items-center justify-center">
+              {form.profile_picture ? (
+                <img src={form.profile_picture} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-xl text-muted font-mono">👤</span>
+              )}
+              {uploadingAvatar && (
+                <div className="absolute inset-0 bg-background/70 flex items-center justify-center text-[8px] text-accent font-bold font-mono">
+                  Loading...
+                </div>
+              )}
             </div>
-            <button
-              type="button"
-              title="Coming soon"
-              className="rounded-full border border-border px-4 py-1.5 text-sm text-muted"
-            >
-              Upload (coming soon)
-            </button>
+            <div>
+              <input
+                type="file"
+                id="onboarding-avatar-upload"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="onboarding-avatar-upload"
+                className="cursor-pointer rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-mono hover:border-accent inline-block text-foreground"
+              >
+                {uploadingAvatar ? "Uploading..." : "Upload Photo"}
+              </label>
+            </div>
           </div>
           <div className="sm:col-span-2">
             <label className={labelClass}>Full name</label>
@@ -188,18 +227,25 @@ export default function OnboardingPage() {
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           <div>
             <label className={labelClass}>Sport</label>
-            <input value={form.sport} onChange={(e) => update("sport", e.target.value)} className={inputClass} />
+            <input disabled value={form.sport} className={`${inputClass} opacity-60 cursor-not-allowed`} />
           </div>
           <div>
-            <label className={labelClass}>Position</label>
-            <input
+            <label className={labelClass}>Cricket Role / Position</label>
+            <select
               value={form.position}
               onChange={(e) => update("position", e.target.value)}
               className={inputClass}
-            />
+            >
+              <option value="Batter (RHB)">Batter (RHB)</option>
+              <option value="Batter (LHB)">Batter (LHB)</option>
+              <option value="Fast Bowler">Fast Bowler</option>
+              <option value="Spin Bowler">Spin Bowler</option>
+              <option value="All-Rounder">All-Rounder</option>
+              <option value="Wicketkeeper-Batter">Wicketkeeper-Batter</option>
+            </select>
           </div>
           <div className="sm:col-span-2">
-            <label className={labelClass}>Academy / club</label>
+            <label className={labelClass}>Academy / State / Club name</label>
             <input
               value={form.academy}
               onChange={(e) => update("academy", e.target.value)}
@@ -212,47 +258,54 @@ export default function OnboardingPage() {
       {step === 2 && (
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>Height (cm)</label>
-            <input
-              type="number"
-              value={form.height_cm}
-              onChange={(e) => update("height_cm", e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className={labelClass}>Weight (kg)</label>
-            <input
-              type="number"
-              value={form.weight_kg}
-              onChange={(e) => update("weight_kg", e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className={labelClass}>Sprint PB (s) — optional</label>
+            <label className={labelClass}>Batting Average (runs/out)</label>
             <input
               type="number"
               step="0.01"
-              value={form.sprint_time_sec}
-              onChange={(e) => update("sprint_time_sec", e.target.value)}
+              value={form.batting_avg}
+              onChange={(e) => update("batting_avg", e.target.value)}
               className={inputClass}
+              placeholder="e.g. 42.5"
             />
           </div>
           <div>
-            <label className={labelClass}>Vertical jump (cm) — optional</label>
+            <label className={labelClass}>Strike Rate (runs/100 balls)</label>
             <input
               type="number"
-              value={form.vertical_jump_cm}
-              onChange={(e) => update("vertical_jump_cm", e.target.value)}
+              step="0.1"
+              value={form.strike_rate}
+              onChange={(e) => update("strike_rate", e.target.value)}
               className={inputClass}
+              placeholder="e.g. 138.2"
             />
           </div>
-          <p className="text-xs text-muted sm:col-span-2">
+          <div>
+            <label className={labelClass}>Bowling Speed (km/h) — Bowlers</label>
+            <input
+              type="number"
+              value={form.bowling_speed}
+              onChange={(e) => update("bowling_speed", e.target.value)}
+              className={inputClass}
+              placeholder="e.g. 135"
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Yo-Yo Test Score — Athletic Baseline</label>
+            <input
+              type="number"
+              step="0.1"
+              value={form.yoyo_test}
+              onChange={(e) => update("yoyo_test", e.target.value)}
+              className={inputClass}
+              placeholder="e.g. 19.5"
+            />
+          </div>
+          <p className="text-xs text-muted sm:col-span-2 mt-4">
             You can log more sessions any time from Performance in your dashboard.
           </p>
         </div>
       )}
+
 
       {step === 3 && (
         <div className="mt-8 space-y-5">

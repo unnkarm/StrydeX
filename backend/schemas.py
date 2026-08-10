@@ -52,6 +52,9 @@ class AthleteProfileIn(BaseModel):
     region: Optional[str] = None
     bio: Optional[str] = None
     visibility: str = "public"  # public | scouts_only | private
+    profile_picture: Optional[str] = None
+
+
 
 
 class AthleteProfileOut(AthleteProfileIn):
@@ -189,6 +192,18 @@ class IntelligenceSummaryOut(BaseModel):
     injury_risk_band: Optional[str] = None
     readiness_pct: Optional[float] = None
     readiness_recommendation: Optional[str] = None
+    
+    # StrydeX MVP Dashboard enhancements
+    overall_score: Optional[float] = None
+    overall_change_pct: Optional[float] = None
+    speed_score: Optional[float] = None
+    strength_score: Optional[float] = None
+    technique_score: Optional[float] = None
+    endurance_score: Optional[float] = None
+    focus_points: Optional[List[str]] = None
+    historical_scores: Optional[List[Dict[str, Any]]] = None
+    ai_recommendations: Optional[Dict[str, Any]] = None
+
 
 
 class AIReportOut(BaseModel):
@@ -250,6 +265,7 @@ class ScoutResult(BaseModel):
     age: Optional[int] = None
     region: Optional[str] = None
     verified: bool
+    match_pct: Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -257,3 +273,24 @@ class ScoutResult(BaseModel):
 
 class VerifyRequest(BaseModel):
     coach_name: str
+
+
+class GoalIn(BaseModel):
+    title: str
+    current_value: float
+    target_value: float
+    unit: str = "s"
+
+
+class GoalOut(GoalIn):
+    id: int
+    athlete_id: int
+    progress_pct: float
+    last_month_change: float
+    status: str
+    created_at: datetime.datetime
+    completed_at: Optional[datetime.datetime] = None
+
+    class Config:
+        from_attributes = True
+

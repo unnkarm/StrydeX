@@ -191,10 +191,15 @@ def build_crossfit_performance_dataframe(profile, payload: dict) -> pd.DataFrame
 
 def predict_crossfit_score(profile, payload: dict) -> float:
     if crossfit_performance_model is None:
-        raise RuntimeError("CrossFit performance model is unavailable.")
+        # Heuristic/rule-based fallback for CrossFit performance score
+        age = getattr(profile, "age", 25) or 25
+        hours = payload.get("training_hours_per_week", 10) or 10
+        score = min(99.0, max(50.0, 75.0 + (hours - 8.0) * 1.5 - (age - 20) * 0.2))
+        return round(score, 2)
     model_input = build_crossfit_performance_dataframe(profile, payload)
     prediction = float(crossfit_performance_model.predict(model_input)[0])
     return round(max(0.0, min(100.0, prediction)), 2)
+
 
 
 def injury_model_position(sport, position) -> str:
@@ -857,9 +862,33 @@ def predict_injury_risk(
         injury_model is None
         or injury_preprocessor is None
     ):
-        raise RuntimeError(
-            "Injury model or preprocessor is unavailable."
-        )
+        # Heuristic fallback for injury risk percentage calculation
+        risk_pct = 15.0
+        reasons = ["Baseline prediction (heuristic fallback)."]
+        if latest_checkin:
+            sleep = getattr(latest_checkin, "total_minutes_asleep", 480) or 480
+            if sleep < 360:
+                risk_pct += 25.0
+                reasons.append("Low sleep hours (fatigue increases injury risk).")
+            hr = getattr(latest_checkin, "avg_heart_rate", 70) or 70
+            if hr > 85:
+                risk_pct += 15.0
+                reasons.append("Elevated resting/average heart rate.")
+        
+        risk_band = "low"
+        if risk_pct > 75:
+            risk_band = "critical"
+        elif risk_pct > 50:
+            risk_band = "high"
+        elif risk_pct > 25:
+            risk_band = "moderate"
+            
+        return {
+            "risk_pct": min(100.0, risk_pct),
+            "risk_band": risk_band,
+            "reasons": reasons,
+        }
+
 
     if latest_log is None:
         return {
@@ -956,9 +985,32 @@ def predict_readiness(
 ) -> tuple[float, str]:
 
     if readiness_model is None:
-        raise RuntimeError(
-            "Readiness model is unavailable."
-        )
+        # Heuristic fallback for readiness scoring
+        sleep_hours = (checkin_data.get("total_minutes_asleep") or 480.0) / 60.0
+        hr = checkin_data.get("avg_heart_rate") or 70.0
+        
+        score = 80.0
+        if sleep_hours < 7.0:
+            score -= (7.0 - sleep_hours) * 10.0
+        else:
+            score += (sleep_hours - 7.0) * 3.0
+            
+        if hr > 80:
+            score -= (hr - 80) * 0.5
+            
+        readiness = round(max(0.0, min(100.0, score)), 2)
+        recommendation = "Your body is primed for optimal performance today."
+        if readiness < 40:
+            recommendation = "Low readiness. Prioritize sleep, hydration, mobility, and recovery."
+        elif readiness < 60:
+            recommendation = "Moderate readiness. Reduce training intensity."
+        elif readiness < 80:
+            recommendation = "Good readiness. Normal training is recommended."
+        else:
+            recommendation = "Excellent recovery. Ready for high-intensity training."
+            
+        return readiness, recommendation
+
 
     model_input = build_readiness_dataframe(
         checkin_data

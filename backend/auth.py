@@ -16,16 +16,32 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
 RESET_TOKEN_EXPIRE_MINUTES = 15
 
+import hashlib
+import secrets
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password[:72])
+    salt = secrets.token_hex(16)
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt.encode('utf-8'), 10000)
+    return f"pbkdf2_sha256$10000${salt}${key.hex()}"
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain[:72], hashed)
+    try:
+        if hashed.startswith("pbkdf2_sha256$"):
+            parts = hashed.split("$")
+            iterations = int(parts[1])
+            salt = parts[2]
+            key_hex = parts[3]
+            key = hashlib.pbkdf2_hmac('sha256', plain.encode('utf-8'), salt.encode('utf-8'), iterations)
+            return secrets.compare_digest(key.hex(), key_hex)
+        return pwd_context.verify(plain[:72], hashed)
+    except Exception:
+        return False
+
 
 
 def create_access_token(user_id: int) -> str:
