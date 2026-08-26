@@ -74,7 +74,7 @@ def get_injury_risk(db: Session = Depends(get_db), user: models.User = Depends(g
         .order_by(models.Video.uploaded_at.desc())
         .first()
     )
-    return analytics.compute_injury_risk(logs, latest_checkin, latest_video)
+    return analytics.compute_movement_risk(logs, latest_checkin, latest_video)
 
 
 # ---------- 5. Readiness / fatigue checkin ----------
@@ -152,7 +152,7 @@ def get_summary(db: Session = Depends(get_db), user: models.User = Depends(get_c
         .order_by(models.Video.uploaded_at.desc())
         .first()
     )
-    injury = analytics.compute_injury_risk(logs, latest_checkin, latest_video)
+    injury = analytics.compute_movement_risk(logs, latest_checkin, latest_video)
 
     sprint_pb_entry = next(
         (r for r in reversed(records) if r["metric"] == "performance_metric" and r["is_current_best"]), None

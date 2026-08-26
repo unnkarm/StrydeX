@@ -40,8 +40,8 @@ SKELETON_LANDMARKS = {
     "right_foot_index": L.RIGHT_FOOT_INDEX,
 }
 
-OPTIMAL_RANGES = {
-    "knee": (135.0, 150.0),
+TARGET_CRICKET_RANGES = {
+    "knee": (150.0, 168.0),
     "hip": (115.0, 130.0),
     "ankle": (75.0, 90.0),
 }
@@ -267,7 +267,7 @@ def analyze_video(filepath: str) -> dict:
     score_technique = score_stability = score_symmetry = score_efficiency = None
     score_overall = None
     if avg_knee is not None:
-        knee_lo, knee_hi = OPTIMAL_RANGES["knee"]
+        knee_lo, knee_hi = TARGET_CRICKET_RANGES["knee"]
         knee_center = (knee_lo + knee_hi) / 2
         knee_dev = abs(avg_knee - knee_center)
         trunk_penalty = max(0.0, (avg_trunk or 0.0) - 10.0)

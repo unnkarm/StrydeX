@@ -18,6 +18,7 @@ from routers import (
     scout_router,
     video_router,
     goal_router,
+    coach_router,
 )
 
 Base.metadata.create_all(bind=engine)
@@ -53,6 +54,7 @@ app.include_router(portfolio_router.router)
 app.include_router(scout_router.router)
 app.include_router(analytics_router.router)
 app.include_router(goal_router.router)
+app.include_router(coach_router.router)
 
 
 @app.get("/")

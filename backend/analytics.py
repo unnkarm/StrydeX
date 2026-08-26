@@ -850,10 +850,10 @@ def predict_metric(
 
 
 # ==========================================================
-# Injury model inference
+# Movement and training risk model inference
 # ==========================================================
 
-def predict_injury_risk(
+def predict_movement_risk(
     latest_log,
     latest_checkin=None,
 ) -> dict:
@@ -862,14 +862,14 @@ def predict_injury_risk(
         injury_model is None
         or injury_preprocessor is None
     ):
-        # Heuristic fallback for injury risk percentage calculation
+        # Heuristic fallback for training/movement risk percentage calculation
         risk_pct = 15.0
         reasons = ["Baseline prediction (heuristic fallback)."]
         if latest_checkin:
             sleep = getattr(latest_checkin, "total_minutes_asleep", 480) or 480
             if sleep < 360:
                 risk_pct += 25.0
-                reasons.append("Low sleep hours (fatigue increases injury risk).")
+                reasons.append("Low sleep hours (fatigue increases training risk).")
             hr = getattr(latest_checkin, "avg_heart_rate", 70) or 70
             if hr > 85:
                 risk_pct += 15.0
@@ -937,10 +937,10 @@ def predict_injury_risk(
         band = "low"
 
     reasons = [
-        f"Estimated injury probability: {risk}%.",
+        f"Estimated training/movement risk probability: {risk}%.",
         (
             "Prediction generated using the trained "
-            "injury classification model."
+            "classification model."
         ),
     ]
 
@@ -956,21 +956,18 @@ def predict_injury_risk(
     }
 
 
-def compute_injury_risk(
+def compute_movement_risk(
     logs: list,
     latest_checkin=None,
     latest_video=None,
 ) -> dict:
     """
     Compatibility function used by analytics_router.py.
-
-    latest_video is accepted to preserve the existing route contract.
-    The current trained injury model does not use video features.
     """
 
     latest = _latest_log(logs)
 
-    return predict_injury_risk(
+    return predict_movement_risk(
         latest,
         latest_checkin,
     )

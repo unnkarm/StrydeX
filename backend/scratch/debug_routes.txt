@@ -32,4 +32,5 @@ Path: /goals/me | Methods: {'GET'}
 Path: /goals/ | Methods: {'POST'}
 Path: /goals/{goal_id}/complete | Methods: {'POST'}
 Path: /goals/{goal_id} | Methods: {'DELETE'}
+Path: /coach/ask | Methods: {'POST'}
 Path: / | Methods: {'GET'}

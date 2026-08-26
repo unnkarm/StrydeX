@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 @router.post("/signup", response_model=schemas.TokenResponse)
 def signup(req: schemas.SignupRequest, db: Session = Depends(get_db)):
-    existing = db.query(models.User).filter(models.User.email == req.email).first()
+    email_clean = req.email.lower().strip()
+    existing = db.query(models.User).filter(models.User.email == email_clean).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -33,7 +34,7 @@ def signup(req: schemas.SignupRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid role")
 
     user = models.User(
-        email=req.email,
+        email=email_clean,
         hashed_password=hash_password(req.password),
         role=req.role,
     )
@@ -50,7 +51,8 @@ def login(
     req: schemas.LoginRequest,
     db: Session = Depends(get_db),
 ):
-    user = db.query(models.User).filter(models.User.email == req.email).first()
+    email_clean = req.email.lower().strip()
+    user = db.query(models.User).filter(models.User.email == email_clean).first()
     if not user or not verify_password(req.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 

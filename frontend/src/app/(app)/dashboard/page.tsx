@@ -437,54 +437,113 @@ export default function DashboardPage() {
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Left Columns */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Snapshot */}
-            <div className="rounded-xl border border-border bg-surface p-6 shadow-lg">
-              <h2 className="display-heading text-sm text-accent border-b border-border pb-3 mb-5 uppercase tracking-widest font-mono">
-                🧠 Biometric Intelligence Snapshot
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                <div className="flex flex-col items-center justify-center p-4 bg-surface-2 rounded-lg border border-border">
-                  <RadialProgress value={summary?.overall_score || 84} label="Overall" accent />
-                  <span className="text-[10px] text-muted mt-2 font-mono">↑ {summary?.overall_change_pct || 8}% 4-Wk Change</span>
-                </div>
-                <div className="md:col-span-2 grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-background rounded border border-border">
-                    <div className="text-xs text-muted font-medium font-mono">Batting Index</div>
-                    <div className="text-2xl font-bold font-mono mt-1 text-foreground">{summary?.speed_score || 91}</div>
-                  </div>
-                  <div className="p-3 bg-background rounded border border-border">
-                    <div className="text-xs text-muted font-medium font-mono">Bowling Index</div>
-                    <div className="text-2xl font-bold font-mono mt-1 text-foreground">{summary?.strength_score || 78}</div>
-                  </div>
-                  <div className="p-3 bg-background rounded border border-border">
-                    <div className="text-xs text-muted font-medium font-mono">Fielding Index</div>
-                    <div className="text-2xl font-bold font-mono mt-1 text-foreground">{summary?.technique_score || 86}</div>
-                  </div>
-                  <div className="p-3 bg-background rounded border border-border">
-                    <div className="text-xs text-muted font-medium font-mono">Athleticism Index</div>
-                    <div className="text-2xl font-bold font-mono mt-1 text-foreground">{summary?.endurance_score || 81}</div>
+            {/* PitchIQ Home Screen Card */}
+            <div className="rounded-xl border border-border bg-surface p-8 shadow-xl space-y-6 animate-slide-up transition-all duration-300 hover:scale-[1.005] hover:shadow-2xl">
+              <div>
+                <span className="text-xs font-mono uppercase text-accent tracking-widest block">
+                  PitchIQ Performance Command
+                </span>
+                <h2 className="display-heading text-3xl font-bold mt-2 text-foreground">
+                  Good morning, {profile?.name || "Arjun"}.
+                </h2>
+                <p className="text-sm text-muted mt-1">Here is your active performance snapshot.</p>
+              </div>
+
+              {/* Overall Performance Score */}
+              <div className="flex items-center gap-6 p-5 bg-surface-2 rounded-xl border border-border">
+                <div>
+                  <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold block">
+                    Overall Performance Index
+                  </span>
+                  <div className="text-5xl font-mono font-extrabold text-foreground mt-1 flex items-baseline gap-2">
+                    78 <span className="text-xs text-accent font-bold">↑ 6%</span>
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4 mt-6 border-t border-border pt-4">
-                <div className="p-3 bg-surface-2 rounded-lg border border-border flex items-center justify-between">
-                  <div>
-                    <span className="text-xs text-muted font-mono block">System Readiness</span>
-                    <span className="text-[10px] text-muted italic mt-0.5 block">Body battery score</span>
-                  </div>
-                  <RadialProgress value={summary?.readiness_pct || 87} label="Readiness" size={80} strokeWidth={6} />
+
+              {/* Four-part index break down */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="p-4 bg-background border border-border rounded-lg text-center">
+                  <span className="text-[10px] text-muted font-mono block uppercase">Batting</span>
+                  <span className="text-2xl font-mono font-bold text-foreground mt-1 block">82</span>
                 </div>
-                <div className="p-3 bg-surface-2 rounded-lg border border-border flex flex-col justify-between">
-                  <span className="text-xs text-muted font-mono">INJURY RISK EVALUATION</span>
-                  <span className="text-xl font-bold font-mono mt-1 text-clay uppercase tracking-wider">{summary?.injury_risk_band || "LOW"}</span>
+                <div className="p-4 bg-background border border-border rounded-lg text-center">
+                  <span className="text-[10px] text-muted font-mono block uppercase">Bowling</span>
+                  <span className="text-2xl font-mono font-bold text-foreground mt-1 block">74</span>
+                </div>
+                <div className="p-4 bg-background border border-border rounded-lg text-center">
+                  <span className="text-[10px] text-muted font-mono block uppercase">Fielding</span>
+                  <span className="text-2xl font-mono font-bold text-foreground mt-1 block">81</span>
+                </div>
+                <div className="p-4 bg-background border border-border rounded-lg text-center">
+                  <span className="text-[10px] text-muted font-mono block uppercase">Fitness</span>
+                  <span className="text-2xl font-mono font-bold text-foreground mt-1 block">76</span>
+                </div>
+              </div>
+
+              {/* boundary-line divider */}
+              <div className="text-center font-mono text-[9px] text-muted tracking-widest py-2 select-none">
+                ────────────── ● ──────────────
+              </div>
+
+              {/* AI Coach card */}
+              <div className="p-6 bg-accent/5 border border-accent/20 rounded-xl space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🧠</span>
+                  <span className="text-xs text-accent font-mono uppercase tracking-widest font-extrabold">AI Coach Briefing</span>
+                </div>
+                <p className="text-sm text-foreground leading-relaxed">
+                  Your batting is trending upward. Your front-foot movement has improved over the last 4 sessions, but your head position is becoming less stable against short-pitched deliveries.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-border/50">
+                  <div>
+                    <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold block">Today's Focus</span>
+                    <span className="text-xs text-foreground font-semibold mt-0.5 block">
+                      Head stability → Front-foot control
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold block">Recommended Drill</span>
+                    <span className="text-xs text-muted mt-0.5 block">
+                      Front-foot alignment · 3 × 8 balls
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <Link href="/upload" className="text-xs font-mono text-accent hover:underline flex items-center gap-1">
+                    Analyze another session →
+                  </Link>
                 </div>
               </div>
             </div>
 
-            {/* 3D Delivery Path telemetry */}
+            {/* Recent Match Performance logs list */}
             <div className="rounded-xl border border-border bg-surface p-6 shadow-lg">
               <h2 className="display-heading text-sm text-accent border-b border-border pb-3 mb-5 uppercase tracking-widest font-mono">
-                🏏 3D Bowling Release trajectory
+                🏏 Recent Match Performances
+              </h2>
+              <div className="space-y-3 font-mono text-xs">
+                <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                  <span className="text-muted">vs Kolkata Knight Riders (Academy)</span>
+                  <span className="text-foreground font-bold">64 Runs (SR 145) &middot; Rating: 89</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                  <span className="text-muted">vs Mumbai Indians (Academy)</span>
+                  <span className="text-foreground font-bold">31 Runs (SR 118) &middot; Rating: 74</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                  <span className="text-muted">vs Chennai Super Kings (Academy)</span>
+                  <span className="text-foreground font-bold">82 Runs (SR 156) &middot; Rating: 93</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 3D Sprint Path telemetry */}
+            <div className="rounded-xl border border-border bg-surface p-6 shadow-lg">
+              <h2 className="display-heading text-sm text-accent border-b border-border pb-3 mb-5 uppercase tracking-widest font-mono">
+                🏃 Sprint Phase Flight Path Trajectory
               </h2>
               <div className="relative h-[290px] bg-background/50 rounded-lg border border-border overflow-hidden">
                 <Interactive3DPitch />
@@ -681,47 +740,93 @@ export default function DashboardPage() {
           {/* Squad Metrics & Analytics */}
           <div className="lg:col-span-2 space-y-8">
             <div className="rounded-xl border border-border bg-surface p-6 shadow-lg">
-              <h2 className="display-heading text-sm text-accent border-b border-border pb-3 mb-5 uppercase tracking-widest font-mono">
-                🏏 Academy Squad Roster Averages
-              </h2>
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="p-3 bg-surface-2 border border-border rounded text-center">
-                  <div className="text-[10px] text-muted font-mono uppercase">Academy Strike Rate</div>
-                  <div className="text-2xl font-bold font-mono mt-1 text-foreground">138.4</div>
-                </div>
-                <div className="p-3 bg-surface-2 border border-border rounded text-center">
-                  <div className="text-[10px] text-muted font-mono uppercase">Mean Fast Ball Velocity</div>
-                  <div className="text-2xl font-bold font-mono mt-1 text-foreground">131 km/h</div>
-                </div>
-                <div className="p-3 bg-surface-2 border border-border rounded text-center">
-                  <div className="text-[10px] text-muted font-mono uppercase">Yo-Yo Fitness Mean</div>
-                  <div className="text-2xl font-bold font-mono mt-1 text-accent">18.6</div>
-                </div>
+              <div className="flex justify-between items-center border-b border-border pb-3 mb-5">
+                <h2 className="display-heading text-sm text-accent uppercase tracking-widest font-mono">
+                  📋 CoachOS — Squad Overview
+                </h2>
+                <span className="text-xs px-2 py-0.5 rounded bg-clay/10 text-clay font-mono">
+                  3 athletes need attention today
+                </span>
               </div>
 
+              {/* Squad List */}
               <div className="overflow-x-auto">
                 <table className="w-full text-left font-mono text-xs">
                   <thead>
                     <tr className="border-b border-border text-muted">
-                      <th className="pb-2">Name</th>
-                      <th className="pb-2">Role</th>
-                      <th className="pb-2">Region</th>
-                      <th className="pb-2">Fitness Index</th>
+                      <th className="pb-2">Athlete</th>
+                      <th className="pb-2">Readiness</th>
+                      <th className="pb-2">Trend</th>
+                      <th className="pb-2 text-right">Attention</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {squadResults.map((player) => (
-                      <tr key={player.username} className="border-b border-border/50 hover:bg-background/20">
-                        <td className="py-2.5 font-bold text-foreground">
-                          <Link href={`/u/${player.username}`} className="hover:underline">{player.name}</Link>
-                        </td>
-                        <td className="py-2.5 text-muted">{player.position || "Batter"}</td>
-                        <td className="py-2.5 text-muted">{player.region || "Academy"}</td>
-                        <td className="py-2.5 text-accent">{player.match_pct || 88}%</td>
-                      </tr>
-                    ))}
+                    <tr 
+                      className="border-b border-border/50 hover:bg-background/20 cursor-pointer"
+                      onClick={() => alert("Arjun's indicators are optimal. Readiness: 91% (Trend: Up). Keep training as scheduled.")}
+                    >
+                      <td className="py-3 font-bold text-foreground hover:underline">Arjun</td>
+                      <td className="py-3 font-semibold text-foreground">91%</td>
+                      <td className="py-3 text-accent font-bold">↑</td>
+                      <td className="py-3 text-right text-accent font-bold">🟢</td>
+                    </tr>
+                    <tr 
+                      className="border-b border-border/50 hover:bg-background/20 cursor-pointer bg-surface-2/40"
+                      onClick={() => {
+                        const target = document.getElementById("riya-details");
+                        if (target) target.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      <td className="py-3 font-bold text-foreground hover:underline">Riya (Click to inspect)</td>
+                      <td className="py-3 font-semibold text-foreground">74%</td>
+                      <td className="py-3 text-clay font-bold">↓</td>
+                      <td className="py-3 text-right text-clay font-bold">🟡</td>
+                    </tr>
+                    <tr 
+                      className="border-b border-border/50 hover:bg-background/20 cursor-pointer"
+                      onClick={() => alert("Kabir's indicators are critical. Readiness: 58% (Trend: Down). Critical load indicators detected. Recommendation: Complete rest day.")}
+                    >
+                      <td className="py-3 font-bold text-foreground hover:underline">Kabir</td>
+                      <td className="py-3 font-semibold text-foreground">58%</td>
+                      <td className="py-3 text-clay font-bold">↓</td>
+                      <td className="py-3 text-right text-clay font-bold">🔴</td>
+                    </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            {/* Drilldown Section for Riya */}
+            <div id="riya-details" className="rounded-xl border border-clay/35 bg-clay/5 p-6 shadow-lg space-y-4">
+              <div className="flex justify-between items-center border-b border-border pb-3">
+                <h3 className="text-sm font-bold font-mono text-foreground">🔎 Squad Drilldown: Riya</h3>
+                <span className="text-[10px] font-mono uppercase bg-clay/20 text-clay px-2 py-0.5 rounded">Attention Flagged</span>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="p-3 bg-surface border border-border rounded">
+                  <span className="text-[9px] text-muted font-mono block uppercase">Bowling Velocity</span>
+                  <span className="text-sm font-bold text-clay mt-1 block">↓ 4.2%</span>
+                </div>
+                <div className="p-3 bg-surface border border-border rounded">
+                  <span className="text-[9px] text-muted font-mono block uppercase">Sleep Hours</span>
+                  <span className="text-sm font-bold text-clay mt-1 block">↓ 12%</span>
+                </div>
+                <div className="p-3 bg-surface border border-border rounded">
+                  <span className="text-[9px] text-muted font-mono block uppercase">Delivery Workload</span>
+                  <span className="text-sm font-bold text-clay mt-1 block">↑ 18%</span>
+                </div>
+                <div className="p-3 bg-surface border border-border rounded">
+                  <span className="text-[9px] text-muted font-mono block uppercase">Knee Landing Brace</span>
+                  <span className="text-sm font-bold text-clay mt-1 block">↓ 7%</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-background border border-border rounded-lg">
+                <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold block mb-1">🧠 AI COACH RECOMMENDATION</span>
+                <p className="text-xs text-muted leading-relaxed">
+                  Consider reducing high-intensity bowling workload today. Riya shows acute training fatigue combined with sub-optimal front-foot knee brace extension. Prioritize landing alignment drills.
+                </p>
               </div>
             </div>
           </div>

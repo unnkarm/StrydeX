@@ -17,9 +17,9 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      const { access_token } = await api.login(email, password);
+      const { access_token } = await api.login(email.trim(), password);
       setToken(access_token);
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

@@ -18,9 +18,9 @@ export default function SignupPage() {
     setError(null);
     setLoading(true);
     try {
-      const { access_token } = await api.signup(email, password, role);
+      const { access_token } = await api.signup(email.trim(), password, role);
       setToken(access_token);
-      router.push(role === "athlete" ? "/onboarding" : "/dashboard");
+      window.location.href = role === "athlete" ? "/onboarding" : "/dashboard";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

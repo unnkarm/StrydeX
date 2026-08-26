@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Overview" },
+  { href: "/dashboard", label: "Home" },
+  { href: "/upload", label: "Analyze" },
   { href: "/performance", label: "Performance" },
-  { href: "/upload", label: "Video Lab" },
-  { href: "/portfolio", label: "Portfolio" },
+  { href: "/coach", label: "AI Coach" },
+  { href: "/portfolio", label: "Profile" },
 ];
 
 export default function AppSidebar() {

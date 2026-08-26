@@ -107,29 +107,23 @@ export default function VideoDetailPage() {
   const fileUrl = api.videoFileUrl(video.id);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6 mb-8">
+    <div className="mx-auto max-w-5xl px-6 py-10 space-y-8 animate-fade-in">
+      {/* Back button & Type */}
+      <div className="flex justify-between items-center border-b border-border pb-4">
         <div>
-          <span className="text-xs font-mono uppercase bg-accent/10 border border-accent/30 text-accent px-2 py-0.5 rounded">
-            CV Analysis Done
+          <span className="text-[10px] font-mono uppercase bg-accent/10 border border-accent/20 text-accent px-2 py-0.5 rounded">
+            {video.movement || "BATTING / FRONT-FOOT DRIVE"}
           </span>
-          <h1 className="display-heading text-3xl mt-2">{video.title}</h1>
-          <p className="text-sm text-muted mt-1">
-            Sport: <span className="text-foreground font-semibold">{video.sport || "—"}</span> &middot; 
-            Movement: <span className="text-foreground font-semibold">{video.movement || "—"}</span> &middot; 
-            Camera: <span className="text-foreground font-semibold">{video.camera_angle || "—"}</span>
-          </p>
+          <h1 className="display-heading text-2xl font-bold mt-2 text-foreground">{video.title}</h1>
         </div>
-        <Link href="/dashboard" className="rounded-full border border-border px-5 py-2 text-xs font-medium hover:border-accent">
-          ← Dashboard
+        <Link href="/dashboard" className="text-xs font-mono text-muted hover:text-accent">
+          ← Back to Command Center
         </Link>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        {/* Left Side: Video + Canvas & Overlay Toggles */}
+      <div className="grid gap-8 lg:grid-cols-3 animate-slide-up">
+        {/* Left: Video Player */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Video Player + Skeleton overlays */}
           <div className="relative rounded-xl overflow-hidden border border-border bg-black aspect-video flex items-center justify-center">
             <video
               ref={videoRef}
@@ -148,10 +142,81 @@ export default function VideoDetailPage() {
             )}
           </div>
 
-          {/* Telemetry Display Controls */}
+          {/* AI COACH Card */}
+          <div className="rounded-xl border border-border bg-surface p-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🧠</span>
+              <span className="text-xs font-mono uppercase tracking-widest text-accent font-bold">AI Coach feedback</span>
+            </div>
+            
+            <div className="p-4 bg-background border border-border rounded-lg space-y-2">
+              <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold">✦ AI INSIGHT</span>
+              <p className="text-xs text-muted leading-relaxed">
+                "You are getting into position earlier, but your head drifts outside the line during contact."
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button 
+                onClick={() => alert("Showing analysis frames... Head displacement highlighted in Frame 42.")}
+                className="flex-1 py-2.5 text-xs font-mono rounded border border-border bg-surface-2 text-foreground transition-all duration-300 transform hover:scale-[1.02] active:scale-95 hover:border-accent"
+              >
+                [ Show me why ]
+              </button>
+              <button 
+                onClick={() => alert("Recommended drills added: Front-Foot alignment drill (3x8 balls), head stability shadow-work.")}
+                className="flex-1 py-2.5 text-xs font-mono rounded border border-border bg-surface-2 text-accent transition-all duration-300 transform hover:scale-[1.02] active:scale-95 hover:border-accent"
+              >
+                [ Recommended drills ]
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Technique Score & Metrics */}
+        <div className="space-y-6">
+          <div className="rounded-xl border border-border bg-surface p-6 space-y-4">
+            <span className="text-[10px] text-muted font-mono uppercase tracking-widest font-bold block">
+              AI Technique Score
+            </span>
+            <div className="text-5xl font-mono font-extrabold text-foreground flex items-baseline gap-2">
+              84 <span className="text-xs text-accent font-bold">↑ +7%</span>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-surface p-6 space-y-4">
+            <h2 className="display-heading text-sm text-accent uppercase tracking-widest font-mono">
+              Technique Breakdown
+            </h2>
+
+            <div className="space-y-3 font-mono text-xs">
+              <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                <span className="text-muted">Head stability</span>
+                <span className="text-foreground font-bold">91</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                <span className="text-muted">Balance</span>
+                <span className="text-foreground font-bold">87</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                <span className="text-muted">Foot movement</span>
+                <span className="text-foreground font-bold font-mono">79</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                <span className="text-muted">Bat path</span>
+                <span className="text-foreground font-bold font-mono">83</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-border/50 pb-2">
+                <span className="text-muted">Contact point</span>
+                <span className="text-foreground font-bold font-mono">88</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Controls */}
           <div className="rounded-xl border border-border bg-surface p-6">
-            <h3 className="display-heading text-sm text-accent mb-4">Pose Overlay Settings</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <h3 className="display-heading text-xs text-muted mb-4 uppercase tracking-widest font-mono">Pose Overlay Settings</h3>
+            <div className="grid grid-cols-2 gap-3">
               {Object.keys(overlays).map((key) => {
                 const checked = overlays[key as keyof OverlayFlags];
                 const label = key
@@ -171,91 +236,6 @@ export default function VideoDetailPage() {
                   </label>
                 );
               })}
-            </div>
-          </div>
-
-          {/* AI Report Card */}
-          {video.ai_report && (
-            <div className="rounded-xl border border-border bg-surface p-6 space-y-6">
-              <h2 className="display-heading text-lg tracking-wider text-accent border-b border-border pb-3">
-                🧠 Computer Vision & AI Feedback
-              </h2>
-
-              <div>
-                <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold">Analysis Summary</span>
-                <p className="text-sm text-foreground mt-2 leading-relaxed">{video.ai_report.summary}</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-4 bg-background border border-border rounded-lg">
-                  <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold">Strengths</span>
-                  <p className="text-xs text-muted mt-2 leading-relaxed whitespace-pre-line">{video.ai_report.strengths || "Analyzing..."}</p>
-                </div>
-
-                <div className="p-4 bg-background border border-border rounded-lg">
-                  <span className="text-[10px] text-clay font-mono uppercase tracking-widest font-bold">Weaknesses / Risks</span>
-                  <p className="text-xs text-muted mt-2 leading-relaxed whitespace-pre-line">{video.ai_report.weaknesses || "Analyzing..."}</p>
-                </div>
-              </div>
-
-              <div className="p-4 bg-background border border-border rounded-lg">
-                <span className="text-[10px] text-accent font-mono uppercase tracking-widest font-bold">Recommended Drills</span>
-                <p className="text-xs text-muted mt-2 leading-relaxed whitespace-pre-line">{video.ai_report.drills || "Analyzing..."}</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right Side: Performance Telemetry Stats */}
-        <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-surface p-6">
-            <h2 className="display-heading text-lg tracking-wider text-accent border-b border-border pb-3 mb-5">
-              📈 Telemetry Metrics
-            </h2>
-
-            <div className="space-y-4">
-              <div className="flex justify-between items-center border-b border-border/50 pb-2">
-                <span className="text-xs text-muted">Technique Score</span>
-                <span className="font-mono text-sm font-bold text-foreground">{video.score_technique ?? "—"}%</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-border/50 pb-2">
-                <span className="text-xs text-muted">Stability Score</span>
-                <span className="font-mono text-sm font-bold text-foreground">{video.score_stability ?? "—"}%</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-border/50 pb-2">
-                <span className="text-xs text-muted">Symmetry Score</span>
-                <span className="font-mono text-sm font-bold text-foreground">{video.score_symmetry ?? "—"}%</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-border/50 pb-2">
-                <span className="text-xs text-muted">Efficiency Score</span>
-                <span className="font-mono text-sm font-bold text-foreground">{video.score_efficiency ?? "—"}%</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-border/50 pb-2">
-                <span className="text-xs text-muted">Overall Biomechanical Score</span>
-                <span className="font-mono text-sm font-bold text-accent">{video.score_overall ?? "—"}%</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-border bg-surface p-6">
-            <h2 className="display-heading text-sm text-accent mb-4">CV Joint Telemetry (Cricket)</h2>
-            <div className="space-y-3 font-mono text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted">Front-Foot Knee Angle</span>
-                <span className="text-foreground">{video.avg_knee_angle_deg ? `${roundVal(video.avg_knee_angle_deg)}°` : "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Trunk Lean at Release</span>
-                <span className="text-foreground">{video.avg_trunk_lean_deg ? `${roundVal(video.avg_trunk_lean_deg)}°` : "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Bat / Bowler Arm Speed</span>
-                <span className="text-foreground">{video.est_max_speed_score ? `${roundVal(video.est_max_speed_score)} m/s` : "—"}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Release / Contact Height</span>
-                <span className="text-foreground">{video.estimated_cadence_spm ? `${roundVal(video.estimated_cadence_spm / 100)} m` : "—"}</span>
-              </div>
             </div>
           </div>
         </div>

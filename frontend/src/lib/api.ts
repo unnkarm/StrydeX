@@ -1,5 +1,5 @@
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8002";
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -169,5 +169,12 @@ export const api = {
       body: fd,
     });
   },
+
+  askCoach: (query: string) =>
+    request("/coach/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+    }),
 };
 

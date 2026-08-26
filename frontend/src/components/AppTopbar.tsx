@@ -50,8 +50,10 @@ export default function AppTopbar() {
 
   return (
     <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-border bg-background/95 px-6 py-3 backdrop-blur">
-      <Link href="/dashboard" className="shrink-0">
-        <img src="/logo.png" alt="StrydeX Logo" className="h-7 w-auto object-contain" />
+      <Link href="/dashboard" className="shrink-0 flex items-center gap-2">
+        <span className="display-heading text-lg font-bold tracking-wider text-foreground">
+          Pitch<span className="text-accent">IQ</span>
+        </span>
       </Link>
 
       <form onSubmit={handleSearch} className="hidden flex-1 max-w-sm sm:block">

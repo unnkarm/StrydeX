@@ -60,17 +60,6 @@ export default function ScoutPage() {
         <div className="md:col-span-2">
           <form onSubmit={handleSearch} className="grid gap-5 sm:grid-cols-3">
             <div>
-              <label className="mb-1 block text-xs uppercase tracking-widest text-muted">Sport</label>
-              <select
-                value={filters.sport}
-                onChange={(e) => setFilters((f) => ({ ...f, sport: e.target.value }))}
-                className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent text-foreground"
-              >
-                <option value="">All Sports</option>
-                <option value="Cricket">Cricket</option>
-              </select>
-            </div>
-            <div>
               <label className="mb-1 block text-xs uppercase tracking-widest text-muted">Cricket Role</label>
               <select
                 value={filters.position}

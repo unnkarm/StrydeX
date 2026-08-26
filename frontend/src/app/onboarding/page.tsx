@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { useCurrentUser } from "@/lib/useCurrentUser";
 
-const STEPS = ["Identity", "Sport", "Performance", "Visibility"] as const;
+const STEPS = ["Identity", "Role", "Performance", "Visibility"] as const;
 
 const inputClass =
-  "w-full rounded-md border border-border bg-surface px-4 py-2.5 text-foreground outline-none focus:border-accent";
-const labelClass = "mb-1 block text-xs uppercase tracking-widest text-muted";
+  "w-full rounded-md border border-border bg-surface px-4 py-2.5 text-foreground outline-none focus:border-accent font-mono text-sm";
+const labelClass = "mb-1 block text-xs uppercase tracking-widest text-muted font-mono font-bold";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -31,7 +31,10 @@ export default function OnboardingPage() {
     region: "",
     age: "",
     sport: "Cricket",
-    position: "Batter (RHB)", // RHB, LHB, Fast Bowler, Spin Bowler, Wicketkeeper, All-Rounder
+    position: "Batter", // RHB, LHB, Fast Bowler, Spin Bowler, Wicketkeeper, All-Rounder
+    hand: "Right hand",
+    bowling_style: "None",
+    goal: "Improve technique",
     academy: "",
     height_cm: "",
     weight_kg: "",
@@ -79,7 +82,7 @@ export default function OnboardingPage() {
         name: form.name,
         age: form.age ? Number(form.age) : null,
         sport: form.sport || null,
-        position: form.position || null,
+        position: `${form.position} · ${form.hand} · ${form.bowling_style}`,
         height_cm: form.height_cm ? Number(form.height_cm) : null,
         weight_kg: form.weight_kg ? Number(form.weight_kg) : null,
         academy: form.academy || null,
@@ -92,7 +95,7 @@ export default function OnboardingPage() {
       // Save baseline logs
       if (form.batting_avg || form.bowling_speed) {
         await api.addPerformanceLog({
-          notes: `Onboarding baseline: Batting Avg ${form.batting_avg || "—"}, Bowler Speed ${form.bowling_speed || "—"} km/h, YoYo score ${form.yoyo_test || "—"}`,
+          notes: `Onboarding baseline: Batting Avg ${form.batting_avg || "—"}, Speed ${form.bowling_speed || "—"} km/h, Goal: ${form.goal}`,
           sprint_time_sec: form.yoyo_test ? Number(form.yoyo_test) : null,
           vertical_jump_cm: form.batting_avg ? Number(form.batting_avg) : null,
         });
@@ -108,12 +111,14 @@ export default function OnboardingPage() {
 
   if (done) {
     return (
-      <div className="mx-auto max-w-md px-6 py-24 text-center">
+      <div className="mx-auto max-w-md px-6 py-24 text-center font-mono space-y-4">
         <div className="display-heading text-3xl text-accent">You&apos;re in.</div>
-        <p className="mt-3 text-muted">Your cricketer profile is ready.</p>
+        <p className="text-muted text-sm">Your verified PitchIQ cricket profile is active.</p>
         <button
-          onClick={() => router.push("/dashboard")}
-          className="mt-8 rounded-full bg-accent px-6 py-3 font-medium text-accent-ink hover:opacity-90 transition-opacity"
+          onClick={() => {
+            window.location.href = "/dashboard";
+          }}
+          className="mt-8 rounded-full bg-accent px-6 py-3 font-bold text-accent-ink hover:opacity-90 transition-opacity text-xs uppercase tracking-wider"
         >
           Go to dashboard →
         </button>
@@ -124,10 +129,10 @@ export default function OnboardingPage() {
   return (
     <div className="mx-auto max-w-xl px-6 py-14">
       <div className="flex items-center justify-between">
-        <span className="display-heading text-lg font-semibold">
-          Stryde<span className="text-accent">X</span> <span className="text-[10px] bg-accent/10 text-accent px-2 py-0.5 rounded ml-2 uppercase font-mono">Cricket</span>
+        <span className="display-heading text-lg font-bold tracking-wider">
+          Pitch<span className="text-accent font-extrabold">IQ</span> <span className="text-[9px] bg-accent/15 text-accent px-2 py-0.5 rounded ml-2 uppercase font-mono tracking-widest font-extrabold">Cricket</span>
         </span>
-        <Link href="/dashboard" className="text-sm text-muted hover:text-foreground">
+        <Link href="/dashboard" className="text-xs font-mono text-muted hover:text-foreground">
           Exit
         </Link>
       </div>
@@ -138,7 +143,7 @@ export default function OnboardingPage() {
           <div key={label} className="flex flex-1 items-center last:flex-none">
             <div className="flex flex-col items-center">
               <span
-                className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] ${
+                className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-[10px] font-mono ${
                   i < step
                     ? "border-accent bg-accent text-accent-ink"
                     : i === step
@@ -148,7 +153,7 @@ export default function OnboardingPage() {
               >
                 {i < step ? "✓" : i + 1}
               </span>
-              <span className={`mt-1.5 text-[11px] ${i <= step ? "text-foreground" : "text-muted"}`}>{label}</span>
+              <span className={`mt-1.5 text-[9px] font-mono uppercase tracking-widest font-bold ${i <= step ? "text-foreground" : "text-muted"}`}>{label}</span>
             </div>
             {i < STEPS.length - 1 && (
               <div className={`mx-2 h-px flex-1 ${i < step ? "bg-accent" : "bg-border"}`} />
@@ -157,10 +162,10 @@ export default function OnboardingPage() {
         ))}
       </div>
 
-      <h1 className="display-heading mt-10 text-2xl">
-        {step === 0 && "Build your cricketer profile"}
-        {step === 1 && "What is your role?"}
-        {step === 2 && "Your baseline statistics"}
+      <h1 className="display-heading mt-10 text-2xl font-bold">
+        {step === 0 && "Welcome to PitchIQ"}
+        {step === 1 && "What do you play?"}
+        {step === 2 && "Configure baseline metrics"}
         {step === 3 && "Who can see your profile?"}
       </h1>
 
@@ -208,7 +213,7 @@ export default function OnboardingPage() {
             />
           </div>
           <div>
-            <label className={labelClass}>Location</label>
+            <label className={labelClass}>Location (City)</label>
             <input value={form.region} onChange={(e) => update("region", e.target.value)} className={inputClass} />
           </div>
           <div>
@@ -226,22 +231,58 @@ export default function OnboardingPage() {
       {step === 1 && (
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>Sport</label>
-            <input disabled value={form.sport} className={`${inputClass} opacity-60 cursor-not-allowed`} />
-          </div>
-          <div>
-            <label className={labelClass}>Cricket Role / Position</label>
+            <label className={labelClass}>Select Role</label>
             <select
               value={form.position}
               onChange={(e) => update("position", e.target.value)}
               className={inputClass}
             >
-              <option value="Batter (RHB)">Batter (RHB)</option>
-              <option value="Batter (LHB)">Batter (LHB)</option>
-              <option value="Fast Bowler">Fast Bowler</option>
-              <option value="Spin Bowler">Spin Bowler</option>
-              <option value="All-Rounder">All-Rounder</option>
-              <option value="Wicketkeeper-Batter">Wicketkeeper-Batter</option>
+              <option value="Batter">🏏 Batter</option>
+              <option value="Bowler">🏏 Bowler</option>
+              <option value="All-rounder">🏏 All-rounder</option>
+              <option value="Wicketkeeper">🧤 Wicketkeeper</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelClass}>Batting Hand</label>
+            <select
+              value={form.hand}
+              onChange={(e) => update("hand", e.target.value)}
+              className={inputClass}
+            >
+              <option value="Right hand">Right hand</option>
+              <option value="Left hand">Left hand</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelClass}>Bowling Style</label>
+            <select
+              value={form.bowling_style}
+              onChange={(e) => update("bowling_style", e.target.value)}
+              className={inputClass}
+            >
+              <option value="None">None</option>
+              <option value="Right-arm fast">Right-arm fast</option>
+              <option value="Right-arm medium">Right-arm medium</option>
+              <option value="Off-spin">Off-spin</option>
+              <option value="Leg-spin">Leg-spin</option>
+              <option value="Left-arm orthodox">Left-arm orthodox</option>
+              <option value="Left-arm fast">Left-arm fast</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelClass}>Primary Training Goal</label>
+            <select
+              value={form.goal}
+              onChange={(e) => update("goal", e.target.value)}
+              className={inputClass}
+            >
+              <option value="Improve technique">Improve technique</option>
+              <option value="Increase scoring">Increase scoring</option>
+              <option value="Increase bowling consistency">Increase bowling consistency</option>
+              <option value="Prepare for trials">Prepare for trials</option>
+              <option value="Track match performance">Track match performance</option>
+              <option value="Get noticed by scouts">Get noticed by scouts</option>
             </select>
           </div>
           <div className="sm:col-span-2">
@@ -250,6 +291,7 @@ export default function OnboardingPage() {
               value={form.academy}
               onChange={(e) => update("academy", e.target.value)}
               className={inputClass}
+              placeholder="e.g. Cricket Association of Bengal"
             />
           </div>
         </div>
@@ -258,10 +300,10 @@ export default function OnboardingPage() {
       {step === 2 && (
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           <div>
-            <label className={labelClass}>Batting Average (runs/out)</label>
+            <label className={labelClass}>Batting Average (if known)</label>
             <input
               type="number"
-              step="0.01"
+              step="0.1"
               value={form.batting_avg}
               onChange={(e) => update("batting_avg", e.target.value)}
               className={inputClass}
@@ -269,7 +311,7 @@ export default function OnboardingPage() {
             />
           </div>
           <div>
-            <label className={labelClass}>Strike Rate (runs/100 balls)</label>
+            <label className={labelClass}>Strike Rate (if known)</label>
             <input
               type="number"
               step="0.1"
@@ -280,100 +322,84 @@ export default function OnboardingPage() {
             />
           </div>
           <div>
-            <label className={labelClass}>Bowling Speed (km/h) — Bowlers</label>
+            <label className={labelClass}>Max Bowling Speed (km/h)</label>
             <input
               type="number"
               value={form.bowling_speed}
               onChange={(e) => update("bowling_speed", e.target.value)}
               className={inputClass}
-              placeholder="e.g. 135"
+              placeholder="e.g. 134"
             />
           </div>
           <div>
-            <label className={labelClass}>Yo-Yo Test Score — Athletic Baseline</label>
+            <label className={labelClass}>Yo-Yo Fitness Test Score</label>
             <input
               type="number"
               step="0.1"
               value={form.yoyo_test}
               onChange={(e) => update("yoyo_test", e.target.value)}
               className={inputClass}
-              placeholder="e.g. 19.5"
+              placeholder="e.g. 18.2"
             />
           </div>
-          <p className="text-xs text-muted sm:col-span-2 mt-4">
-            You can log more sessions any time from Performance in your dashboard.
-          </p>
         </div>
       )}
-
 
       {step === 3 && (
-        <div className="mt-8 space-y-5">
-          <div>
-            <label className={labelClass}>Bio</label>
-            <textarea
-              rows={3}
-              value={form.bio}
-              onChange={(e) => update("bio", e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className={labelClass}>Profile visibility</label>
-            <div className="space-y-2">
-              {(
-                [
-                  ["public", "Public — visible to anyone, including on search engines"],
-                  ["scouts_only", "Scouts only — visible via direct link and scout search"],
-                  ["private", "Private — hidden from scout search and your public link"],
-                ] as const
-              ).map(([value, desc]) => (
-                <label
-                  key={value}
-                  className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 text-sm ${
-                    form.visibility === value ? "border-accent bg-surface-2" : "border-border bg-surface"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={form.visibility === value}
-                    onChange={() => update("visibility", value)}
-                    className="mt-1 accent-accent"
-                  />
-                  <span className="text-foreground">{desc}</span>
-                </label>
-              ))}
-            </div>
+        <div className="mt-8 space-y-4">
+          <p className="text-sm text-muted font-mono leading-relaxed">
+            Choose who has access to view your PitchIQ verified cricket performance records:
+          </p>
+          <div className="space-y-2">
+            {(
+              [
+                ["public", "Public (Anyone can view your verified stats)"],
+                ["scouts_only", "Verified Scouts only (Coaches and selectors)"],
+                ["private", "Private (Only you)"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                onClick={() => update("visibility", value)}
+                className={`w-full text-left rounded-lg border p-4 text-xs font-mono transition-colors ${
+                  form.visibility === value
+                    ? "border-accent bg-accent/10 text-accent font-semibold"
+                    : "border-border hover:border-accent text-foreground"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       )}
 
-      {error && <p className="mt-5 text-sm text-clay">{error}</p>}
+      {error && <div className="mt-6 text-sm text-clay font-mono">⚠️ {error}</div>}
 
-      <div className="mt-10 flex justify-between">
+      {/* footer nav buttons */}
+      <div className="mt-10 flex justify-between border-t border-border pt-6">
         <button
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="rounded-full border border-border px-5 py-2.5 text-sm disabled:opacity-0"
+          className="rounded-full border border-border px-5 py-2 text-xs font-bold text-muted hover:text-foreground disabled:opacity-30 font-mono uppercase tracking-wider"
         >
           Back
         </button>
         {step < STEPS.length - 1 ? (
           <button
-            onClick={() => canContinue() && setStep((s) => s + 1)}
+            onClick={() => setStep((s) => s + 1)}
             disabled={!canContinue()}
-            className="rounded-full bg-accent px-6 py-2.5 font-medium text-accent-ink hover:opacity-90 disabled:opacity-50"
+            className="rounded-full bg-accent px-6 py-2 text-xs font-bold text-accent-ink hover:opacity-90 disabled:opacity-50 font-mono uppercase tracking-wider"
           >
-            Continue →
+            Continue
           </button>
         ) : (
           <button
             onClick={finish}
             disabled={saving}
-            className="rounded-full bg-accent px-6 py-2.5 font-medium text-accent-ink hover:opacity-90 disabled:opacity-50"
+            className="rounded-full bg-accent px-6 py-2 text-xs font-bold text-accent-ink hover:opacity-90 disabled:opacity-50 font-mono uppercase tracking-wider animate-pulse"
           >
-            {saving ? "Saving..." : "Finish"}
+            {saving ? "Saving..." : "Verify Portfolio"}
           </button>
         )}
       </div>
