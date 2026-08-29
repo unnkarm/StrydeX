@@ -19,7 +19,6 @@ export interface AthleteProfile {
   bio?: string | null;
   verified: boolean;
   verified_by?: string | null;
-  visibility?: string;
 }
 
 export interface PerformanceLog {
@@ -50,6 +49,92 @@ export interface PerformanceLog {
   altitude_training?: string | null;
   mental_focus_level?: number | null;
   performance_metric?: number | null;
+  competition_category?: "men" | "women" | null;
+  environment?: "outdoor" | "indoor" | null;
+  result_value?: number | null;
+  result_unit?: "seconds" | "metres" | "points" | null;
+  scoring_event_code?: string | null;
+  world_athletics_points?: number | null;
+  scoring_version?: string | null;
+  wind_speed_mps?: number | null;
+  wind_legal?: boolean | null;
+  approach_speed_mps?: number | null;
+  takeoff_velocity_mps?: number | null;
+  takeoff_angle_deg?: number | null;
+  takeoff_contact_time_ms?: number | null;
+  approach_consistency_pct?: number | null;
+  board_accuracy_cm?: number | null;
+  takeoff_distance_cm?: number | null;
+  reactive_strength_index?: number | null;
+  fatigue_score?: number | null;
+  soreness_score?: number | null;
+  session_rpe?: number | null;
+  pain_present?: boolean | null;
+}
+
+export interface AthleticsScore {
+  competition_category: "men" | "women";
+  event: string;
+  event_code: string;
+  event_family: string;
+  environment: "outdoor" | "indoor";
+  result_value: number;
+  result_unit: "seconds" | "metres" | "points";
+  world_athletics_points: number;
+  performance_score: number;
+  score_band: string;
+  wind_speed_mps?: number | null;
+  wind_legal?: boolean | null;
+  scoring_version: string;
+  notes: string[];
+}
+
+export interface AthleticsEvent {
+  event: string;
+  event_code: string;
+  family: string;
+  unit: "seconds" | "metres" | "points";
+  environment: "outdoor" | "indoor";
+}
+
+export interface AthleticsImprovementPriority {
+  priority: "high" | "medium" | "low";
+  area: string;
+  reason: string;
+  actions: string[];
+}
+
+export interface AthleticsReview {
+  overall_score?: number | null;
+  score_band?: string | null;
+  primary_event?: string | null;
+  latest_result?: AthleticsScore | null;
+  change_points?: number | null;
+  confidence: string;
+  historical_scores: { date: string; month: string; score: number; event: string }[];
+  next_milestone?: Record<string, unknown> | null;
+  improvement_priorities: AthleticsImprovementPriority[];
+  context_completeness_pct: number;
+  performance_drivers: {
+    metric: string;
+    label: string;
+    latest_value: number;
+    unit?: string | null;
+    data_points: number;
+    relationship: "positive_association" | "negative_association" | "inconclusive" | "insufficient_history";
+    evidence: string;
+  }[];
+  body_context: {
+    height_cm?: number | null;
+    weight_kg?: number | null;
+    bmi?: number | null;
+    body_fat_percentage?: number | null;
+    vertical_jump_cm?: number | null;
+    strength_to_weight_ratio?: number | null;
+  };
+  personalised_model_status: "driver_analysis_ready" | "collecting_data" | "insufficient_data" | "not_applicable";
+  personalised_model_note: string;
+  model_note: string;
 }
 
 export interface DailyCheckin {
@@ -132,6 +217,20 @@ export interface IntelligenceSummary {
   injury_risk_band?: string | null;
   readiness_pct?: number | null;
   readiness_recommendation?: string | null;
+  overall_score?: number | null;
+  overall_change_pct?: number | null;
+  speed_score?: number | null;
+  strength_score?: number | null;
+  technique_score?: number | null;
+  endurance_score?: number | null;
+  focus_points?: string[] | null;
+  historical_scores?: { date?: string; month: string; score: number; event?: string }[] | null;
+  ai_recommendations?: {
+    focus?: string;
+    actions?: string[];
+    all_priorities?: AthleticsImprovementPriority[];
+    method?: string;
+  } | null;
 }
 
 export interface AIReport {

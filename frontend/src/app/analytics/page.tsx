@@ -13,6 +13,7 @@ import type {
   InjuryRisk,
   Readiness,
   IntelligenceSummary,
+  AthleticsReview,
 } from "@/lib/types";
 import {
   ResponsiveContainer,
@@ -293,6 +294,7 @@ export default function AnalyticsPage() {
   const [readiness, setReadiness] = useState<Readiness | null>(null);
   const [performanceLogs, setPerformanceLogs] = useState<PerformanceLog[]>([]);
   const [readinessLogs, setReadinessLogs] = useState<DailyCheckin[]>([]);
+  const [athleticsReview, setAthleticsReview] = useState<AthleticsReview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function loadAll() {
@@ -308,6 +310,7 @@ export default function AnalyticsPage() {
         readinessData,
         performanceLogData,
         readinessLogData,
+        athleticsReviewData,
       ] = await Promise.all([
         api.myProfile(),
         api.intelligenceSummary(),
@@ -318,6 +321,7 @@ export default function AnalyticsPage() {
         api.readiness(),
         api.myPerformanceLogs(),
         api.readinessHistory(),
+        api.athleticsReview(),
       ]);
 
       setProfile(profileData);
@@ -329,6 +333,7 @@ export default function AnalyticsPage() {
       setReadiness(readinessData);
       setPerformanceLogs(performanceLogData);
       setReadinessLogs(readinessLogData);
+      setAthleticsReview(athleticsReviewData);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load analytics");
     }
@@ -393,6 +398,36 @@ export default function AnalyticsPage() {
           <StatCard compact label="Injury risk" value={summary?.injury_risk_pct != null ? `${summary.injury_risk_pct}%` : "—"} />
           <StatCard compact label="Readiness" value={summary?.readiness_pct != null ? `${summary.readiness_pct}%` : "—"} />
         </div>
+
+        {athleticsReview && athleticsReview.personalised_model_status !== "not_applicable" && (
+          <section className="mb-10 rounded-lg border border-border bg-surface p-5">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-medium text-foreground">Personalised jump drivers</h2>
+                <p className="mt-1 max-w-2xl text-xs text-muted">{athleticsReview.personalised_model_note}</p>
+              </div>
+              <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs text-accent">
+                Context {athleticsReview.context_completeness_pct}%
+              </span>
+            </div>
+
+            {athleticsReview.performance_drivers.length > 0 ? (
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                {athleticsReview.performance_drivers.slice(0, 6).map((driver) => (
+                  <div key={driver.metric} className="rounded-md border border-border bg-surface-2 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-xs font-medium text-foreground">{driver.label}</span>
+                      <span className="text-xs text-accent">{driver.latest_value}{driver.unit ? ` ${driver.unit}` : ""}</span>
+                    </div>
+                    <p className="mt-2 text-xs leading-5 text-muted">{driver.evidence}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-4 text-xs text-muted">Add optional technique, power, and recovery measurements with a long-jump or high-jump result.</p>
+            )}
+          </section>
+        )}
 
         <section className="mb-10 rounded-lg border border-border bg-surface p-5">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
@@ -468,9 +503,9 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="mb-1 text-sm font-medium text-foreground">Performance-score forecast</h2>
-            <p className="mb-4 text-xs text-muted">Longitudinal projection from your dated session-score history</p>
-            <div className="grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
+            <h2 className="mb-1 text-sm font-medium text-foreground">ML performance prediction</h2>
+            <p className="mb-4 text-xs text-muted">Random Forest prediction from your latest session inputs</p>
+            <div className="grid grid-cols-3 gap-3 text-center">
               <div>
                 <div className="stat-value text-xl text-foreground">
                   {prediction?.current != null ? `${prediction.current}/100` : "—"}
@@ -481,19 +516,11 @@ export default function AnalyticsPage() {
                 <div className="stat-value text-xl text-accent">
                   {prediction?.predicted_30d != null ? `${prediction.predicted_30d}/100` : "—"}
                 </div>
-                <div className="mt-1 text-[11px] text-muted">In 30 days</div>
+                <div className="mt-1 text-[11px] text-muted">Predicted</div>
               </div>
               <div>
-                <div className="stat-value text-xl text-accent">
-                  {prediction?.predicted_90d != null ? `${prediction.predicted_90d}/100` : "—"}
-                </div>
-                <div className="mt-1 text-[11px] text-muted">In 90 days</div>
-              </div>
-              <div>
-                <div className="stat-value text-xl text-foreground">
-                  {prediction?.confidence_pct != null ? `${prediction.confidence_pct}%` : "—"}
-                </div>
-                <div className="mt-1 text-[11px] text-muted">Trend fit</div>
+                <div className="stat-value text-xl text-foreground">0–100</div>
+                <div className="mt-1 text-[11px] text-muted">Scale</div>
               </div>
             </div>
             {prediction?.note && <p className="mt-4 text-xs text-muted">{prediction.note}</p>}

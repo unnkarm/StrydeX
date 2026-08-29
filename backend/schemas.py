@@ -1,7 +1,7 @@
 import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class SignupRequest(BaseModel):
@@ -51,7 +51,6 @@ class AthleteProfileIn(BaseModel):
     academy: Optional[str] = None
     region: Optional[str] = None
     bio: Optional[str] = None
-    visibility: str = "public"  # public | scouts_only | private
 
 
 class AthleteProfileOut(AthleteProfileIn):
@@ -89,6 +88,28 @@ class PerformanceLogCreate(BaseModel):
     altitude_training: Optional[str] = None
     mental_focus_level: Optional[float] = None
 
+    # Objective track-and-field result used by the athletics scoring model.
+    competition_category: Optional[str] = None
+    environment: Optional[str] = "outdoor"
+    result_value: Optional[float] = None
+    result_unit: Optional[str] = None
+    wind_speed_mps: Optional[float] = None
+
+    # Optional personalised jump context. Range validation prevents impossible
+    # sensor/form values from entering the longitudinal analysis.
+    approach_speed_mps: Optional[float] = Field(None, gt=0, le=15)
+    takeoff_velocity_mps: Optional[float] = Field(None, gt=0, le=15)
+    takeoff_angle_deg: Optional[float] = Field(None, ge=0, le=90)
+    takeoff_contact_time_ms: Optional[float] = Field(None, gt=0, le=1000)
+    approach_consistency_pct: Optional[float] = Field(None, ge=0, le=100)
+    board_accuracy_cm: Optional[float] = Field(None, ge=0, le=300)
+    takeoff_distance_cm: Optional[float] = Field(None, ge=0, le=500)
+    reactive_strength_index: Optional[float] = Field(None, ge=0, le=10)
+    fatigue_score: Optional[float] = Field(None, ge=0, le=10)
+    soreness_score: Optional[float] = Field(None, ge=0, le=10)
+    session_rpe: Optional[float] = Field(None, ge=0, le=10)
+    pain_present: Optional[bool] = None
+
 
 PerformanceLogIn = PerformanceLogCreate
 
@@ -98,6 +119,10 @@ class PerformanceLogOut(PerformanceLogCreate):
     athlete_id: int
     date: datetime.datetime
     performance_metric: Optional[float] = None
+    scoring_event_code: Optional[str] = None
+    world_athletics_points: Optional[int] = None
+    scoring_version: Optional[str] = None
+    wind_legal: Optional[bool] = None
 
     class Config:
         from_attributes = True
@@ -168,6 +193,77 @@ class PredictionOut(BaseModel):
     note: Optional[str] = None
 
 
+class AthleticsScoreIn(BaseModel):
+    competition_category: str
+    event: str
+    result_value: float
+    result_unit: Optional[str] = None
+    environment: str = "outdoor"
+    wind_speed_mps: Optional[float] = None
+
+
+class AthleticsScoreOut(BaseModel):
+    competition_category: str
+    event: str
+    event_code: str
+    event_family: str
+    environment: str
+    result_value: float
+    result_unit: str
+    world_athletics_points: int
+    performance_score: float
+    score_band: str
+    wind_speed_mps: Optional[float] = None
+    wind_legal: Optional[bool] = None
+    scoring_version: str
+    notes: List[str]
+
+
+class AthleticsEventOut(BaseModel):
+    event: str
+    event_code: str
+    family: str
+    unit: str
+    environment: str
+
+
+class AthleticsImprovementPriority(BaseModel):
+    priority: str
+    area: str
+    reason: str
+    actions: List[str]
+
+
+class AthleticsPerformanceDriver(BaseModel):
+    metric: str
+    label: str
+    latest_value: float
+    unit: Optional[str] = None
+    data_points: int
+    relationship: str
+    evidence: str
+
+
+class AthleticsReviewOut(BaseModel):
+    model_config = {"protected_namespaces": ()}
+
+    overall_score: Optional[float] = None
+    score_band: Optional[str] = None
+    primary_event: Optional[str] = None
+    latest_result: Optional[AthleticsScoreOut] = None
+    change_points: Optional[float] = None
+    confidence: str
+    historical_scores: List[Dict[str, Any]]
+    next_milestone: Optional[Dict[str, Any]] = None
+    improvement_priorities: List[AthleticsImprovementPriority]
+    context_completeness_pct: float = 0.0
+    performance_drivers: List[AthleticsPerformanceDriver] = Field(default_factory=list)
+    body_context: Dict[str, Any] = Field(default_factory=dict)
+    personalised_model_status: str = "insufficient_data"
+    personalised_model_note: str
+    model_note: str
+
+
 class InjuryRiskOut(BaseModel):
     risk_pct: float
     risk_band: str
@@ -189,6 +285,16 @@ class IntelligenceSummaryOut(BaseModel):
     injury_risk_band: Optional[str] = None
     readiness_pct: Optional[float] = None
     readiness_recommendation: Optional[str] = None
+
+    overall_score: Optional[float] = None
+    overall_change_pct: Optional[float] = None
+    speed_score: Optional[float] = None
+    strength_score: Optional[float] = None
+    technique_score: Optional[float] = None
+    endurance_score: Optional[float] = None
+    focus_points: Optional[List[str]] = None
+    historical_scores: Optional[List[Dict[str, Any]]] = None
+    ai_recommendations: Optional[Dict[str, Any]] = None
 
 
 class AIReportOut(BaseModel):

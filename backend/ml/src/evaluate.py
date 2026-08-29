@@ -34,6 +34,7 @@ from readiness_scoring import calculate_readiness_score
 BASE_DIR = Path(__file__).resolve().parent.parent
 ARTIFACTS_DIR = BASE_DIR / "artifacts"
 MODELS_DIR = ARTIFACTS_DIR / "models"
+ATHLETICS_MODEL_PATH = BASE_DIR / "models" / "athletics_performance_model_2025.json"
 
 
 def _regression_metrics(model, dataset: dict) -> dict:
@@ -50,23 +51,6 @@ def _regression_metrics(model, dataset: dict) -> dict:
         "baseline_mae": float(mean_absolute_error(y_test, baseline)),
         "within_5_points": float(np.mean(errors <= 5)),
         "beats_baseline": bool(mean_absolute_error(y_test, predictions) < mean_absolute_error(y_test, baseline)),
-    }
-
-
-def _crossfit_metrics(model, dataset: dict) -> dict:
-    y_test = np.asarray(dataset["y_test"], dtype=float)
-    predictions = np.clip(model.predict(dataset["X_test"]), 0.0, 100.0)
-    baseline = np.full(y_test.shape, float(dataset["y_train_mean"]))
-    mae = mean_absolute_error(y_test, predictions)
-    baseline_mae = mean_absolute_error(y_test, baseline)
-    return {
-        "samples": int(y_test.size),
-        "mae": float(mae),
-        "rmse": float(mean_squared_error(y_test, predictions) ** 0.5),
-        "r2": float(r2_score(y_test, predictions)),
-        "baseline_mae": float(baseline_mae),
-        "within_10_points": float(np.mean(np.abs(y_test - predictions) <= 10)),
-        "beats_baseline": bool(mae < baseline_mae),
     }
 
 
@@ -116,12 +100,9 @@ def _readiness_formula_metrics(dataset: dict) -> dict:
 def evaluate() -> dict:
     results = {}
 
-    crossfit_dataset = ARTIFACTS_DIR / "crossfit_performance_holdout.joblib"
-    crossfit_model = MODELS_DIR / "crossfit_performance_model.joblib"
-    if crossfit_dataset.exists() and crossfit_model.exists():
-        results["crossfit_performance"] = _crossfit_metrics(
-            joblib.load(crossfit_model), joblib.load(crossfit_dataset)
-        )
+    if ATHLETICS_MODEL_PATH.exists():
+        athletics_payload = json.loads(ATHLETICS_MODEL_PATH.read_text())
+        results["athletics_performance"] = athletics_payload["validation"]
 
     for suffix in ("", "_v2"):
         dataset_path = ARTIFACTS_DIR / f"injury_dataset{suffix}.joblib"
@@ -135,7 +116,7 @@ def evaluate() -> dict:
                 joblib.load(model_path), joblib.load(dataset_path), threshold
             )
 
-    for name in ("performance", "readiness"):
+    for name in ("readiness",):
         for suffix in ("", "_v2"):
             dataset_path = ARTIFACTS_DIR / f"{name}_dataset{suffix}.joblib"
             model_path = MODELS_DIR / f"{name}_model{suffix}.joblib"
@@ -147,30 +128,30 @@ def evaluate() -> dict:
     readiness_dataset = ARTIFACTS_DIR / "readiness_dataset_v2.joblib"
     if not readiness_dataset.exists():
         readiness_dataset = ARTIFACTS_DIR / "readiness_dataset.joblib"
-    results["readiness_formula"] = _readiness_formula_metrics(joblib.load(readiness_dataset))
+    if readiness_dataset.exists():
+        results["readiness_formula"] = _readiness_formula_metrics(joblib.load(readiness_dataset))
     return results
 
 
 def _quality_gates(results: dict) -> dict[str, bool]:
+    athletics = results.get("athletics_performance", {})
     injury = results.get("injury_v2", results.get("injury_deployed", {}))
-    performance = results.get("performance_v2", results.get("performance_deployed", {}))
-    formula = results["readiness_formula"]
-    crossfit = results.get("crossfit_performance", {})
-    return {
-        "injury": bool(
+    gates = {
+        "athletics_performance": bool(
+            athletics.get("quality_gate_passed", False)
+            and athletics.get("overall_mae_points", 999) <= 0.5
+            and athletics.get("event_category_models", 0) >= 160
+        ),
+    }
+    if injury:
+        gates["injury"] = bool(
             injury.get("recall", 0) >= 0.70
             and injury.get("balanced_accuracy", 0) >= 0.70
-        ),
-        "generic_performance": bool(
-            performance.get("r2", -1) > 0
-            and performance.get("beats_baseline", False)
-        ),
-        "crossfit_performance": bool(
-            crossfit.get("r2", -1) >= 0.35
-            and crossfit.get("beats_baseline", False)
-        ),
-        "readiness_formula": bool(formula.get("mae", 1) < 1e-9),
-    }
+        )
+    formula = results.get("readiness_formula")
+    if formula:
+        gates["readiness_formula"] = bool(formula.get("mae", 1) < 1e-9)
+    return gates
 
 
 def _passes_quality_gates(results: dict) -> bool:

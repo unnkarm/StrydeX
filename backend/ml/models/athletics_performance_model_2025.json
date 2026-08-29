@@ -1,0 +1,3330 @@
+{
+  "events": {
+    "men": {
+      "10,000mW": {
+        "coefficients": [
+          0.00011370001341666628,
+          -1.2620689961633813,
+          3502.2382226412187
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0013696350650294724,
+          "max_error_points": 0.00398319506621192,
+          "r2": 0.9999999999830567,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 5456.21,
+        "mark_min": 2040.99,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "10000m": {
+        "coefficients": [
+          0.000523999442929842,
+          -3.3011925259675676,
+          5199.371486424657
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.002834307683861945,
+          "max_error_points": 0.008382417492612149,
+          "r2": 0.9999999999257879,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 3106.31,
+        "mark_min": 1515.44,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1000m": {
+        "coefficients": [
+          0.11229987245967794,
+          -53.341296876503215,
+          6334.142779327552
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.04160136538592594,
+          "max_error_points": 0.12392580890173122,
+          "r2": 0.999999984095126,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 234.51,
+        "mark_min": 125.84,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1000m sh": {
+        "coefficients": [
+          0.11389778654421928,
+          -54.670029753044496,
+          6560.289996663257
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.04257978624291224,
+          "max_error_points": 0.12569166644061625,
+          "r2": 0.9999999833965304,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 237.03,
+        "mark_min": 129.13,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "100m": {
+        "coefficients": [
+          24.64221166330592,
+          -837.7135408254398,
+          7119.312511439104
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.23905464172364407,
+          "max_error_points": 0.5552056758724575,
+          "r2": 0.9999995324395565,
+          "samples": 652
+        },
+        "higher_is_better": false,
+        "mark_max": 16.79,
+        "mark_min": 9.46,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "110mH": {
+        "coefficients": [
+          7.665203371660661,
+          -395.4175676080314,
+          5099.52167000382
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.22293441292032723,
+          "max_error_points": 0.5275550418864441,
+          "r2": 0.9999995591204982,
+          "samples": 1024
+        },
+        "higher_is_better": false,
+        "mark_max": 25.43,
+        "mark_min": 12.28,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "15,000mW": {
+        "coefficients": [
+          4.979999739456712e-05,
+          -0.8396274711970276,
+          3539.027702746492
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.000896891316210388,
+          "max_error_points": 0.0025991018883360084,
+          "r2": 0.9999999999926563,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 8288.29,
+        "mark_min": 3127.88,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1500m": {
+        "coefficients": [
+          0.04065992530100738,
+          -31.307736300236805,
+          6026.662254454699
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.02396318354552217,
+          "max_error_points": 0.0732554823589453,
+          "r2": 0.999999994570839,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 380.04,
+        "mark_min": 199.44,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1500m sh": {
+        "coefficients": [
+          0.041999988505831795,
+          -32.42357570362243,
+          6257.66958108224
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.025287917083738388,
+          "max_error_points": 0.07582312285194348,
+          "r2": 0.9999999941485791,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 381.12,
+        "mark_min": 203.42000000000002,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2 Miles": {
+        "coefficients": [
+          0.0070299885182771825,
+          -12.721403001387166,
+          5755.1327189260855
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.010271899760322672,
+          "max_error_points": 0.03160235030554759,
+          "r2": 0.9999999990149834,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 892.87,
+        "mark_min": 458.54,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2 Miles sh": {
+        "coefficients": [
+          0.0072099691876580255,
+          -13.078823619331121,
+          5931.217870658493
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.010418616187592825,
+          "max_error_points": 0.031560442948830314,
+          "r2": 0.9999999989902529,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 895.22,
+        "mark_min": 466.34000000000003,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "20,000mW": {
+        "coefficients": [
+          2.7350002531650695e-05,
+          -0.6235797774558118,
+          3554.4031485659875
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0006378475106173807,
+          "max_error_points": 0.001990648045193666,
+          "r2": 0.9999999999962182,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 11208.78,
+        "mark_min": 4245.4,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2000m": {
+        "coefficients": [
+          0.021810031812471924,
+          -23.031167821416563,
+          6080.168871819903
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.01810194046466352,
+          "max_error_points": 0.05412654966039554,
+          "r2": 0.9999999969717626,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 521.22,
+        "mark_min": 274.64,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2000m SC": {
+        "coefficients": [
+          0.01022998582219502,
+          -13.503484790832609,
+          4456.117711620067
+        ],
+        "family": "steeplechase",
+        "fit": {
+          "mae_points": 0.012760754354254849,
+          "max_error_points": 0.03639246909142457,
+          "r2": 0.9999999985311666,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 650.11,
+        "mark_min": 290.06,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2000m sh": {
+        "coefficients": [
+          0.02260000352726253,
+          -23.865373073783896,
+          6300.397643779604
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.019216076001427607,
+          "max_error_points": 0.05621271199106559,
+          "r2": 0.9999999965950938,
+          "samples": 1399
+        },
+        "higher_is_better": false,
+        "mark_max": 521.34,
+        "mark_min": 279.1,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "200m": {
+        "coefficients": [
+          5.083329625707272,
+          -360.82603806429205,
+          6403.154333108123
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.22256902686853866,
+          "max_error_points": 0.5105982264249178,
+          "r2": 0.9999995535965885,
+          "samples": 1167
+        },
+        "higher_is_better": false,
+        "mark_max": 35.05,
+        "mark_min": 18.9,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "200m sh": {
+        "coefficients": [
+          5.042898433343532,
+          -363.0051678289821,
+          6532.672628975053
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.220044761994697,
+          "max_error_points": 0.530366158637662,
+          "r2": 0.9999995542528246,
+          "samples": 1170
+        },
+        "higher_is_better": false,
+        "mark_max": 35.55,
+        "mark_min": 19.33,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "30,000mW": {
+        "coefficients": [
+          8.929998959850772e-06,
+          -0.34130448397579305,
+          3261.163590032474
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0003730397867148635,
+          "max_error_points": 0.0010654277446064953,
+          "r2": 0.9999999999987264,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 18775.36,
+        "mark_min": 6589.02,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000m": {
+        "coefficients": [
+          0.008150049932737593,
+          -13.69198354232236,
+          5750.592463763812
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.011284547345535172,
+          "max_error_points": 0.034127879152038076,
+          "r2": 0.9999999988347971,
+          "samples": 1399
+        },
+        "higher_is_better": false,
+        "mark_max": 828.92,
+        "mark_min": 425.53,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000m SC": {
+        "coefficients": [
+          0.004315997345851964,
+          -8.804593368707323,
+          4490.321079709185
+        ],
+        "family": "steeplechase",
+        "fit": {
+          "mae_points": 0.008330260899423528,
+          "max_error_points": 0.02395482397332671,
+          "r2": 0.9999999993627868,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1004.77,
+        "mark_min": 450.46,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000m sh": {
+        "coefficients": [
+          0.008321919172357839,
+          -13.980775520786683,
+          5871.902505571865
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.011619784987502239,
+          "max_error_points": 0.03394533404207323,
+          "r2": 0.9999999987661016,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 829.03,
+        "mark_min": 429.84,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000mW": {
+        "coefficients": [
+          0.001317997884138519,
+          -4.230761878842662,
+          3395.177055089643
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.004578236072825348,
+          "max_error_points": 0.013877583743123978,
+          "r2": 0.9999999998084456,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1577.45,
+        "mark_min": 574.36,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "300m": {
+        "coefficients": [
+          1.8296570247435497,
+          -209.3043038212616,
+          5985.805789925604
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.1776304665348928,
+          "max_error_points": 0.5483446807502332,
+          "r2": 0.999999711673277,
+          "samples": 1399
+        },
+        "higher_is_better": false,
+        "mark_max": 56.46,
+        "mark_min": 29.54,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "300m sh": {
+        "coefficients": [
+          1.8029639297594862,
+          -209.1273599331529,
+          6064.198387136691
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.1630073373202887,
+          "max_error_points": 0.4803030094899441,
+          "r2": 0.999999755722988,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 57.25,
+        "mark_min": 30.13,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "35,000mW": {
+        "coefficients": [
+          6.1399996705818095e-06,
+          -0.279983931567266,
+          3191.816162356195
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.000314257025036438,
+          "max_error_points": 0.00090004938238053,
+          "r2": 0.9999999999991017,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 22396.43,
+        "mark_min": 7699.89,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "400m": {
+        "coefficients": [
+          1.021013042553344,
+          -161.30922380614516,
+          6371.289298870718
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.12790661995029756,
+          "max_error_points": 0.36890607672012266,
+          "r2": 0.9999998531926984,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 78.01,
+        "mark_min": 41.97,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "400m sh": {
+        "coefficients": [
+          0.9810285010269515,
+          -158.1309354479629,
+          6372.245446826151
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.12492303290899275,
+          "max_error_points": 0.36403278974830755,
+          "r2": 0.9999998578656933,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 79.59,
+        "mark_min": 42.82,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "400mH": {
+        "coefficients": [
+          0.5459888468068094,
+          -104.2787780129046,
+          4979.068748681378
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.09273708179519222,
+          "max_error_points": 0.2809515638209632,
+          "r2": 0.9999999213821283,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 94.14,
+        "mark_min": 44.86,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x100m": {
+        "coefficients": [
+          1.2360320753944312,
+          -171.79529610957889,
+          5969.431205297963
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.13919028412355927,
+          "max_error_points": 0.4122231571445809,
+          "r2": 0.999999823139233,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 68.6,
+        "mark_min": 35.84,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x200m": {
+        "coefficients": [
+          0.29767755480817204,
+          -85.72750621502057,
+          6172.130946413874
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.06596022985365575,
+          "max_error_points": 0.2027489439906276,
+          "r2": 0.9999999590449887,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 142.16,
+        "mark_min": 75.42,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x200m sh": {
+        "coefficients": [
+          0.31198966894877983,
+          -89.85075766467874,
+          6469.076514968892
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.06982561392573708,
+          "max_error_points": 0.20104011176772474,
+          "r2": 0.9999999549483307,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 142.2,
+        "mark_min": 77.01,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400m": {
+        "coefficients": [
+          0.0505007220369577,
+          -33.73384421283913,
+          5633.448990221085
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.028293733065465856,
+          "max_error_points": 0.08133700581402081,
+          "r2": 0.9999999926954862,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 329.55,
+        "mark_min": 167.49,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400m sh": {
+        "coefficients": [
+          0.048900330305108215,
+          -33.25166827873929,
+          5652.691308895367
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.026699925414122194,
+          "max_error_points": 0.08191957116196136,
+          "r2": 0.999999993273518,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 335.47,
+        "mark_min": 170.79,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400mix": {
+        "coefficients": [
+          0.027319971572150468,
+          -21.85572277422136,
+          4371.09134477952
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.020253903411839278,
+          "max_error_points": 0.059208462324477296,
+          "r2": 0.9999999961976334,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 393.94,
+        "mark_min": 173.62,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400mix sh": {
+        "coefficients": [
+          0.026880251011690337,
+          -21.772687901830203,
+          4408.9069978252455
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.02062583462041305,
+          "max_error_points": 0.05988757732848171,
+          "r2": 0.9999999961076583,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 398.9,
+        "mark_min": 176.78,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "50,000mW": {
+        "coefficients": [
+          2.123999976238684e-06,
+          -0.15802557747097476,
+          2939.275352678517
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0001833148706256387,
+          "max_error_points": 0.0005402418573794421,
+          "r2": 0.9999999999996922,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 36513.84,
+        "mark_min": 11526.4,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "5000m": {
+        "coefficients": [
+          0.0027779979454664195,
+          -8.000608112339021,
+          5760.418712472623
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.006499049830649061,
+          "max_error_points": 0.01977816539874766,
+          "r2": 0.9999999996096934,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1421.02,
+        "mark_min": 730.09,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "5000m sh": {
+        "coefficients": [
+          0.0029000031486405564,
+          -8.351976844929728,
+          6013.400535688679
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.006587059724917838,
+          "max_error_points": 0.019734482234525785,
+          "r2": 0.9999999995981657,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1421.43,
+        "mark_min": 745.19,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "5000mW": {
+        "coefficients": [
+          0.00046699956723308185,
+          -2.5217935388631685,
+          3404.415650269856
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.002691364164101872,
+          "max_error_points": 0.007930923763524333,
+          "r2": 0.9999999999341543,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 2653.72,
+        "mark_min": 968.56,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "500m": {
+        "coefficients": [
+          0.5850277748046698,
+          -121.6786390622816,
+          6326.928029804176
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.09281456666853631,
+          "max_error_points": 0.29778497047209385,
+          "r2": 0.9999999199089741,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 102.69,
+        "mark_min": 55.08,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "500m sh": {
+        "coefficients": [
+          0.5649713205982733,
+          -119.76970949453184,
+          6347.557018668838
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.09463078740497516,
+          "max_error_points": 0.2826481607307869,
+          "r2": 0.9999999189320861,
+          "samples": 1399
+        },
+        "higher_is_better": false,
+        "mark_max": 104.66,
+        "mark_min": 56.22,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "50m": {
+        "coefficients": [
+          95.82235386298235,
+          -1763.0165326414967,
+          8108.971505878431
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.24158111205528718,
+          "max_error_points": 0.5465704424814248,
+          "r2": 0.9999995307469032,
+          "samples": 355
+        },
+        "higher_is_better": false,
+        "mark_max": 9.09,
+        "mark_min": 5.38,
+        "points_max": 1397,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "50mH": {
+        "coefficients": [
+          34.21237722424119,
+          -844.9430290468182,
+          5216.591321673957
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.24200641542735735,
+          "max_error_points": 0.5547999672435253,
+          "r2": 0.999999524797001,
+          "samples": 566
+        },
+        "higher_is_better": false,
+        "mark_max": 12.17,
+        "mark_min": 5.95,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "55m": {
+        "coefficients": [
+          78.92276088460615,
+          -1578.32393698127,
+          7890.6370766237505
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.24672754444788497,
+          "max_error_points": 0.5482944005480022,
+          "r2": 0.9999995144805743,
+          "samples": 389
+        },
+        "higher_is_better": false,
+        "mark_max": 9.88,
+        "mark_min": 5.79,
+        "points_max": 1398,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "55mH": {
+        "coefficients": [
+          30.08530770823347,
+          -803.1373763713807,
+          5359.772393231085
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.24706203140678393,
+          "max_error_points": 0.5667019152397188,
+          "r2": 0.9999994998952919,
+          "samples": 598
+        },
+        "higher_is_better": false,
+        "mark_max": 13.16,
+        "mark_min": 6.53,
+        "points_max": 1398,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "600m": {
+        "coefficients": [
+          0.38569922829516534,
+          -99.89240864576503,
+          6467.788691387541
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.07652037186246811,
+          "max_error_points": 0.22573455611291138,
+          "r2": 0.9999999459662837,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 127.88,
+        "mark_min": 69.25,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "600m sh": {
+        "coefficients": [
+          0.3899861152599268,
+          -102.1733502542711,
+          6692.146447545426
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.07685165478775616,
+          "max_error_points": 0.22269070374386501,
+          "r2": 0.9999999450093566,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 129.39,
+        "mark_min": 71.08,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "60m": {
+        "coefficients": [
+          68.6203220046633,
+          -1468.3760798801684,
+          7854.923996406866
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.25363646031377324,
+          "max_error_points": 0.5895001710550787,
+          "r2": 0.9999994978231411,
+          "samples": 414
+        },
+        "higher_is_better": false,
+        "mark_max": 10.57,
+        "mark_min": 6.19,
+        "points_max": 1395,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "60mH": {
+        "coefficients": [
+          23.916231718964056,
+          -698.1937268967052,
+          5095.479315061545
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.230895199225353,
+          "max_error_points": 0.5565380238685975,
+          "r2": 0.9999995567479723,
+          "samples": 659
+        },
+        "higher_is_better": false,
+        "mark_max": 14.39,
+        "mark_min": 6.95,
+        "points_max": 1398,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "800m": {
+        "coefficients": [
+          0.1980049254240584,
+          -72.07136039069434,
+          6558.281603197362
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.05441053621100569,
+          "max_error_points": 0.1648157849249401,
+          "r2": 0.9999999725570183,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 179.75,
+        "mark_min": 97.91,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "800m sh": {
+        "coefficients": [
+          0.1973925610777903,
+          -72.63927638665304,
+          6682.68796029016
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.055992519189846594,
+          "max_error_points": 0.16332057882118534,
+          "r2": 0.9999999714723727,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 181.74,
+        "mark_min": 99.78,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "DT": {
+        "coefficients": [
+          0.0040063129016178305,
+          17.89206050103094,
+          -27.18777464602131
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.04553281533300488,
+          "max_error_points": 0.09197289751796234,
+          "r2": 0.9999999832707378,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 78.39,
+        "mark_min": 1.57,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Dec.": {
+        "coefficients": [
+          9.772168523987203e-07,
+          0.1391296438011336,
+          -48.9586025647875
+        ],
+        "family": "combined_events",
+        "fit": {
+          "mae_points": 0.038186224532658124,
+          "max_error_points": 0.07956326541966519,
+          "r2": 0.9999999882700028,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 9747.0,
+        "mark_min": 358.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "points"
+      },
+      "HJ": {
+        "coefficients": [
+          32.14570816337835,
+          745.374682614206,
+          -705.2597334942092
+        ],
+        "family": "vertical_jumps",
+        "fit": {
+          "mae_points": 0.23141641878351318,
+          "max_error_points": 0.5090946435890373,
+          "r2": 0.9999995551671473,
+          "samples": 163
+        },
+        "higher_is_better": true,
+        "mark_max": 2.54,
+        "mark_min": 0.92,
+        "points_max": 1395,
+        "points_min": 8,
+        "unit": "metres"
+      },
+      "HT": {
+        "coefficients": [
+          0.0028444950947681684,
+          15.081627308138735,
+          -21.68901198508544
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.038368254813864085,
+          "max_error_points": 0.08018040309673324,
+          "r2": 0.9999999880301745,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 92.65,
+        "mark_min": 1.5,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Hept. sh": {
+        "coefficients": [
+          1.7511052939834233e-06,
+          0.1863299979812808,
+          -46.18002211678935
+        ],
+        "family": "combined_events",
+        "fit": {
+          "mae_points": 0.04921067899254638,
+          "max_error_points": 0.10661425336115826,
+          "r2": 0.9999999801820948,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 7265.0,
+        "mark_min": 253.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "points"
+      },
+      "JT": {
+        "coefficients": [
+          0.0024031524896887136,
+          13.841186813178346,
+          -21.058250953566713
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.03487391084745179,
+          "max_error_points": 0.08943982482423962,
+          "r2": 0.9999999900448241,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 100.9,
+        "mark_min": 1.59,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "LJ": {
+        "coefficients": [
+          1.9310928729678754,
+          186.73134733629965,
+          -479.7064044571262
+        ],
+        "family": "horizontal_jumps",
+        "fit": {
+          "mae_points": 0.2619531529356416,
+          "max_error_points": 0.545900394818716,
+          "r2": 0.9999994410403794,
+          "samples": 669
+        },
+        "higher_is_better": true,
+        "mark_max": 9.19,
+        "mark_min": 2.51,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Mile": {
+        "coefficients": [
+          0.03509967760328158,
+          -29.132456259050514,
+          6044.924547012999
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.02342089538601158,
+          "max_error_points": 0.06756948497059057,
+          "r2": 0.9999999949186644,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 409.65999999999997,
+        "mark_min": 215.28,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Mile sh": {
+        "coefficients": [
+          0.036900007416253953,
+          -30.626657726983915,
+          6354.95803131112
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.023536047911481027,
+          "max_error_points": 0.07213814240731153,
+          "r2": 0.9999999949150348,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 409.79,
+        "mark_min": 220.21,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "PV": {
+        "coefficients": [
+          3.045719920883219,
+          239.61202669610643,
+          -280.54122299350917
+        ],
+        "family": "vertical_jumps",
+        "fit": {
+          "mae_points": 0.2501940378686996,
+          "max_error_points": 0.5303464803627094,
+          "r2": 0.9999994946913813,
+          "samples": 533
+        },
+        "higher_is_better": true,
+        "mark_max": 6.48,
+        "mark_min": 1.16,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Road 10 Miles": {
+        "coefficients": [
+          0.00018524985210252912,
+          -1.94479050298262,
+          5104.302716211314
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.1686483079624171,
+          "max_error_points": 0.529586724789624,
+          "r2": 0.9999997432647626,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 5176.0,
+        "mark_min": 2500.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 10 km": {
+        "coefficients": [
+          0.0005243835511751879,
+          -3.302659028158268,
+          5200.27403631204
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.22059542937467727,
+          "max_error_points": 0.5357497589548075,
+          "r2": 0.9999995538158916,
+          "samples": 1157
+        },
+        "higher_is_better": false,
+        "mark_max": 3106.0,
+        "mark_min": 1515.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 100 km": {
+        "coefficients": [
+          1.7649869023533893e-06,
+          -0.1715553395202665,
+          4168.759475621111
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.01616746828644539,
+          "max_error_points": 0.04847496998627321,
+          "r2": 0.9999999976047174,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 47847.0,
+        "mark_min": 20436.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 10kmW": {
+        "coefficients": [
+          0.00011369880949881335,
+          -1.2619474331486351,
+          3501.5994292764494
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.13304521396786284,
+          "max_error_points": 0.3956312634954884,
+          "r2": 0.9999998384099581,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 5456.0,
+        "mark_min": 2040.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 15 km": {
+        "coefficients": [
+          0.00021619813225110605,
+          -2.104692144508956,
+          5122.299985161234
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.1837944492023298,
+          "max_error_points": 0.536805083260333,
+          "r2": 0.9999996936448627,
+          "samples": 1388
+        },
+        "higher_is_better": false,
+        "mark_max": 4799.0,
+        "mark_min": 2323.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 15kmW": {
+        "coefficients": [
+          4.9801244751949955e-05,
+          -0.8395916226973483,
+          3538.6471161109835
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.09107134111447229,
+          "max_error_points": 0.26523735865066556,
+          "r2": 0.9999999237754903,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 8288.0,
+        "mark_min": 3127.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 20 km": {
+        "coefficients": [
+          0.00010849945387863996,
+          -1.4544357630931108,
+          4874.178186114275
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.13293097988294156,
+          "max_error_points": 0.3834256706822998,
+          "r2": 0.99999983950573,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 6606.0,
+        "mark_min": 3110.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 20kmW": {
+        "coefficients": [
+          2.7350415738631323e-05,
+          -0.6235597178340655,
+          3554.121990636883
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.06603652992354943,
+          "max_error_points": 0.19939060631440952,
+          "r2": 0.9999999603304122,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 11208.0,
+        "mark_min": 4245.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 25 km": {
+        "coefficients": [
+          6.380128595119748e-05,
+          -1.1024131603113667,
+          4762.12008144941
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.1013948547493877,
+          "max_error_points": 0.2985824873430829,
+          "r2": 0.9999999066748422,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 8514.0,
+        "mark_min": 3955.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 30 km": {
+        "coefficients": [
+          4.1899103628953556e-05,
+          -0.8882236041724861,
+          4707.38328960135
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.0802219127421001,
+          "max_error_points": 0.2435088320826253,
+          "r2": 0.9999999407969037,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 10445.0,
+        "mark_min": 4819.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 30kmW": {
+        "coefficients": [
+          8.929872357657538e-06,
+          -0.3412926057869193,
+          3260.9773729428466
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.03776406152735904,
+          "max_error_points": 0.10990363937867187,
+          "r2": 0.9999999867874312,
+          "samples": 1399
+        },
+        "higher_is_better": false,
+        "mark_max": 18775.0,
+        "mark_min": 6589.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 35kmW": {
+        "coefficients": [
+          6.140066929270575e-06,
+          -0.2799797053731765,
+          3191.689746893986
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.031049471471612508,
+          "max_error_points": 0.09197157881885687,
+          "r2": 0.9999999910135995,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 22396.0,
+        "mark_min": 7699.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 3kmW": {
+        "coefficients": [
+          0.0013188638764628565,
+          -4.232300411922081,
+          3395.346767514365
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.2248909629244647,
+          "max_error_points": 0.5610437640361852,
+          "r2": 0.9999995587868747,
+          "samples": 841
+        },
+        "higher_is_better": false,
+        "mark_max": 1577.0,
+        "mark_min": 574.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 5 km": {
+        "coefficients": [
+          0.002779112591439777,
+          -8.002589937143135,
+          5760.829724555492
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.23943424862268622,
+          "max_error_points": 0.5946457392765296,
+          "r2": 0.9999995335908778,
+          "samples": 620
+        },
+        "higher_is_better": false,
+        "mark_max": 1421.0,
+        "mark_min": 730.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 50kmW": {
+        "coefficients": [
+          2.1239897308494306e-06,
+          -0.15802293332530984,
+          2939.1902791591256
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.01846346244937487,
+          "max_error_points": 0.052623521882878777,
+          "r2": 0.9999999969099649,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 36513.0,
+        "mark_min": 11526.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 5kmW": {
+        "coefficients": [
+          0.00046733161702404994,
+          -2.5226751352788774,
+          3404.498836039265
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.21542780843365708,
+          "max_error_points": 0.5148426952328009,
+          "r2": 0.999999574267966,
+          "samples": 1196
+        },
+        "higher_is_better": false,
+        "mark_max": 2653.0,
+        "mark_min": 968.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road HM": {
+        "coefficients": [
+          9.469710951085247e-05,
+          -1.352189290138717,
+          4827.0206764506775
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.12246483502103567,
+          "max_error_points": 0.36068207278776754,
+          "r2": 0.9999998634962609,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 7037.0,
+        "mark_min": 3295.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road Marathon": {
+        "coefficients": [
+          2.0101186255386236e-05,
+          -0.6150659606585237,
+          4705.042285813542
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.05589972460229644,
+          "max_error_points": 0.1755789212415948,
+          "r2": 0.9999999710696951,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 15076.0,
+        "mark_min": 6954.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road Mile": {
+        "coefficients": [
+          0.03509967760328158,
+          -29.132456259050514,
+          6044.924547012999
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.02342089538601158,
+          "max_error_points": 0.06756948497059057,
+          "r2": 0.9999999949186644,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 409.65999999999997,
+        "mark_min": 215.28,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "SP": {
+        "coefficients": [
+          0.04234614355500164,
+          57.99966265925927,
+          -55.823610246193894
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.1473131912235987,
+          "max_error_points": 0.3160133405947363,
+          "r2": 0.999999822437439,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 24.66,
+        "mark_min": 0.98,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "TJ": {
+        "coefficients": [
+          0.46036660240430977,
+          90.96978768045486,
+          -514.9946082621861
+        ],
+        "family": "horizontal_jumps",
+        "fit": {
+          "mae_points": 0.23953286250472616,
+          "max_error_points": 0.532033727645512,
+          "r2": 0.9999995258828375,
+          "samples": 1360
+        },
+        "higher_is_better": true,
+        "mark_max": 19.19,
+        "mark_min": 5.52,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      }
+    },
+    "women": {
+      "10,000mW": {
+        "coefficients": [
+          7.849989817193869e-05,
+          -1.0079383485729574,
+          3235.480591702657
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0010973016871344042,
+          "max_error_points": 0.003442821673615981,
+          "r2": 0.9999999999889368,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 6307.13,
+        "mark_min": 2196.92,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "10000m": {
+        "coefficients": [
+          0.00017120004503028667,
+          -1.5407985033799105,
+          3466.792517297162
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.001622580709023883,
+          "max_error_points": 0.004818858176804497,
+          "r2": 0.9999999999758717,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 4423.57,
+        "mark_min": 1640.35,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1000m": {
+        "coefficients": [
+          0.03819970853323496,
+          -25.21148779372495,
+          4159.840558570959
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.023863133609058878,
+          "max_error_points": 0.07181444115076374,
+          "r2": 0.9999999946960042,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 324.88,
+        "mark_min": 138.56,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1000m sh": {
+        "coefficients": [
+          0.03473027366942642,
+          -23.643965410197897,
+          4024.1370966617746
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.0235682669506556,
+          "max_error_points": 0.06793906543271078,
+          "r2": 0.9999999949270488,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 335.03,
+        "mark_min": 139.62,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "100m": {
+        "coefficients": [
+          9.927426450755473,
+          -436.67512621507274,
+          4802.020943910287
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.23774692467692893,
+          "max_error_points": 0.5649882028174034,
+          "r2": 0.9999995040289049,
+          "samples": 934
+        },
+        "higher_is_better": false,
+        "mark_max": 21.68,
+        "mark_min": 10.12,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "100mH": {
+        "coefficients": [
+          3.982296326193549,
+          -238.86195777303217,
+          3581.905439308296
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.21595155048343104,
+          "max_error_points": 0.5187182864592614,
+          "r2": 0.9999995747748698,
+          "samples": 1247
+        },
+        "higher_is_better": false,
+        "mark_max": 29.49,
+        "mark_min": 11.24,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "15,000mW": {
+        "coefficients": [
+          3.3869995586917205e-05,
+          -0.6627677511492891,
+          3242.2582453610516
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0007076783976344813,
+          "max_error_points": 0.0021770841326542723,
+          "r2": 0.999999999995335,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 9612.17,
+        "mark_min": 3354.8,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1500m": {
+        "coefficients": [
+          0.013399996270511168,
+          -14.471861176585165,
+          3907.36558360221
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.014516630006859422,
+          "max_error_points": 0.044218031975560734,
+          "r2": 0.9999999980764928,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 531.36,
+        "mark_min": 216.77,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "1500m sh": {
+        "coefficients": [
+          0.013649954143577166,
+          -14.741826462447719,
+          3980.2593316208768
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.014570257827195161,
+          "max_error_points": 0.04442243038238303,
+          "r2": 0.9999999980186441,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 531.44,
+        "mark_min": 219.74,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2 Miles": {
+        "coefficients": [
+          0.0021569982582830436,
+          -5.592213856654185,
+          3624.580322990727
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.00576763198427508,
+          "max_error_points": 0.01670478970163458,
+          "r2": 0.9999999996970342,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1274.76,
+        "mark_min": 490.66,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2 Miles sh": {
+        "coefficients": [
+          0.0022019917298953993,
+          -5.708869030281674,
+          3700.1929170326503
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.005988873631129082,
+          "max_error_points": 0.017457259979437367,
+          "r2": 0.9999999996707511,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1274.98,
+        "mark_min": 498.93,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "20,000mW": {
+        "coefficients": [
+          1.8699999291782496e-05,
+          -0.4936798059301587,
+          3258.285541475733
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.0005460287538513902,
+          "max_error_points": 0.0015592417250900326,
+          "r2": 0.9999999999972413,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 12968.75,
+        "mark_min": 4547.46,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2000m": {
+        "coefficients": [
+          0.006766010458434191,
+          -10.148946030703522,
+          3805.8288250569512
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.010353189451677411,
+          "max_error_points": 0.0314273320987013,
+          "r2": 0.999999999009283,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 737.84,
+        "mark_min": 295.11,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2000m SC": {
+        "coefficients": [
+          0.0036359877997066675,
+          -6.777453730507191,
+          3158.2797230992333
+        ],
+        "family": "steeplechase",
+        "fit": {
+          "mae_points": 0.007460133064861176,
+          "max_error_points": 0.02214656450723851,
+          "r2": 0.9999999994836802,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 915.41,
+        "mark_min": 311.48,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "2000m sh": {
+        "coefficients": [
+          0.006849999624871235,
+          -10.305069946620536,
+          3875.71093756908
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.010382490452950605,
+          "max_error_points": 0.030500132035285787,
+          "r2": 0.9999999990073402,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 740.11,
+        "mark_min": 300.11,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "200m": {
+        "coefficients": [
+          2.2422237149251503,
+          -204.01464451600725,
+          4640.7273418159075
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.18844925692227787,
+          "max_error_points": 0.5191271195426452,
+          "r2": 0.9999996661647188,
+          "samples": 1383
+        },
+        "higher_is_better": false,
+        "mark_max": 44.83,
+        "mark_min": 20.51,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "200m sh": {
+        "coefficients": [
+          1.961747630974168,
+          -186.35304547628573,
+          4425.54036196398
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.1799522931372134,
+          "max_error_points": 0.549829673068416,
+          "r2": 0.9999997050850311,
+          "samples": 1397
+        },
+        "higher_is_better": false,
+        "mark_max": 46.78,
+        "mark_min": 20.78,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "30,000mW": {
+        "coefficients": [
+          6.890001039159705e-06,
+          -0.294340758982423,
+          3143.5584499156193
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.00032303633860627606,
+          "max_error_points": 0.0009829137818542222,
+          "r2": 0.9999999999990278,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 20979.03,
+        "mark_min": 7105.42,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000m": {
+        "coefficients": [
+          0.0025389974609585043,
+          -6.093570428561012,
+          3656.127933661982
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.006308003835399956,
+          "max_error_points": 0.01847342537712393,
+          "r2": 0.9999999996289592,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1180.15,
+        "mark_min": 457.43,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000m SC": {
+        "coefficients": [
+          0.0013229981350113464,
+          -3.9954423351189225,
+          3016.549852175559
+        ],
+        "family": "steeplechase",
+        "fit": {
+          "mae_points": 0.0045076775375517695,
+          "max_error_points": 0.013923818640250829,
+          "r2": 0.9999999998113281,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1482.5,
+        "mark_min": 481.31,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000m sh": {
+        "coefficients": [
+          0.0025900005371446233,
+          -6.215973858076024,
+          3729.5683350888007
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.006495635840630517,
+          "max_error_points": 0.018591372625451186,
+          "r2": 0.9999999996070918,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1180.35,
+        "mark_min": 464.78,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "3000mW": {
+        "coefficients": [
+          0.0009230001724474233,
+          -3.400323224525732,
+          3131.6890529705215
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.003795970537751795,
+          "max_error_points": 0.011249026538280305,
+          "r2": 0.9999999998673773,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 1809.08,
+        "mark_min": 610.41,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "300m": {
+        "coefficients": [
+          0.6999743364046215,
+          -107.7903202162764,
+          4149.6928333867945
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.10217697226272483,
+          "max_error_points": 0.3065673415198944,
+          "r2": 0.9999999032980863,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 75.8,
+        "mark_min": 32.27,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "300m sh": {
+        "coefficients": [
+          0.6595068053503016,
+          -104.19485102763578,
+          4115.419602850147
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.10010564668788448,
+          "max_error_points": 0.30283960809310884,
+          "r2": 0.999999907531115,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 77.76,
+        "mark_min": 32.92,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "35,000mW": {
+        "coefficients": [
+          4.9300001116190925e-06,
+          -0.25083835488921324,
+          3190.663239910055
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.00027036028089290603,
+          "max_error_points": 0.0007907017470643041,
+          "r2": 0.999999999999312,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 24989.62,
+        "mark_min": 8588.42,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "400m": {
+        "coefficients": [
+          0.3350059758433283,
+          -73.69744695937172,
+          4053.1545244198323
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.07037166991144626,
+          "max_error_points": 0.2086503664090742,
+          "r2": 0.9999999533858305,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 108.27000000000001,
+        "mark_min": 45.35,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "400m sh": {
+        "coefficients": [
+          0.3223977808867084,
+          -72.21408570023581,
+          4043.8163995667487
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.06953425743621372,
+          "max_error_points": 0.21099212846911541,
+          "r2": 0.9999999551896146,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 110.22999999999999,
+        "mark_min": 46.1,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "400mH": {
+        "coefficients": [
+          0.20856495718596868,
+          -54.224906210984656,
+          3524.488878250143
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.055135994511926065,
+          "max_error_points": 0.16741108677206284,
+          "r2": 0.9999999718324887,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 127.81,
+        "mark_min": 48.07,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x100m": {
+        "coefficients": [
+          0.3895003606300067,
+          -76.33805796594909,
+          3740.3711316749523
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.07613064948535404,
+          "max_error_points": 0.23396527406475798,
+          "r2": 0.9999999459714769,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 96.39,
+        "mark_min": 38.04,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x200m": {
+        "coefficients": [
+          0.07949854657178429,
+          -33.70677533002898,
+          3572.8487462397807
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.03578842782061136,
+          "max_error_points": 0.10745573307031009,
+          "r2": 0.9999999883078006,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 208.45,
+        "mark_min": 79.28999999999999,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x200m sh": {
+        "coefficients": [
+          0.08259992174056595,
+          -35.021537008354024,
+          3712.19578624117
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.036069719894580236,
+          "max_error_points": 0.10504204835524433,
+          "r2": 0.9999999881257261,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 208.52,
+        "mark_min": 81.81,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400m": {
+        "coefficients": [
+          0.015620076884752967,
+          -14.995086303379882,
+          3598.7788204044336
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.015619579624681136,
+          "max_error_points": 0.04598856350503411,
+          "r2": 0.9999999977227231,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 471.99,
+        "mark_min": 180.61,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400m sh": {
+        "coefficients": [
+          0.015500027841914735,
+          -15.003873478431911,
+          3630.89914991987
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.014872154515334322,
+          "max_error_points": 0.04619052302859927,
+          "r2": 0.9999999979391829,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 475.96,
+        "mark_min": 183.46,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400mix": {
+        "coefficients": [
+          0.027319971572150468,
+          -21.85572277422136,
+          4371.09134477952
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.020253903411839278,
+          "max_error_points": 0.059208462324477296,
+          "r2": 0.9999999961976334,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 393.94,
+        "mark_min": 173.62,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "4x400mix sh": {
+        "coefficients": [
+          0.026880251011690337,
+          -21.772687901830203,
+          4408.9069978252455
+        ],
+        "family": "relays",
+        "fit": {
+          "mae_points": 0.02062583462041305,
+          "max_error_points": 0.05988757732848171,
+          "r2": 0.9999999961076583,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 398.9,
+        "mark_min": 176.78,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "50,000mW": {
+        "coefficients": [
+          1.9900000562706844e-06,
+          -0.15665278293517365,
+          3082.926353309373
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.00017352808929704873,
+          "max_error_points": 0.0005053582317486871,
+          "r2": 0.9999999999997232,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 38651.11,
+        "mark_min": 12836.09,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "5000m": {
+        "coefficients": [
+          0.0008079992470755356,
+          -3.3935897885513855,
+          3563.261678007049
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.003548267407992236,
+          "max_error_points": 0.01059790243198222,
+          "r2": 0.9999999998835541,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 2064.82,
+        "mark_min": 783.68,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "5000m sh": {
+        "coefficients": [
+          0.000824999929653683,
+          -3.4649913242096124,
+          3638.2322919017865
+        ],
+        "family": "distance_running",
+        "fit": {
+          "mae_points": 0.003658254548997775,
+          "max_error_points": 0.010320126331407664,
+          "r2": 0.9999999998774908,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 2065.18,
+        "mark_min": 797.32,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "5000mW": {
+        "coefficients": [
+          0.0003246000429030896,
+          -2.0384849417874733,
+          3200.4161664440685
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.002274793263563392,
+          "max_error_points": 0.006623766545089893,
+          "r2": 0.9999999999533989,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 3084.49,
+        "mark_min": 1063.22,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "500m": {
+        "coefficients": [
+          0.1875992158007648,
+          -54.589575659539214,
+          3971.259245585238
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.0532610713564655,
+          "max_error_points": 0.15864585499366513,
+          "r2": 0.9999999736256514,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 143.19,
+        "mark_min": 59.11,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "500m sh": {
+        "coefficients": [
+          0.17139835836126147,
+          -51.58928019811394,
+          3881.9738918457647
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.05161896364168407,
+          "max_error_points": 0.15380514436265003,
+          "r2": 0.9999999757525659,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 148.07999999999998,
+        "mark_min": 60.12,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "50m": {
+        "coefficients": [
+          33.04624345234375,
+          -799.5823293286801,
+          4836.413712902383
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.24136965605545613,
+          "max_error_points": 0.554037527026594,
+          "r2": 0.9999995228468253,
+          "samples": 575
+        },
+        "higher_is_better": false,
+        "mark_max": 11.92,
+        "mark_min": 5.59,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "50mH": {
+        "coefficients": [
+          16.21266532608068,
+          -495.9578685621549,
+          3792.827532203191
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.24035604698730859,
+          "max_error_points": 0.550429426154551,
+          "r2": 0.9999995172552008,
+          "samples": 774
+        },
+        "higher_is_better": false,
+        "mark_max": 15.05,
+        "mark_min": 6.01,
+        "points_max": 1398,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "55m": {
+        "coefficients": [
+          27.692226983740323,
+          -728.2024319075151,
+          4786.948624095031
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.24411022949102282,
+          "max_error_points": 0.5454871608421854,
+          "r2": 0.9999995213196866,
+          "samples": 618
+        },
+        "higher_is_better": false,
+        "mark_max": 12.95,
+        "mark_min": 6.04,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "55mH": {
+        "coefficients": [
+          13.198221547838196,
+          -443.33954567734634,
+          3722.94741639006
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.23348578234657355,
+          "max_error_points": 0.5445191994649576,
+          "r2": 0.9999995300087146,
+          "samples": 840
+        },
+        "higher_is_better": false,
+        "mark_max": 16.52,
+        "mark_min": 6.5,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "600m": {
+        "coefficients": [
+          0.12900248173204687,
+          -46.43936729480111,
+          4179.413953724792
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.04534320829144722,
+          "max_error_points": 0.14037380421041235,
+          "r2": 0.9999999811242337,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 177.21,
+        "mark_min": 75.82,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "600m sh": {
+        "coefficients": [
+          0.10630096102995838,
+          -40.46755851730087,
+          3851.3911703898057
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.03990039785303517,
+          "max_error_points": 0.12187528162121453,
+          "r2": 0.999999985312399,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 187.28,
+        "mark_min": 75.58,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "60m": {
+        "coefficients": [
+          24.91177544268937,
+          -697.4127036588022,
+          4880.840624159058
+        ],
+        "family": "sprints",
+        "fit": {
+          "mae_points": 0.23229013762466472,
+          "max_error_points": 0.5437651001348058,
+          "r2": 0.9999995495573136,
+          "samples": 649
+        },
+        "higher_is_better": false,
+        "mark_max": 13.79,
+        "mark_min": 6.5,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "60mH": {
+        "coefficients": [
+          11.16828188895924,
+          -406.391484810719,
+          3696.952238603586
+        ],
+        "family": "hurdles",
+        "fit": {
+          "mae_points": 0.2378024117718618,
+          "max_error_points": 0.5686468742164834,
+          "r2": 0.9999995061024805,
+          "samples": 894
+        },
+        "higher_is_better": false,
+        "mark_max": 17.9,
+        "mark_min": 7.0,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "800m": {
+        "coefficients": [
+          0.06879989342031485,
+          -34.399261916566026,
+          4299.822125128643
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.03342780051909488,
+          "max_error_points": 0.09814383903676571,
+          "r2": 0.9999999898603567,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 246.18,
+        "mark_min": 107.35,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "800m sh": {
+        "coefficients": [
+          0.05719995663840619,
+          -30.201001015219976,
+          3986.457460413207
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.029946627652686533,
+          "max_error_points": 0.08856234364202464,
+          "r2": 0.9999999918018224,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 259.81,
+        "mark_min": 107.55,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "DT": {
+        "coefficients": [
+          0.004028423809671883,
+          17.94169538353408,
+          -19.210748193700688
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.045604892753934534,
+          "max_error_points": 0.09228202483450332,
+          "r2": 0.9999999832178448,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 77.74,
+        "mark_min": 1.13,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "HJ": {
+        "coefficients": [
+          39.55790874452859,
+          831.3655724459641,
+          -601.5063267491713
+        ],
+        "family": "vertical_jumps",
+        "fit": {
+          "mae_points": 0.24122406484654885,
+          "max_error_points": 0.5837053050863688,
+          "r2": 0.999999521082111,
+          "samples": 148
+        },
+        "higher_is_better": true,
+        "mark_max": 2.18,
+        "mark_min": 0.71,
+        "points_max": 1399,
+        "points_min": 9,
+        "unit": "metres"
+      },
+      "HT": {
+        "coefficients": [
+          0.003096723966757167,
+          15.730166876520217,
+          -22.699498543300493
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.04016016208880926,
+          "max_error_points": 0.08143528113168941,
+          "r2": 0.9999999868726918,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 88.89,
+        "mark_min": 1.51,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Hept.": {
+        "coefficients": [
+          1.5806071811913355e-06,
+          0.1770408921206575,
+          -43.84270064776955
+        ],
+        "family": "combined_events",
+        "fit": {
+          "mae_points": 0.04592795770105923,
+          "max_error_points": 0.10293325920679308,
+          "r2": 0.999999982274567,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 7635.0,
+        "mark_min": 253.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "points"
+      },
+      "JT": {
+        "coefficients": [
+          0.004072274456460982,
+          18.042616052881876,
+          -18.842904339455917
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.04583983150419846,
+          "max_error_points": 0.09366521207084588,
+          "r2": 0.9999999828053321,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 77.29,
+        "mark_min": 1.1,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "LJ": {
+        "coefficients": [
+          1.958114032648782,
+          193.69548254415298,
+          -233.98988652740124
+        ],
+        "family": "horizontal_jumps",
+        "fit": {
+          "mae_points": 0.23318587954423098,
+          "max_error_points": 0.5549158254601991,
+          "r2": 0.999999529790935,
+          "samples": 663
+        },
+        "higher_is_better": true,
+        "mark_max": 7.82,
+        "mark_min": 1.2,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Mile": {
+        "coefficients": [
+          0.011649998601785339,
+          -13.513881163061724,
+          3918.9920049545713
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.01392315609057927,
+          "max_error_points": 0.039265873945169005,
+          "r2": 0.9999999982262202,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 570.73,
+        "mark_min": 233.34,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Mile sh": {
+        "coefficients": [
+          0.011540015186727752,
+          -13.513232952952565,
+          3955.9633560971665
+        ],
+        "family": "middle_distance",
+        "fit": {
+          "mae_points": 0.013429899639727084,
+          "max_error_points": 0.04011404018774556,
+          "r2": 0.9999999983298175,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 576.19,
+        "mark_min": 237.19,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "PV": {
+        "coefficients": [
+          3.9325797501136113,
+          275.48968329938896,
+          -205.12169246190317
+        ],
+        "family": "vertical_jumps",
+        "fit": {
+          "mae_points": 0.2448266450370236,
+          "max_error_points": 0.5425095766503318,
+          "r2": 0.9999995118338209,
+          "samples": 468
+        },
+        "higher_is_better": true,
+        "mark_max": 5.41,
+        "mark_min": 0.74,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "Pent. sh": {
+        "coefficients": [
+          2.9452123778378105e-06,
+          0.24163567137421185,
+          -42.4364572270455
+        ],
+        "family": "combined_events",
+        "fit": {
+          "mae_points": 0.06635320296771574,
+          "max_error_points": 0.13693346316995303,
+          "r2": 0.999999964220974,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 5589.0,
+        "mark_min": 179.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "points"
+      },
+      "Road 10 Miles": {
+        "coefficients": [
+          5.016145853009955e-05,
+          -0.7928929030447937,
+          3133.2910969989925
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.09125924575051125,
+          "max_error_points": 0.25907967246666885,
+          "r2": 0.9999999232350474,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 7762.0,
+        "mark_min": 2620.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 10 km": {
+        "coefficients": [
+          0.00017119892280575058,
+          -1.5406236637962205,
+          3466.0215817051553
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.16326136062752214,
+          "max_error_points": 0.4852447923103682,
+          "r2": 0.9999997547643015,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 4423.0,
+        "mark_min": 1640.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 100 km": {
+        "coefficients": [
+          8.739977332149915e-07,
+          -0.1069765374389027,
+          3273.4574422815035
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.011552952681271824,
+          "max_error_points": 0.03452633146889639,
+          "r2": 0.9999999987637119,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 60130.0,
+        "mark_min": 21177.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 10kmW": {
+        "coefficients": [
+          7.850131933362908e-05,
+          -1.0078686324187753,
+          3234.987258340427
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.11024441903054952,
+          "max_error_points": 0.33315424540501226,
+          "r2": 0.9999998883515279,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 6307.0,
+        "mark_min": 2196.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 15 km": {
+        "coefficients": [
+          5.9501699566234956e-05,
+          -0.8673501034976465,
+          3160.8202295483866
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.09512776847135358,
+          "max_error_points": 0.28889645285426013,
+          "r2": 0.9999999170682626,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 7159.0,
+        "mark_min": 2438.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 15kmW": {
+        "coefficients": [
+          3.387067634299122e-05,
+          -0.6627433846043826,
+          3241.9561134960227
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.07345301295624089,
+          "max_error_points": 0.21963638447937228,
+          "r2": 0.9999999511047648,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 9612.0,
+        "mark_min": 3354.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 20 km": {
+        "coefficients": [
+          2.95611679216031e-05,
+          -0.6002903493063669,
+          3047.4915164017953
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.06857511224405145,
+          "max_error_points": 0.19598897433593265,
+          "r2": 0.9999999568603531,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 9970.0,
+        "mark_min": 3272.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 20kmW": {
+        "coefficients": [
+          1.8699883727573408e-05,
+          -0.4936586478417729,
+          3258.026582888161
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.054726103368098425,
+          "max_error_points": 0.15875745316861867,
+          "r2": 0.9999999729341649,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 12968.0,
+        "mark_min": 4547.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 25 km": {
+        "coefficients": [
+          1.7820078937802955e-05,
+          -0.4640160886377101,
+          3020.6229502424653
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.0532287510459035,
+          "max_error_points": 0.15545415405063068,
+          "r2": 0.9999999744894372,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 12783.0,
+        "mark_min": 4156.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 30 km": {
+        "coefficients": [
+          1.1779975715343728e-05,
+          -0.3760051889529725,
+          3000.4277898994915
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.04183469531488608,
+          "max_error_points": 0.12761857006194077,
+          "r2": 0.9999999836862042,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 15668.0,
+        "mark_min": 5058.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 30kmW": {
+        "coefficients": [
+          6.890029993008804e-06,
+          -0.2943343933317253,
+          3143.4127356740487
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.03179471246332566,
+          "max_error_points": 0.09603639302940792,
+          "r2": 0.9999999904864075,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 20979.0,
+        "mark_min": 7105.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 35kmW": {
+        "coefficients": [
+          4.929913380667544e-06,
+          -0.250830552043302,
+          3190.5165854212783
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.02757309213828762,
+          "max_error_points": 0.08340214157806258,
+          "r2": 0.9999999930240774,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 24989.0,
+        "mark_min": 8588.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 3kmW": {
+        "coefficients": [
+          0.0009235372677024182,
+          -3.4012984886507978,
+          3131.6220206806006
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.2232429980583289,
+          "max_error_points": 0.5461991713177667,
+          "r2": 0.9999995595212338,
+          "samples": 961
+        },
+        "higher_is_better": false,
+        "mark_max": 1809.0,
+        "mark_min": 610.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 5 km": {
+        "coefficients": [
+          0.0008086109772535481,
+          -3.3949790882248307,
+          3563.519547606108
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.22065608392192956,
+          "max_error_points": 0.5381669644125395,
+          "r2": 0.9999995636925022,
+          "samples": 1006
+        },
+        "higher_is_better": false,
+        "mark_max": 2064.0,
+        "mark_min": 784.0,
+        "points_max": 1399,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 50kmW": {
+        "coefficients": [
+          1.9900128027207633e-06,
+          -0.15665146940118774,
+          3082.8568995285123
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.017533077479550747,
+          "max_error_points": 0.053575227500004985,
+          "r2": 0.9999999971800813,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 38651.0,
+        "mark_min": 12836.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road 5kmW": {
+        "coefficients": [
+          0.0003247214016885581,
+          -2.0387046061149015,
+          3199.9870319940364
+        ],
+        "family": "race_walks",
+        "fit": {
+          "mae_points": 0.20788587362355007,
+          "max_error_points": 0.5201890761575214,
+          "r2": 0.9999996022095775,
+          "samples": 1306
+        },
+        "higher_is_better": false,
+        "mark_max": 3084.0,
+        "mark_min": 1063.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road HM": {
+        "coefficients": [
+          2.5960366893779164e-05,
+          -0.5606107770835904,
+          3026.587224520168
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.06477976152933236,
+          "max_error_points": 0.19216101350730241,
+          "r2": 0.9999999611022089,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 10601.0,
+        "mark_min": 3454.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road Marathon": {
+        "coefficients": [
+          5.389966906978792e-06,
+          -0.2522457493387495,
+          2951.2162982735485
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.029094693108420416,
+          "max_error_points": 0.08389259214027334,
+          "r2": 0.9999999922980956,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 22969.0,
+        "mark_min": 7283.0,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "Road Mile": {
+        "coefficients": [
+          0.011649998601785339,
+          -13.513881163061724,
+          3918.9920049545713
+        ],
+        "family": "road_running",
+        "fit": {
+          "mae_points": 0.01392315609057927,
+          "max_error_points": 0.039265873945169005,
+          "r2": 0.9999999982262202,
+          "samples": 1400
+        },
+        "higher_is_better": false,
+        "mark_max": 570.73,
+        "mark_min": 233.34,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "seconds"
+      },
+      "SP": {
+        "coefficients": [
+          0.04621438764158579,
+          60.75503111382711,
+          -25.931941888917667
+        ],
+        "family": "throws",
+        "fit": {
+          "mae_points": 0.15441611590626855,
+          "max_error_points": 0.3110045626453939,
+          "r2": 0.999999805114319,
+          "samples": 1400
+        },
+        "higher_is_better": true,
+        "mark_max": 23.07,
+        "mark_min": 0.44,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      },
+      "TJ": {
+        "coefficients": [
+          0.429664588736361,
+          90.34304187807568,
+          -231.66758253046947
+        ],
+        "family": "horizontal_jumps",
+        "fit": {
+          "mae_points": 0.2406496570230386,
+          "max_error_points": 0.5311942304263084,
+          "r2": 0.9999995208224859,
+          "samples": 1387
+        },
+        "higher_is_better": true,
+        "mark_max": 16.73,
+        "mark_min": 2.54,
+        "points_max": 1400,
+        "points_min": 1,
+        "unit": "metres"
+      }
+    }
+  },
+  "limitations": [
+    "Scores objective results; it does not infer performance from body measurements.",
+    "It is not an official World Athletics ranking and adds no placing or competition-category bonus.",
+    "Senior scoring tables are not age grading tables.",
+    "Future-performance forecasts require longitudinal athlete results and are evaluated separately."
+  ],
+  "model_name": "StrydeX athletics performance scoring model",
+  "model_type": "event-specific quadratic regression",
+  "model_version": "2025.1",
+  "points_range": [
+    0,
+    1400
+  ],
+  "source": {
+    "derived_data_url": "https://github.com/jchen1/iaaf-scoring-tables",
+    "known_rows_excluded": [
+      {
+        "competition_category": "men",
+        "event": "110mH",
+        "mark": 10.5,
+        "points": 401
+      },
+      {
+        "competition_category": "men",
+        "event": "50mH",
+        "mark": 18.56,
+        "points": 401
+      }
+    ],
+    "official_url": "https://worldathletics.org/download/download?filename=4f77dcb3-2945-4c58-ad8b-955a999b13e8.pdf",
+    "source_sha256": "82f4f387e18fb8d2d24f266e96a732f6954555108525d06ce18d87dd7ca2a68a",
+    "title": "World Athletics Scoring Tables of Athletics, 2025 revised edition"
+  },
+  "strydex_score_formula": "round(clamp(points, 0, 1400) / 14, 1)",
+  "target": "World Athletics-equivalent result points",
+  "validation": {
+    "event_category_models": 164,
+    "maximum_allowed_event_mae_points": 0.5,
+    "minimum_allowed_event_r2": 0.999,
+    "overall_mae_points": 0.07016850396729181,
+    "quality_gate_passed": true
+  }
+}

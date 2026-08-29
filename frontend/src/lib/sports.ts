@@ -5,7 +5,6 @@ export const SPORTS = [
   "Basketball",
   "Boxing",
   "Cricket",
-  "CrossFit",
   "Cycling",
   "Field Hockey",
   "American Football",
@@ -28,7 +27,6 @@ export const POSITIONS_BY_SPORT: Record<string, string[]> = {
   Basketball: ["Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"],
   Boxing: ["Boxer"],
   Cricket: ["Batter", "Bowler", "All-rounder", "Wicketkeeper"],
-  CrossFit: ["CrossFit athlete"],
   Cycling: ["Road cyclist", "Track cyclist", "Mountain biker", "BMX rider"],
   "Field Hockey": ["Goalkeeper", "Defender", "Midfielder", "Forward"],
   "American Football": ["Quarterback", "Running back", "Wide receiver", "Tight end", "Offensive line", "Defensive line", "Linebacker", "Defensive back", "Kicker / punter"],
@@ -45,13 +43,18 @@ export const POSITIONS_BY_SPORT: Record<string, string[]> = {
 };
 
 export const EVENTS_BY_SPORT: Record<string, string[]> = {
-  Athletics: ["100m Sprint", "200m Sprint", "400m Sprint", "800m", "1500m", "5km", "10km Road Race", "Marathon", "Hurdles", "Long jump", "High jump", "Throws", "Combined events"],
+  Athletics: [
+    "100m Sprint", "200m Sprint", "400m Sprint", "800m", "1500m", "3000m",
+    "5000m", "10000m", "100m Hurdles", "110m Hurdles", "400m Hurdles",
+    "3000m Steeplechase", "4x100m Relay", "4x400m Relay", "High jump",
+    "Pole vault", "Long jump", "Triple jump", "Shot put", "Discus throw",
+    "Hammer throw", "Javelin throw", "Decathlon", "Heptathlon",
+  ],
   Badminton: ["Singles", "Doubles", "Mixed doubles"],
   Baseball: ["Match"],
   Basketball: ["Match", "Training session"],
   Boxing: ["Bout", "Sparring session"],
   Cricket: ["Test match", "One Day match", "T20 match", "Training session"],
-  CrossFit: ["Competition", "Benchmark session", "Training session"],
   Cycling: ["Road race", "Time trial", "Track event", "Mountain bike race", "BMX race"],
   "Field Hockey": ["Match", "Training session"],
   "American Football": ["Match", "Training session"],

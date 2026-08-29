@@ -74,7 +74,7 @@ def get_injury_risk(db: Session = Depends(get_db), user: models.User = Depends(g
         .order_by(models.Video.uploaded_at.desc())
         .first()
     )
-    return analytics.compute_injury_risk(logs, latest_checkin, latest_video)
+    return analytics.compute_movement_risk(logs, latest_checkin, latest_video)
 
 
 # ---------- 5. Readiness / fatigue checkin ----------
@@ -152,22 +152,76 @@ def get_summary(db: Session = Depends(get_db), user: models.User = Depends(get_c
         .order_by(models.Video.uploaded_at.desc())
         .first()
     )
-    injury = analytics.compute_injury_risk(logs, latest_checkin, latest_video)
+    injury = analytics.compute_movement_risk(logs, latest_checkin, latest_video)
 
-    sprint_pb_entry = next(
+    score_pb_entry = next(
         (r for r in reversed(records) if r["metric"] == "performance_metric" and r["is_current_best"]), None
     )
     new_pb_days_ago = None
-    if sprint_pb_entry:
-        new_pb_days_ago = (datetime.datetime.utcnow() - sprint_pb_entry["date"]).days
+    if score_pb_entry:
+        new_pb_days_ago = (datetime.datetime.utcnow() - score_pb_entry["date"]).days
+
+    review = analytics.build_review(
+        analytics.athletics_performance_model,
+        logs,
+        latest_checkin,
+        profile,
+    )
+    history = review["historical_scores"]
+    overall_change_pct = None
+    if len(history) >= 2 and history[0]["score"]:
+        overall_change_pct = round(
+            ((history[-1]["score"] - history[0]["score"]) / abs(history[0]["score"])) * 100,
+            1,
+        )
+
+    latest_result = review.get("latest_result") or {}
+    event_family = latest_result.get("event_family")
+    overall_score = review.get("overall_score")
+    speed_families = {"sprints", "hurdles", "relays"}
+    endurance_families = {
+        "middle_distance",
+        "distance_running",
+        "road_running",
+        "steeplechase",
+        "race_walks",
+    }
+    strength_families = {"horizontal_jumps", "vertical_jumps", "throws", "combined_events"}
+
+    speed_score = overall_score if event_family in speed_families else None
+    strength_score = overall_score if event_family in strength_families else None
+    endurance_score = overall_score if event_family in endurance_families else None
+    technique_score = None
+    if latest_video and latest_video.score_technique is not None:
+        technique_score = round(float(latest_video.score_technique), 1)
+
+    priorities = review["improvement_priorities"]
+    focus_points = [item["area"] for item in priorities[:3]]
+    ai_recommendations = {
+        "focus": priorities[0]["reason"] if priorities else None,
+        "actions": priorities[0]["actions"] if priorities else [],
+        "all_priorities": priorities,
+        "method": review["model_note"],
+    }
+    readiness_val = latest_checkin.readiness_score if latest_checkin else None
 
     return schemas.IntelligenceSummaryOut(
-        sprint_pb=sprint_pb_entry["value"] if sprint_pb_entry else None,
+        sprint_pb=score_pb_entry["value"] if score_pb_entry else None,
         sprint_trend_pct=trends["sprint_time"]["change_pct"],
         new_pb_days_ago=new_pb_days_ago,
         predicted_next_month=prediction.get("predicted_30d"),
         injury_risk_pct=injury["risk_pct"],
         injury_risk_band=injury["risk_band"],
-        readiness_pct=latest_checkin.readiness_score if latest_checkin else None,
+        readiness_pct=readiness_val,
         readiness_recommendation=latest_checkin.recommendation if latest_checkin else None,
+
+        overall_score=review["overall_score"],
+        overall_change_pct=overall_change_pct,
+        speed_score=speed_score,
+        strength_score=strength_score,
+        technique_score=technique_score,
+        endurance_score=endurance_score,
+        focus_points=focus_points,
+        historical_scores=history,
+        ai_recommendations=ai_recommendations,
     )

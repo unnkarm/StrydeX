@@ -58,7 +58,6 @@ class AthleteProfile(Base):
     bio = Column(Text, nullable=True)
     verified = Column(Boolean, default=False, nullable=False)
     verified_by = Column(String, nullable=True)
-    visibility = Column(String, default="public")  # public | scouts_only | private
 
     user = relationship("User", back_populates="athlete_profile")
     performance_logs = relationship(
@@ -112,6 +111,32 @@ class PerformanceLog(Base):
     altitude_training = Column(String, nullable=True)
     mental_focus_level = Column(Float, nullable=True)
     performance_metric = Column(Float, nullable=True)
+
+    # Athletics-only objective result scoring (2025 model)
+    competition_category = Column(String, nullable=True)  # men | women
+    environment = Column(String, nullable=True)  # outdoor | indoor
+    result_value = Column(Float, nullable=True)
+    result_unit = Column(String, nullable=True)  # seconds | metres | points
+    scoring_event_code = Column(String, nullable=True)
+    world_athletics_points = Column(Integer, nullable=True)
+    scoring_version = Column(String, nullable=True)
+    wind_speed_mps = Column(Float, nullable=True)
+    wind_legal = Column(Boolean, nullable=True)
+
+    # Optional personalised jump-performance context. These measurements never
+    # alter the objective result score; they support longitudinal driver review.
+    approach_speed_mps = Column(Float, nullable=True)
+    takeoff_velocity_mps = Column(Float, nullable=True)
+    takeoff_angle_deg = Column(Float, nullable=True)
+    takeoff_contact_time_ms = Column(Float, nullable=True)
+    approach_consistency_pct = Column(Float, nullable=True)
+    board_accuracy_cm = Column(Float, nullable=True)
+    takeoff_distance_cm = Column(Float, nullable=True)
+    reactive_strength_index = Column(Float, nullable=True)
+    fatigue_score = Column(Float, nullable=True)
+    soreness_score = Column(Float, nullable=True)
+    session_rpe = Column(Float, nullable=True)
+    pain_present = Column(Boolean, nullable=True)
 
     athlete = relationship("AthleteProfile", back_populates="performance_logs")
 
@@ -192,4 +217,3 @@ class AIReport(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
     video = relationship("Video", back_populates="ai_report")
-

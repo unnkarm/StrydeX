@@ -60,8 +60,8 @@ export const api = {
   login: (email: string, password: string) =>
     request("/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ username: email, password }).toString(),
       auth: false,
     }),
 
@@ -108,6 +108,22 @@ export const api = {
 
   myPerformanceLogs: () => request("/performance/me"),
 
+  athleticsEvents: (competitionCategory: "men" | "women", environment: "outdoor" | "indoor" = "outdoor") =>
+    request(
+      `/athletics/events?competition_category=${encodeURIComponent(competitionCategory)}&environment=${encodeURIComponent(environment)}`,
+      { auth: false },
+    ),
+
+  scoreAthleticsResult: (data: Record<string, unknown>) =>
+    request("/athletics/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      auth: false,
+    }),
+
+  athleticsReview: () => request("/athletics/review"),
+
   uploadVideo: (form: FormData) => request("/videos/upload", { method: "POST", body: form }),
 
   myVideos: () => request("/videos/me"),
@@ -144,4 +160,3 @@ export const api = {
   readinessHistory: () => request("/analytics/checkins"),
   intelligenceSummary: () => request("/analytics/summary"),
 };
-

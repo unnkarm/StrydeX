@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from database import Base, engine
+from database import Base, engine, ensure_local_schema
 import models  # noqa: F401 (ensures models are registered before create_all)
 from routers import (
     analytics_router,
+    athletics_router,
     athlete_router,
     auth_router,
     performance_router,
@@ -17,6 +18,7 @@ from routers import (
 )
 
 Base.metadata.create_all(bind=engine)
+ensure_local_schema()
 
 app = FastAPI(title="StrydeX API", version="0.1.0")
 
@@ -38,6 +40,7 @@ app.include_router(video_router.router)
 app.include_router(portfolio_router.router)
 app.include_router(scout_router.router)
 app.include_router(analytics_router.router)
+app.include_router(athletics_router.router)
 
 
 @app.get("/")

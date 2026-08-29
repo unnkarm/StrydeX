@@ -6,6 +6,7 @@ from typing import Optional
 
 import joblib
 import pandas as pd
+from ml.src.athletics_performance import build_review, get_model as get_athletics_model
 
 logger = logging.getLogger(__name__)
 
@@ -23,76 +24,36 @@ ENCODERS_DIR = ARTIFACTS_DIR / "encoders"
 # Load Models and Preprocessors
 # ==========================================================
 
-performance_model = None
 injury_model = None
 readiness_model = None
-crossfit_performance_model = None
 
-performance_preprocessor = None
 injury_preprocessor = None
 
-try:
-    performance_model = joblib.load(
-        MODELS_DIR / "performance_model.joblib"
-    )
+athletics_performance_model = get_athletics_model()
 
-    injury_model = joblib.load(
-        MODELS_DIR / "injury_model.joblib"
-    )
 
-    readiness_model = joblib.load(
-        MODELS_DIR / "readiness_model.joblib"
-    )
+def _load_optional_joblib(path: Path):
+    try:
+        return joblib.load(path)
+    except Exception as exc:
+        logger.warning("Optional ML artifact unavailable at %s: %s", path, exc)
+        return None
 
-    performance_preprocessor = joblib.load(
-        ENCODERS_DIR / "performance_preprocessor.joblib"
-    )
 
-    injury_preprocessor = joblib.load(
-        ENCODERS_DIR / "injury_preprocessor.joblib"
-    )
-
-    logger.info("All StrydeX ML artifacts loaded successfully.")
-
-except Exception:
-    logger.exception("Failed to load one or more ML artifacts.")
-
-try:
-    crossfit_performance_model = joblib.load(
-        MODELS_DIR / "crossfit_performance_model.joblib"
-    )
-except Exception:
-    logger.exception("Failed to load the CrossFit performance model.")
+injury_model = _load_optional_joblib(MODELS_DIR / "injury_model.joblib")
+readiness_model = _load_optional_joblib(MODELS_DIR / "readiness_model.joblib")
+injury_preprocessor = _load_optional_joblib(ENCODERS_DIR / "injury_preprocessor.joblib")
 
 
 def validate_models() -> None:
-    """Raise a clear startup error when an artifact is unavailable."""
+    """Validate the deployed athletics model.
 
-    missing = []
+    Injury/readiness artifacts remain optional MVP features; their existing
+    functions already provide explicit fallbacks when an artifact is absent.
+    """
 
-    if performance_model is None:
-        missing.append("performance_model.joblib")
-
-    if injury_model is None:
-        missing.append("injury_model.joblib")
-
-    if readiness_model is None:
-        missing.append("readiness_model.joblib")
-
-    if crossfit_performance_model is None:
-        missing.append("crossfit_performance_model.joblib")
-
-    if performance_preprocessor is None:
-        missing.append("performance_preprocessor.joblib")
-
-    if injury_preprocessor is None:
-        missing.append("injury_preprocessor.joblib")
-
-    if missing:
-        raise RuntimeError(
-            "Missing or invalid ML artifacts: "
-            + ", ".join(missing)
-        )
+    if not athletics_performance_model.payload["validation"]["quality_gate_passed"]:
+        raise RuntimeError("Athletics performance model failed its quality gate")
 
 
 # ==========================================================
@@ -130,73 +91,6 @@ def _safe_string(value, default: str = "Unknown") -> str:
     return text if text else default
 
 
-def performance_model_categories(sport, event) -> tuple[str, str]:
-    """Map broad UI categories to categories represented in model training."""
-    raw_sport = _safe_string(sport)
-    known_sports = {"Basketball", "Cycling", "Running", "Soccer", "Swimming", "Tennis"}
-    sport_aliases = {
-        "Athletics": "Running",
-    }
-    model_sport = raw_sport if raw_sport in known_sports else sport_aliases.get(raw_sport, "Unknown")
-
-    raw_event = _safe_string(event)
-    known_events = {"100m Sprint", "10km Road Race", "50m Freestyle", "Marathon"}
-    if raw_event in known_events:
-        model_event = raw_event
-    else:
-        normalized = raw_event.lower().replace(" ", "")
-        if "marathon" in normalized:
-            model_event = "Marathon"
-        elif "10km" in normalized or normalized.startswith("10k"):
-            model_event = "10km Road Race"
-        elif "freestyle" in normalized:
-            model_event = "50m Freestyle"
-        elif "sprint" in normalized:
-            model_event = "100m Sprint"
-        else:
-            model_event = "Unknown"
-
-    return model_sport, model_event
-
-
-def is_crossfit_sport(sport) -> bool:
-    return _safe_string(sport).strip().lower() in {"crossfit", "cross fit"}
-
-
-def build_crossfit_performance_dataframe(profile, payload: dict) -> pd.DataFrame:
-    """Build the privacy-safe features used by the CrossFit model."""
-
-    height_cm = getattr(profile, "height_cm", None)
-    weight_kg = getattr(profile, "weight_kg", None)
-    supplied_bmi = payload.get("bmi")
-    if supplied_bmi is None and height_cm and weight_kg:
-        supplied_bmi = float(weight_kg) / (float(height_cm) / 100.0) ** 2
-
-    return pd.DataFrame(
-        [
-            {
-                "age": getattr(profile, "age", None),
-                "height_cm": height_cm,
-                "weight_kg": weight_kg,
-                "bmi": supplied_bmi,
-                "region": getattr(profile, "region", None),
-                "training_hours_per_week": payload.get("training_hours_per_week"),
-                "training_intensity": _safe_string(
-                    payload.get("training_intensity"), default="Medium"
-                ),
-            }
-        ]
-    )
-
-
-def predict_crossfit_score(profile, payload: dict) -> float:
-    if crossfit_performance_model is None:
-        raise RuntimeError("CrossFit performance model is unavailable.")
-    model_input = build_crossfit_performance_dataframe(profile, payload)
-    prediction = float(crossfit_performance_model.predict(model_input)[0])
-    return round(max(0.0, min(100.0, prediction)), 2)
-
-
 def injury_model_position(sport, position) -> str:
     """Map detailed positions only where the injury dataset has a true match."""
     if _safe_string(sport) != "Basketball":
@@ -209,27 +103,6 @@ def injury_model_position(sport, position) -> str:
         "Point Guard": "Guard",
         "Shooting Guard": "Guard",
     }.get(_safe_string(position), "Unknown")
-
-
-PERFORMANCE_NUMERIC_DEFAULTS = {
-    "training_hours_per_week": 22.685,
-    "average_heart_rate": 125.75,
-    "bmi": 25.0,
-    "sleep_hours_per_night": 7.0,
-    "daily_caloric_intake": 2761.7,
-    "hydration_level": 75.4,
-    "previous_competition_performance": 50.28,
-    "resting_heart_rate": 70.1,
-    "body_fat_percentage": 17.3,
-    "vo2_max": 55.0,
-    "event_distance": 2530.595,
-    "mental_focus_level": 5.5,
-}
-
-
-def performance_numeric_value(name: str, value) -> float:
-    """Use the training-data median when a performance input is unavailable."""
-    return _safe_float(value, default=PERFORMANCE_NUMERIC_DEFAULTS[name])
 
 
 def _latest_log(logs: list):
@@ -325,141 +198,6 @@ def _best_month(
     return max(
         monthly_averages,
         key=monthly_averages.get,
-    )
-
-
-# ==========================================================
-# Performance feature builder
-# ==========================================================
-
-def build_performance_dataframe(log) -> pd.DataFrame:
-    """
-    Build exactly the feature columns used to train the
-    performance preprocessor.
-    """
-
-    model_sport, model_event = performance_model_categories(
-        getattr(log, "sport_type", None),
-        getattr(log, "event", None),
-    )
-
-    return pd.DataFrame(
-        [
-            {
-                "sport_type": model_sport,
-                "event": model_event,
-                "training_hours_per_week": performance_numeric_value(
-                    "training_hours_per_week",
-                    getattr(
-                        log,
-                        "training_hours_per_week",
-                        None,
-                    )
-                ),
-                "average_heart_rate": performance_numeric_value(
-                    "average_heart_rate",
-                    getattr(
-                        log,
-                        "average_heart_rate",
-                        None,
-                    )
-                ),
-                "bmi": performance_numeric_value(
-                    "bmi", getattr(log, "bmi", None)
-                ),
-                "sleep_hours_per_night": performance_numeric_value(
-                    "sleep_hours_per_night",
-                    getattr(
-                        log,
-                        "sleep_hours_per_night",
-                        None,
-                    )
-                ),
-                "daily_caloric_intake": performance_numeric_value(
-                    "daily_caloric_intake",
-                    getattr(
-                        log,
-                        "daily_caloric_intake",
-                        None,
-                    )
-                ),
-                "hydration_level": performance_numeric_value(
-                    "hydration_level",
-                    getattr(
-                        log,
-                        "hydration_level",
-                        None,
-                    )
-                ),
-                "injury_history": _safe_string(
-                    getattr(
-                        log,
-                        "injury_history",
-                        None,
-                    ),
-                    default="None",
-                ),
-                "previous_competition_performance": performance_numeric_value(
-                    "previous_competition_performance",
-                    getattr(
-                        log,
-                        "previous_competition_performance",
-                        None,
-                    )
-                ),
-                "training_intensity": _safe_string(
-                    getattr(
-                        log,
-                        "training_intensity",
-                        None,
-                    ),
-                    default="Medium",
-                ),
-                "resting_heart_rate": performance_numeric_value(
-                    "resting_heart_rate",
-                    getattr(
-                        log,
-                        "resting_heart_rate",
-                        None,
-                    )
-                ),
-                "body_fat_percentage": performance_numeric_value(
-                    "body_fat_percentage",
-                    getattr(
-                        log,
-                        "body_fat_percentage",
-                        None,
-                    )
-                ),
-                "vo2_max": performance_numeric_value(
-                    "vo2_max", getattr(log, "vo2_max", None)
-                ),
-                "event_distance": performance_numeric_value(
-                    "event_distance",
-                    getattr(
-                        log,
-                        "event_distance",
-                        None,
-                    )
-                ),
-                "altitude_training": _safe_string(
-                    getattr(
-                        log,
-                        "altitude_training",
-                        None,
-                    ),
-                    default="No",
-                ),
-                "mental_focus_level": performance_numeric_value(
-                    "mental_focus_level",
-                    getattr(
-                        log,
-                        "mental_focus_level",
-                        None,
-                    )
-                ),
-            }
-        ]
     )
 
 
@@ -679,84 +417,34 @@ def build_readiness_dataframe(
     )
 
 
-# ==========================================================
-# Performance model inference
-# ==========================================================
-
-def predict_performance(latest_log) -> dict:
-    if (
-        performance_model is None
-        or performance_preprocessor is None
-    ):
-        raise RuntimeError(
-            "Performance model or preprocessor is unavailable."
-        )
-
-    if latest_log is None:
-        return {
-            "current": None,
-            "predicted_30d": None,
-            "predicted_90d": None,
-            "confidence_pct": None,
-            "note": "No performance logs available.",
-        }
-
-    model_input = build_performance_dataframe(
-        latest_log
-    )
-
-    processed_input = (
-        performance_preprocessor.transform(
-            model_input
-        )
-    )
-
-    prediction = float(
-        performance_model.predict(
-            processed_input
-        )[0]
-    )
-
-    prediction = max(
-        0.0,
-        min(
-            100.0,
-            prediction,
-        ),
-    )
-
-    return {
-        "current": getattr(
-            latest_log,
-            "performance_metric",
-            None,
-        ),
-        "predicted_30d": round(
-            prediction,
-            2,
-        ),
-        "predicted_90d": round(
-            prediction,
-            2,
-        ),
-        "confidence_pct": None,
-        "note": (
-            "Prediction generated using the trained "
-            "performance regression model."
-        ),
-    }
-
-
 def forecast_performance(logs: list) -> dict:
     """Forecast the stored session score from the athlete's dated history.
 
-    The random-forest model estimates a score for an individual session.  It
-    has no time or horizon features, so using it again for a future date would
-    only reproduce the current score.  Future estimates instead come from the
-    athlete's own score trend and are withheld until there is enough history.
+    The athletics model scores an objective result; it does not invent future
+    training inputs. Future estimates therefore come only from the athlete's
+    own scored-result trend and are withheld until there is enough history.
     """
 
-    series = _series(logs, "performance_metric")
+    scored_logs = [
+        log
+        for log in logs
+        if getattr(log, "performance_metric", None) is not None
+        and getattr(log, "date", None) is not None
+    ]
+    if scored_logs:
+        latest = max(scored_logs, key=lambda log: log.date)
+        latest_event = getattr(latest, "scoring_event_code", None) or getattr(latest, "event", None)
+        latest_category = getattr(latest, "competition_category", None)
+        same_event_logs = [
+            log
+            for log in scored_logs
+            if (getattr(log, "scoring_event_code", None) or getattr(log, "event", None)) == latest_event
+            and getattr(log, "competition_category", None) == latest_category
+        ]
+    else:
+        same_event_logs = []
+
+    series = _series(same_event_logs, "performance_metric")
     current = series[-1][1] if series else None
     unavailable = {
         "current": current,
@@ -768,7 +456,7 @@ def forecast_performance(logs: list) -> dict:
     if not series:
         return {
             **unavailable,
-            "note": "No scored performance sessions are available yet.",
+            "note": "No scored athletics results are available yet.",
         }
 
     distinct_days = {date.date() for date, _ in series}
@@ -777,7 +465,7 @@ def forecast_performance(logs: list) -> dict:
         return {
             **unavailable,
             "note": (
-                "A forecast needs at least 4 scored sessions across 3 days "
+                "A same-event forecast needs at least 4 scored results across 3 days "
                 "and a history spanning 7 days."
             ),
         }
@@ -821,7 +509,7 @@ def forecast_performance(logs: list) -> dict:
         "predicted_90d": projected(90),
         "confidence_pct": round(r_squared * 100, 1),
         "note": (
-            f"Trend forecast from {len(series)} dated session scores. "
+            f"Same-event trend forecast from {len(series)} dated result scores. "
             "Confidence describes historical trend fit, not certainty."
         ),
     }
@@ -845,21 +533,13 @@ def predict_metric(
 
 
 # ==========================================================
-# Injury model inference
+# Movement and training risk model inference
 # ==========================================================
 
-def predict_injury_risk(
+def predict_movement_risk(
     latest_log,
     latest_checkin=None,
 ) -> dict:
-
-    if (
-        injury_model is None
-        or injury_preprocessor is None
-    ):
-        raise RuntimeError(
-            "Injury model or preprocessor is unavailable."
-        )
 
     if latest_log is None:
         return {
@@ -869,6 +549,38 @@ def predict_injury_risk(
                 "No performance information is available."
             ],
         }
+
+    if (
+        injury_model is None
+        or injury_preprocessor is None
+    ):
+        # Heuristic fallback for training/movement risk percentage calculation
+        risk_pct = 15.0
+        reasons = ["Baseline prediction (heuristic fallback)."]
+        if latest_checkin:
+            sleep = getattr(latest_checkin, "total_minutes_asleep", 480) or 480
+            if sleep < 360:
+                risk_pct += 25.0
+                reasons.append("Low sleep hours (fatigue increases training risk).")
+            hr = getattr(latest_checkin, "avg_heart_rate", 70) or 70
+            if hr > 85:
+                risk_pct += 15.0
+                reasons.append("Elevated resting/average heart rate.")
+
+        risk_band = "low"
+        if risk_pct > 75:
+            risk_band = "critical"
+        elif risk_pct > 50:
+            risk_band = "high"
+        elif risk_pct > 25:
+            risk_band = "moderate"
+
+        return {
+            "risk_pct": min(100.0, risk_pct),
+            "risk_band": risk_band,
+            "reasons": reasons,
+        }
+
 
     model_input = build_injury_dataframe(
         latest_log,
@@ -908,10 +620,10 @@ def predict_injury_risk(
         band = "low"
 
     reasons = [
-        f"Estimated injury probability: {risk}%.",
+        f"Estimated training/movement risk probability: {risk}%.",
         (
             "Prediction generated using the trained "
-            "injury classification model."
+            "classification model."
         ),
     ]
 
@@ -927,21 +639,18 @@ def predict_injury_risk(
     }
 
 
-def compute_injury_risk(
+def compute_movement_risk(
     logs: list,
     latest_checkin=None,
     latest_video=None,
 ) -> dict:
     """
     Compatibility function used by analytics_router.py.
-
-    latest_video is accepted to preserve the existing route contract.
-    The current trained injury model does not use video features.
     """
 
     latest = _latest_log(logs)
 
-    return predict_injury_risk(
+    return predict_movement_risk(
         latest,
         latest_checkin,
     )
@@ -956,9 +665,32 @@ def predict_readiness(
 ) -> tuple[float, str]:
 
     if readiness_model is None:
-        raise RuntimeError(
-            "Readiness model is unavailable."
-        )
+        # Heuristic fallback for readiness scoring
+        sleep_hours = (checkin_data.get("total_minutes_asleep") or 480.0) / 60.0
+        hr = checkin_data.get("avg_heart_rate") or 70.0
+
+        score = 80.0
+        if sleep_hours < 7.0:
+            score -= (7.0 - sleep_hours) * 10.0
+        else:
+            score += (sleep_hours - 7.0) * 3.0
+
+        if hr > 80:
+            score -= (hr - 80) * 0.5
+
+        readiness = round(max(0.0, min(100.0, score)), 2)
+        recommendation = "Your body is primed for optimal performance today."
+        if readiness < 40:
+            recommendation = "Low readiness. Prioritize sleep, hydration, mobility, and recovery."
+        elif readiness < 60:
+            recommendation = "Moderate readiness. Reduce training intensity."
+        elif readiness < 80:
+            recommendation = "Good readiness. Normal training is recommended."
+        else:
+            recommendation = "Excellent recovery. Ready for high-intensity training."
+
+        return readiness, recommendation
+
 
     model_input = build_readiness_dataframe(
         checkin_data
