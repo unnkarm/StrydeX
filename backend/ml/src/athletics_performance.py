@@ -509,12 +509,22 @@ class AthleticsPerformanceModel:
         base_event = event_code.removesuffix(" sh")
         wind_sensitive = base_event in WIND_SENSITIVE_EVENTS
         wind_legal = None
+        wind_corrected = None
         if wind_sensitive and wind_speed_mps is not None:
-            wind_legal = float(wind_speed_mps) <= 2.0
+            w_speed = float(wind_speed_mps)
+            wind_legal = w_speed <= 2.0
+            if expected_unit == "seconds":
+                # Aerodynamic wind adjustment (Mureika / Ward-Smith approximation)
+                coeff = 0.09 if "200" in base_event else 0.05
+                wind_corrected = round(mark + (coeff * w_speed), 3)
 
         notes = []
         if wind_legal is False:
-            notes.append("Wind-assisted mark: useful for training analysis but not a legal comparable mark.")
+            correction_str = f", zero-wind equivalent is ~{wind_corrected:.2f}s" if wind_corrected is not None else ""
+            notes.append(f"Wind-assisted mark: useful for training analysis but not a legal comparable mark{correction_str}.")
+        elif wind_speed_mps is not None and float(wind_speed_mps) < 0 and wind_corrected is not None:
+            notes.append(f"Headwind mark ({wind_speed_mps:+.1f} m/s): zero-wind equivalent is ~{wind_corrected:.2f}s.")
+
         if mark < model["mark_min"] or mark > model["mark_max"]:
             notes.append("Result is outside the 2025 table range, so the score was capped.")
 
@@ -529,8 +539,10 @@ class AthleticsPerformanceModel:
             "world_athletics_points": points,
             "performance_score": performance_score,
             "score_band": score_band(performance_score),
+            "competitive_tier": competitive_tier(points),
             "wind_speed_mps": float(wind_speed_mps) if wind_speed_mps is not None else None,
             "wind_legal": wind_legal,
+            "wind_corrected_result": wind_corrected,
             "scoring_version": self.version,
             "notes": notes,
         }
@@ -587,6 +599,18 @@ def score_band(score: float) -> str:
     if score >= 30:
         return "developing"
     return "foundation"
+
+
+def competitive_tier(points: int) -> str:
+    if points >= 1200:
+        return "World Class / International Elite"
+    if points >= 1000:
+        return "Senior National / NCAA D1 Standard"
+    if points >= 800:
+        return "Collegiate Regional / Senior Club"
+    if points >= 600:
+        return "State / High School Varsity"
+    return "Developmental / Junior"
 
 
 def _dated_scored_logs(logs: Iterable[Any]) -> list[Any]:

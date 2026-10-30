@@ -144,18 +144,22 @@ type ReadinessForm = {
 };
 
 const EMPTY_CHECKIN: ReadinessForm = {
-  total_steps: "",
-  calories: "",
-  very_active_minutes: "",
-  fairly_active_minutes: "",
-  lightly_active_minutes: "",
-  sedentary_minutes: "",
-  total_minutes_asleep: "",
-  total_time_in_bed: "",
-  avg_heart_rate: "",
+  total_steps: "8000",
+  calories: "2200",
+  very_active_minutes: "30",
+  fairly_active_minutes: "20",
+  lightly_active_minutes: "180",
+  sedentary_minutes: "480",
+  total_minutes_asleep: "450",
+  total_time_in_bed: "480",
+  avg_heart_rate: "68",
 };
 
 function CheckinForm({ onSubmitted }: { onSubmitted: () => void }) {
+  const [tab, setTab] = useState<"quick" | "detailed">("quick");
+  const [quickSleep, setQuickSleep] = useState("7.5");
+  const [quickHr, setQuickHr] = useState("65");
+  const [quickActivity, setQuickActivity] = useState<"rest" | "moderate" | "intense">("moderate");
   const [form, setForm] = useState<ReadinessForm>(EMPTY_CHECKIN);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -172,18 +176,45 @@ function CheckinForm({ onSubmitted }: { onSubmitted: () => void }) {
     ["avg_heart_rate", "Average heart rate (bpm)"],
   ];
 
+  function applyPreset(sleepHours: number, hr: number, act: "rest" | "moderate" | "intense") {
+    setQuickSleep(sleepHours.toString());
+    setQuickHr(hr.toString());
+    setQuickActivity(act);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError(null);
 
     try {
-      await api.submitCheckin(
-        Object.fromEntries(
-          Object.entries(form).map(([key, value]) => [key, Number(value)])
-        )
-      );
-      setForm(EMPTY_CHECKIN);
+      if (tab === "quick") {
+        const sleepHours = Number(quickSleep) || 7.5;
+        const totalMinutesAsleep = Math.round(sleepHours * 60);
+        const totalTimeInBed = Math.round((sleepHours + 0.5) * 60);
+        const avgHr = Number(quickHr) || 68;
+        const actMins = quickActivity === "intense" ? 50 : quickActivity === "moderate" ? 30 : 10;
+        const steps = quickActivity === "intense" ? 11000 : quickActivity === "moderate" ? 8000 : 4500;
+        const cal = quickActivity === "intense" ? 2600 : quickActivity === "moderate" ? 2200 : 1800;
+
+        await api.submitCheckin({
+          total_steps: steps,
+          calories: cal,
+          very_active_minutes: actMins,
+          fairly_active_minutes: 20,
+          lightly_active_minutes: 180,
+          sedentary_minutes: 480,
+          total_minutes_asleep: totalMinutesAsleep,
+          total_time_in_bed: totalTimeInBed,
+          avg_heart_rate: avgHr,
+        });
+      } else {
+        await api.submitCheckin(
+          Object.fromEntries(
+            Object.entries(form).map(([key, value]) => [key, Number(value)])
+          )
+        );
+      }
       onSubmitted();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -193,32 +224,131 @@ function CheckinForm({ onSubmitted }: { onSubmitted: () => void }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      {fields.map(([key, label]) => (
-        <label key={key} className="text-xs text-muted">
-          {label}
-          <input
-            required
-            type="number"
-            min="0"
-            step="any"
-            value={form[key]}
-            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-            className="mt-1 w-full rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
-          />
-        </label>
-      ))}
+    <div className="space-y-4">
+      <div className="flex gap-2 border-b border-border pb-3">
+        <button
+          type="button"
+          onClick={() => setTab("quick")}
+          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            tab === "quick" ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-foreground"
+          }`}
+        >
+          ⚡ Quick check-in (10-second)
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("detailed")}
+          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            tab === "detailed" ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-foreground"
+          }`}
+        >
+          Detailed tracker metrics
+        </button>
+      </div>
 
-      {error && <div className="sm:col-span-3 text-xs text-clay">{error}</div>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {tab === "quick" ? (
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs text-muted mb-2">1-Tap Recovery Presets:</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => applyPreset(8.5, 58, "moderate")}
+                  className="rounded-md border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs text-accent hover:opacity-90"
+                >
+                  🟢 Fully Recovered (8.5h sleep · HR 58)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyPreset(7.0, 68, "moderate")}
+                  className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-xs text-foreground hover:border-accent"
+                >
+                  🟡 Normal / Ready (7h sleep · HR 68)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyPreset(5.5, 78, "rest")}
+                  className="rounded-md border border-clay/40 bg-clay/10 px-3 py-1.5 text-xs text-clay hover:opacity-90"
+                >
+                  🔴 High Fatigue / Sleep Debt (&lt;6h sleep · HR 78)
+                </button>
+              </div>
+            </div>
 
-      <button
-        type="submit"
-        disabled={saving}
-        className="sm:col-span-3 rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-ink transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
-        {saving ? "Predicting readiness..." : "Submit wearable data"}
-      </button>
-    </form>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <label className="text-xs text-muted">
+                Sleep duration (hours)
+                <input
+                  required
+                  type="number"
+                  min="0"
+                  max="24"
+                  step="0.1"
+                  value={quickSleep}
+                  onChange={(e) => setQuickSleep(e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
+                />
+              </label>
+
+              <label className="text-xs text-muted">
+                Resting / average heart rate (bpm)
+                <input
+                  required
+                  type="number"
+                  min="30"
+                  max="220"
+                  step="1"
+                  value={quickHr}
+                  onChange={(e) => setQuickHr(e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
+                />
+              </label>
+
+              <label className="text-xs text-muted">
+                Training load today
+                <select
+                  value={quickActivity}
+                  onChange={(e) => setQuickActivity(e.target.value as "rest" | "moderate" | "intense")}
+                  className="mt-1 w-full rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
+                >
+                  <option value="rest">Recovery / Rest day</option>
+                  <option value="moderate">Moderate session</option>
+                  <option value="intense">Intense / Competition</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {fields.map(([key, label]) => (
+              <label key={key} className="text-xs text-muted">
+                {label}
+                <input
+                  required
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={form[key]}
+                  onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                  className="mt-1 w-full rounded-md border border-border bg-surface-2 px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
+                />
+              </label>
+            ))}
+          </div>
+        )}
+
+        {error && <div className="text-xs text-clay">{error}</div>}
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-accent-ink transition-opacity hover:opacity-90 disabled:opacity-50"
+        >
+          {saving ? "Calculating readiness..." : "Submit readiness check-in"}
+        </button>
+      </form>
+    </div>
   );
 }
 
@@ -352,6 +482,11 @@ export default function AnalyticsPage() {
       performance: point.value,
     })) || [];
 
+  const perfValues = chartData.map((d) => d.performance);
+  const minScore = perfValues.length > 0 ? Math.floor(Math.min(...perfValues) - 2) : 0;
+  const maxScore = perfValues.length > 0 ? Math.ceil(Math.max(...perfValues) + 2) : 100;
+  const chartDomain: [number, number] = [Math.max(0, minScore), Math.min(100, maxScore)];
+
   const suggestions = buildSuggestions(
     summary,
     injuryRisk,
@@ -369,7 +504,7 @@ export default function AnalyticsPage() {
           Athlete intelligence
         </h1>
         <p className="mb-8 text-sm text-muted">
-          ML performance predictions, injury-risk estimation, wearable readiness, trends, and records.
+          Longitudinal performance trends, ACWR workload &amp; movement risk, daily readiness, and personal records.
         </p>
 
         {error && (
@@ -468,7 +603,7 @@ export default function AnalyticsPage() {
                   <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
                     <CartesianGrid stroke="#2b362c" strokeDasharray="4 6" />
                     <XAxis dataKey="date" stroke="#8c978c" fontSize={12} />
-                    <YAxis stroke="#8c978c" fontSize={12} domain={[0, 100]} />
+                    <YAxis stroke="#8c978c" fontSize={12} domain={chartDomain} />
                     <Tooltip
                       contentStyle={{
                         background: "#1f2a20",
@@ -503,8 +638,8 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="mb-1 text-sm font-medium text-foreground">ML performance prediction</h2>
-            <p className="mb-4 text-xs text-muted">Random Forest prediction from your latest session inputs</p>
+            <h2 className="mb-1 text-sm font-medium text-foreground">Longitudinal performance projection</h2>
+            <p className="mb-4 text-xs text-muted">Trajectory modeled from your dated session scores</p>
             <div className="grid grid-cols-3 gap-3 text-center">
               <div>
                 <div className="stat-value text-xl text-foreground">
@@ -516,7 +651,7 @@ export default function AnalyticsPage() {
                 <div className="stat-value text-xl text-accent">
                   {prediction?.predicted_30d != null ? `${prediction.predicted_30d}/100` : "—"}
                 </div>
-                <div className="mt-1 text-[11px] text-muted">Predicted</div>
+                <div className="mt-1 text-[11px] text-muted">30d Projected</div>
               </div>
               <div>
                 <div className="stat-value text-xl text-foreground">0–100</div>
@@ -561,8 +696,8 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="mb-1 text-sm font-medium text-foreground">ML injury risk</h2>
-            <p className="mb-4 text-xs text-muted">Classification model using athlete, load, recovery, and fatigue features</p>
+            <h2 className="mb-1 text-sm font-medium text-foreground">Workload &amp; Movement Risk (ACWR)</h2>
+            <p className="mb-4 text-xs text-muted">Acute:Chronic Workload Ratio (Gabbett standard) + recovery biomarkers</p>
             {injuryRisk ? (
               <>
                 <div className="mb-3 flex items-center gap-3">
@@ -582,11 +717,42 @@ export default function AnalyticsPage() {
                     {injuryRisk.risk_band} risk
                   </div>
                 </div>
+
                 <ul className="space-y-1 text-xs text-muted">
                   {injuryRisk.reasons.map((reason, index) => (
                     <li key={index}>• {reason}</li>
                   ))}
                 </ul>
+
+                {(injuryRisk.risk_band === "critical" || injuryRisk.risk_band === "high") && (
+                  <div className="mt-3 rounded border border-clay/40 bg-clay/10 p-2.5 text-xs text-clay">
+                    <span className="font-semibold">⚠️ Action advice:</span> Your connective tissues are red-lined from a rapid spike in training load. Swap maximal sprints and heavy jumps for active recovery, light mobility, or aerobic flush today.
+                  </div>
+                )}
+
+                <details className="mt-4 rounded-md border border-border bg-surface-2 p-3 text-xs">
+                  <summary className="cursor-pointer font-medium text-accent hover:underline">
+                    💡 What does this mean in plain English?
+                  </summary>
+                  <div className="mt-2.5 space-y-2 text-muted leading-relaxed">
+                    <p>
+                      <strong className="text-foreground">The "Too Much, Too Fast" Meter:</strong> ACWR compares your training strain over the last 7 days (<em className="text-foreground">acute fatigue</em>) to what your body has conditioned itself to over the past month (<em className="text-foreground">chronic fitness base</em>).
+                    </p>
+                    <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 pt-1 text-[11px]">
+                      <div className="rounded border border-border bg-background/50 p-2">
+                        <span className="font-medium text-accent">0.8 – 1.3 (Sweet Spot):</span>
+                        <p className="mt-0.5">Your workload is safely matched to your conditioning. Lowest soft-tissue injury risk.</p>
+                      </div>
+                      <div className="rounded border border-clay/30 bg-clay/5 p-2">
+                        <span className="font-medium text-clay">&gt; 1.5 (Hazard Zone):</span>
+                        <p className="mt-0.5">Sudden volume jump. Muscle pulls (hamstrings/calves) and tendon flare-ups spike dramatically.</p>
+                      </div>
+                    </div>
+                    <p className="pt-1 text-[11px]">
+                      <strong className="text-foreground">How to fix it:</strong> Gradually build weekly training load up by 10–15% at a time, rather than doubling or tripling volume in a single week.
+                    </p>
+                  </div>
+                </details>
               </>
             ) : (
               <p className="text-sm text-muted">Add a performance session to calculate injury risk.</p>
@@ -594,9 +760,9 @@ export default function AnalyticsPage() {
           </section>
 
           <section className="rounded-lg border border-border bg-surface p-5 lg:col-span-2">
-            <h2 className="mb-1 text-sm font-medium text-foreground">Wearable readiness prediction</h2>
+            <h2 className="mb-1 text-sm font-medium text-foreground">Daily readiness &amp; recovery check-in</h2>
             <p className="mb-4 text-xs text-muted">
-              Submit Fitbit-style activity, sleep, and heart-rate inputs for an ML readiness score.
+              Submit sleep, heart rate, and training load to calibrate recovery and receive daily workout guidance.
             </p>
 
             {readiness?.readiness_pct != null && (

@@ -129,15 +129,15 @@ class PerformanceLogOut(PerformanceLogCreate):
 
 
 class DailyCheckinIn(BaseModel):
-    total_steps: int
-    calories: float
-    very_active_minutes: int
-    fairly_active_minutes: int
-    lightly_active_minutes: int
-    sedentary_minutes: int
-    total_minutes_asleep: float
-    total_time_in_bed: float
-    avg_heart_rate: float
+    total_steps: Optional[int] = 8000
+    calories: Optional[float] = 2200.0
+    very_active_minutes: Optional[int] = 30
+    fairly_active_minutes: Optional[int] = 20
+    lightly_active_minutes: Optional[int] = 180
+    sedentary_minutes: Optional[int] = 480
+    total_minutes_asleep: Optional[float] = 450.0
+    total_time_in_bed: Optional[float] = 480.0
+    avg_heart_rate: Optional[float] = 68.0
 
 
 class DailyCheckinOut(DailyCheckinIn):
@@ -213,8 +213,10 @@ class AthleticsScoreOut(BaseModel):
     world_athletics_points: int
     performance_score: float
     score_band: str
+    competitive_tier: Optional[str] = None
     wind_speed_mps: Optional[float] = None
     wind_legal: Optional[bool] = None
+    wind_corrected_result: Optional[float] = None
     scoring_version: str
     notes: List[str]
 

@@ -278,11 +278,12 @@ def analyze_video(filepath: str) -> dict:
 
         left_knees = [f["ang"]["left_knee"] for f in frame_series if "left_knee" in f["ang"]]
         right_knees = [f["ang"]["right_knee"] for f in frame_series if "right_knee" in f["ang"]]
-        if left_knees and right_knees:
+        if left_knees and right_knees and len(left_knees) >= 4 and len(right_knees) >= 4:
             sym_gap = abs(float(np.mean(left_knees)) - float(np.mean(right_knees)))
-            score_symmetry = _clamp(100 - sym_gap * 3.0)
+            # Attenuate sensitivity to minor monocular camera perspective/parallax angles
+            score_symmetry = _clamp(100 - sym_gap * 2.2)
         else:
-            score_symmetry = _clamp(70.0)
+            score_symmetry = _clamp(75.0)
 
         motion_cv = (
             float(np.std(motion_magnitudes) / (np.mean(motion_magnitudes) + 1e-6))

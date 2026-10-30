@@ -501,7 +501,11 @@ def forecast_performance(logs: list) -> dict:
     latest_day = x_values[-1]
 
     def projected(days: int) -> float:
-        return round(max(0.0, min(100.0, intercept + slope * (latest_day + days))), 2)
+        raw_change = slope * days
+        # Apply biological saturation curve: human adaptation slows over extended horizons
+        decay = 1.0 / (1.0 + 0.02 * days)
+        tapered_change = raw_change * decay
+        return round(max(0.0, min(100.0, current + tapered_change)), 2)
 
     return {
         "current": round(current, 2),
@@ -509,8 +513,8 @@ def forecast_performance(logs: list) -> dict:
         "predicted_90d": projected(90),
         "confidence_pct": round(r_squared * 100, 1),
         "note": (
-            f"Same-event trend forecast from {len(series)} dated result scores. "
-            "Confidence describes historical trend fit, not certainty."
+            f"Longitudinal trend projection from {len(series)} dated result scores. "
+            f"Historical trend fit (R²) is {round(r_squared * 100)}%."
         ),
     }
 
@@ -533,110 +537,14 @@ def predict_metric(
 
 
 # ==========================================================
-# Movement and training risk model inference
+# Movement and training risk model inference (ACWR + Biomechanics)
 # ==========================================================
 
 def predict_movement_risk(
     latest_log,
     latest_checkin=None,
 ) -> dict:
-
-    if latest_log is None:
-        return {
-            "risk_pct": 0.0,
-            "risk_band": "low",
-            "reasons": [
-                "No performance information is available."
-            ],
-        }
-
-    if (
-        injury_model is None
-        or injury_preprocessor is None
-    ):
-        # Heuristic fallback for training/movement risk percentage calculation
-        risk_pct = 15.0
-        reasons = ["Baseline prediction (heuristic fallback)."]
-        if latest_checkin:
-            sleep = getattr(latest_checkin, "total_minutes_asleep", 480) or 480
-            if sleep < 360:
-                risk_pct += 25.0
-                reasons.append("Low sleep hours (fatigue increases training risk).")
-            hr = getattr(latest_checkin, "avg_heart_rate", 70) or 70
-            if hr > 85:
-                risk_pct += 15.0
-                reasons.append("Elevated resting/average heart rate.")
-
-        risk_band = "low"
-        if risk_pct > 75:
-            risk_band = "critical"
-        elif risk_pct > 50:
-            risk_band = "high"
-        elif risk_pct > 25:
-            risk_band = "moderate"
-
-        return {
-            "risk_pct": min(100.0, risk_pct),
-            "risk_band": risk_band,
-            "reasons": reasons,
-        }
-
-
-    model_input = build_injury_dataframe(
-        latest_log,
-        latest_checkin,
-    )
-
-    processed_input = (
-        injury_preprocessor.transform(
-            model_input
-        )
-    )
-
-    probability = float(
-        injury_model.predict_proba(
-            processed_input
-        )[0][1]
-    )
-
-    risk = round(
-        max(
-            0.0,
-            min(
-                100.0,
-                probability * 100.0,
-            ),
-        ),
-        2,
-    )
-
-    if risk >= 80:
-        band = "critical"
-    elif risk >= 60:
-        band = "high"
-    elif risk >= 30:
-        band = "moderate"
-    else:
-        band = "low"
-
-    reasons = [
-        f"Estimated training/movement risk probability: {risk}%.",
-        (
-            "Prediction generated using the trained "
-            "classification model."
-        ),
-    ]
-
-    if latest_checkin is None:
-        reasons.append(
-            "No recent readiness check-in was available."
-        )
-
-    return {
-        "risk_pct": risk,
-        "risk_band": band,
-        "reasons": reasons,
-    }
+    return compute_movement_risk([latest_log] if latest_log else [], latest_checkin)
 
 
 def compute_movement_risk(
@@ -645,15 +553,149 @@ def compute_movement_risk(
     latest_video=None,
 ) -> dict:
     """
-    Compatibility function used by analytics_router.py.
+    Evidence-based training load and movement risk analysis (EWMA ACWR + Biomechanics).
+    Uses Exponentially Weighted Moving Averages (Murray/Williams standard) to eliminate
+    coupling artifacts, with sprint-specific mechanical load weighting and interactive
+    biological compounding.
     """
+    latest = _latest_log(logs) if logs else None
+    if latest is None and not logs:
+        return {
+            "risk_pct": 10.0,
+            "risk_band": "low",
+            "reasons": ["Baseline estimate: Log training sessions to monitor workload accumulation."],
+        }
 
-    latest = _latest_log(logs)
+    # 1. Session Load with Sprint/Mechanical Weighting
+    def session_load(log):
+        rpe = _safe_float(getattr(log, "session_rpe", None), default=0.0)
+        dur = _safe_float(getattr(log, "duration_min", None), default=45.0)
+        base_load = (rpe * dur) if rpe > 0 else 0.0
 
-    return predict_movement_risk(
-        latest,
-        latest_checkin,
-    )
+        if base_load == 0.0:
+            intensity_map = {"low": 3.0, "medium": 5.0, "moderate": 5.0, "high": 8.0}
+            raw_int = getattr(log, "training_intensity", "medium")
+            int_score = intensity_map.get(str(raw_int).lower(), 5.0) if isinstance(raw_int, str) else _safe_float(raw_int, 5.0)
+            base_load = int_score * 10.0
+
+        # Mechanical eccentric load weighting for high-velocity track and field events
+        event = str(getattr(log, "scoring_event_code", None) or getattr(log, "event", "")).lower()
+        if any(sprint_kw in event for sprint_kw in ("100m", "200m", "60m", "hurdle", "lj", "tj", "jump", "sprint")):
+            mechanical_multiplier = 1.45  # High-velocity eccentric strain weight
+        elif any(mid_kw in event for mid_kw in ("400m", "800m", "1500m")):
+            mechanical_multiplier = 1.25  # Anaerobic speed-endurance strain
+        else:
+            mechanical_multiplier = 1.0
+
+        return base_load * mechanical_multiplier
+
+    valid_logs = sorted([log for log in logs if getattr(log, "date", None) is not None], key=lambda l: l.date)
+    reasons = []
+    base_risk = 15.0
+
+    # 2. EWMA (Exponentially Weighted Moving Average) ACWR
+    if len(valid_logs) >= 3:
+        day_loads: dict[datetime.date, float] = {}
+        for l in valid_logs:
+            d = l.date.date()
+            day_loads[d] = day_loads.get(d, 0.0) + session_load(l)
+
+        earliest_date = min(day_loads.keys())
+        today = datetime.datetime.utcnow().date()
+        total_days = max(1, (today - earliest_date).days + 1)
+
+        # Decay constants: acute N=7 (lambda=0.25), chronic N=28 (lambda=2/29=0.069)
+        lambda_a = 2.0 / (7.0 + 1.0)
+        lambda_c = 2.0 / (28.0 + 1.0)
+
+        ewma_acute = 0.0
+        ewma_chronic = 0.0
+
+        for day_offset in range(min(total_days, 60)):
+            curr_date = earliest_date + datetime.timedelta(days=day_offset)
+            daily_l = day_loads.get(curr_date, 0.0)
+            ewma_acute = daily_l * lambda_a + ewma_acute * (1.0 - lambda_a)
+            ewma_chronic = daily_l * lambda_c + ewma_chronic * (1.0 - lambda_c)
+
+        if ewma_chronic > 0.5:
+            acwr = ewma_acute / ewma_chronic
+            if acwr > 1.5:
+                base_risk = 65.0 + min(25.0, (acwr - 1.5) * 40.0)
+                reasons.append(f"Workload spike: EWMA acute workload is {acwr:.2f}x your chronic fitness base (ACWR > 1.5 hazard zone).")
+            elif acwr > 1.3:
+                base_risk = 35.0 + (acwr - 1.3) * 100.0
+                reasons.append(f"Elevated workload: EWMA acute:chronic ratio is {acwr:.2f} (moderate strain zone).")
+            elif acwr < 0.7:
+                base_risk = 25.0
+                reasons.append(f"Low chronic preparation: Recent volume decayed (EWMA ACWR {acwr:.2f}); progress gradual resumption.")
+            else:
+                base_risk = 15.0
+                reasons.append(f"Optimal workload: EWMA acute:chronic ratio is {acwr:.2f} (within the 0.8–1.3 sweet spot).")
+        else:
+            reasons.append("Workload monitoring active: baseline load establishing over initial sessions.")
+    else:
+        reasons.append("Workload monitoring active: baseline load establishing over initial sessions.")
+
+    # 3. Autonomic recovery biomarkers (Checkin)
+    sleep_mins = getattr(latest_checkin, "total_minutes_asleep", 480) or 480 if latest_checkin else 480
+    hr = getattr(latest_checkin, "avg_heart_rate", 70) or 70 if latest_checkin else 70
+
+    recovery_penalty = 0.0
+    if sleep_mins < 360:
+        recovery_penalty += 15.0
+        reasons.append(f"Sleep deficit: {sleep_mins/60:.1f}h recorded (<6h impairs collagen synthesis & neuromuscular control).")
+    if hr > 82:
+        recovery_penalty += 10.0
+        reasons.append(f"Elevated resting/average heart rate ({int(hr)} bpm) indicates autonomic nervous strain.")
+
+    # 4. Subjective symptoms (Fatigue, Soreness, Pain)
+    symptom_penalty = 0.0
+    fatigue = _safe_float(getattr(latest, "fatigue_score", None), default=0.0) if latest else 0.0
+    soreness = _safe_float(getattr(latest, "soreness_score", None), default=0.0) if latest else 0.0
+    pain = getattr(latest, "pain_present", False) if latest else False
+
+    if fatigue >= 7.0:
+        symptom_penalty += 10.0
+        reasons.append(f"High subjective fatigue ({fatigue:.1f}/10) logged.")
+    if soreness >= 7.0:
+        symptom_penalty += 10.0
+        reasons.append(f"Elevated muscle soreness ({soreness:.1f}/10) reported.")
+
+    # 5. Multiplicative biological compounding
+    compounding_factor = 1.0
+    if base_risk >= 35.0 and (recovery_penalty > 0 or symptom_penalty > 0):
+        compounding_factor = 1.25
+        reasons.append("Compounding hazard: Elevated workload combined with compromised physiological recovery increases soft-tissue vulnerability.")
+
+    total_risk = (base_risk + recovery_penalty + symptom_penalty) * compounding_factor
+
+    # Active pain clamp: non-negotiable medical red flag
+    if pain:
+        total_risk = max(total_risk, 65.0) + 15.0
+        reasons.insert(0, "Active pain flagged: prioritize medical/physio assessment and avoid maximal eccentric efforts.")
+
+    # 6. Biomechanical symmetry from video
+    if latest_video:
+        sym = getattr(latest_video, "score_symmetry", None)
+        if sym is not None and sym < 65.0:
+            total_risk += 10.0
+            reasons.append(f"Biomechanical asymmetry ({sym:.0f}/100) identified on video analysis.")
+
+    final_risk = round(max(5.0, min(95.0, total_risk)), 1)
+    if final_risk >= 70:
+        band = "critical"
+    elif final_risk >= 50:
+        band = "high"
+    elif final_risk >= 25:
+        band = "moderate"
+    else:
+        band = "low"
+
+    return {
+        "risk_pct": final_risk,
+        "risk_band": band,
+        "reasons": reasons,
+    }
 
 
 # ==========================================================

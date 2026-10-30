@@ -226,5 +226,66 @@ class AthleticsPersistenceTests(unittest.TestCase):
         self.assertEqual(log.fatigue_score, 5.0)
 
 
+class AdvancedAnalyticsMovementRiskTests(unittest.TestCase):
+    def test_ewma_acwr_elevated_load_and_compounding_risk(self):
+        from analytics import compute_movement_risk
+
+        now = dt.datetime.utcnow()
+        # Build a 4-week timeline with a sudden spike in the acute 7-day period
+        logs = []
+        # 3 baseline sessions in chronic period
+        for day in (25, 20, 14):
+            logs.append(
+                SimpleNamespace(
+                    date=now - dt.timedelta(days=day),
+                    event="100m",
+                    scoring_event_code="100m",
+                    session_rpe=5.0,
+                    duration_min=40.0,
+                    pain_present=False,
+                    fatigue_score=3.0,
+                )
+            )
+        # Acute spike: 4 intense sprint sessions in the past 4 days
+        for day in (4, 3, 2, 1):
+            logs.append(
+                SimpleNamespace(
+                    date=now - dt.timedelta(days=day),
+                    event="100m",
+                    scoring_event_code="100m",
+                    session_rpe=9.0,
+                    duration_min=75.0,
+                    pain_present=False,
+                    fatigue_score=8.0,
+                )
+            )
+
+        # Check-in with sleep deficit to test multiplicative compounding
+        checkin = SimpleNamespace(
+            total_minutes_asleep=300.0,  # 5 hours
+            avg_heart_rate=86.0,
+        )
+
+        risk = compute_movement_risk(logs, latest_checkin=checkin)
+        self.assertGreaterEqual(risk["risk_pct"], 60.0)
+        self.assertIn(risk["risk_band"], ("high", "critical"))
+        self.assertTrue(any("EWMA" in reason for reason in risk["reasons"]))
+        self.assertTrue(any("Compounding hazard" in reason for reason in risk["reasons"]))
+
+    def test_wind_correction_and_tier_in_scoring_model(self):
+        model = get_model()
+        scored = model.score(
+            competition_category="men",
+            event="100m",
+            result_value=10.15,
+            wind_speed_mps=2.4,
+        )
+        self.assertFalse(scored["wind_legal"])
+        self.assertIsNotNone(scored["wind_corrected_result"])
+        # Wind corrected should be higher (slower) than raw assisted time
+        self.assertGreater(scored["wind_corrected_result"], scored["result_value"])
+        self.assertIn(scored["competitive_tier"], ("World Class / International Elite", "Senior National / NCAA D1 Standard"))
+
+
 if __name__ == "__main__":
     unittest.main()
